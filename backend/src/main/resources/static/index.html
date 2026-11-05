@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<title>BabyHealth Guard Dashboard</title>
+<style>
+body{font-family:Arial,sans-serif;margin:0;background:#f5f7fa;color:#222}
+header{background:#2b7a78;color:#fff;padding:16px 24px}
+main{max-width:960px;margin:24px auto;padding:0 16px}
+.card{background:#fff;border-radius:8px;padding:16px;margin-bottom:16px;box-shadow:0 1px 3px rgba(0,0,0,.1)}
+input,select,button{padding:8px;margin:4px;border:1px solid #ccc;border-radius:4px}
+button{background:#2b7a78;color:#fff;border:none;cursor:pointer}
+button:hover{background:#205e5c}
+table{width:100%;border-collapse:collapse}
+th,td{padding:8px;border-bottom:1px solid #eee;text-align:left}
+.hidden{display:none}
+</style>
+</head>
+<body>
+<header><h1>BabyHealth Guard — Health Worker Dashboard</h1></header>
+<main>
+  <div id="loginCard" class="card">
+    <h2>Login</h2>
+    <input id="email" placeholder="email" value="admin@babyhealth.local"/>
+    <input id="password" type="password" placeholder="password" value="admin123"/>
+    <button onclick="login()">Login</button>
+    <p id="loginMsg"></p>
+  </div>
+
+  <div id="app" class="hidden">
+    <div class="card">
+      <h2>Register Mother</h2>
+      <input id="mName" placeholder="Full name"/>
+      <input id="mPhone" placeholder="Phone"/>
+      <input id="mDob" type="date"/>
+      <input id="mFacility" placeholder="Facility id" value="F1"/>
+      <button onclick="createMother()">Create</button>
+    </div>
+    <div class="card">
+      <h2>Mothers</h2>
+      <button onclick="loadMothers()">Refresh</button>
+      <table><thead><tr><th>Name</th><th>Phone</th><th>DOB</th><th>Facility</th></tr></thead><tbody id="mothersBody"></tbody></table>
+    </div>
+    <div class="card">
+      <h2>Record Vitals</h2>
+      <input id="vMother" placeholder="Mother UUID"/>
+      <input id="vSys" type="number" placeholder="Systolic"/>
+      <input id="vDia" type="number" placeholder="Diastolic"/>
+      <input id="vWeight" type="number" step="0.1" placeholder="Weight kg"/>
+      <button onclick="recordVitals()">Save</button>
+    </div>
+    <div class="card">
+      <h2>Schedule Appointment</h2>
+      <input id="aMother" placeholder="Mother UUID"/>
+      <select id="aType"><option>ANTENATAL</option><option>DELIVERY</option><option>IMMUNIZATION</option><option>POSTNATAL</option></select>
+      <input id="aWhen" type="datetime-local"/>
+      <button onclick="scheduleAppt()">Schedule</button>
+    </div>
+  </div>
+</main>
+<script>
+const API = '';
+let token = localStorage.getItem('token');
+function showApp(){ if(token){ document.getElementById('loginCard').classList.add('hidden'); document.getElementById('app').classList.remove('hidden'); loadMothers(); } }
+async function login(){
+  const r = await fetch(API+'/api/auth/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:document.getElementById('email').value,password:document.getElementById('password').value})});
+  const d = await r.json();
+  if(d.token){ token=d.token; localStorage.setItem('token',token); showApp(); } else { document.getElementById('loginMsg').textContent='Login failed'; }
+}
+function H(){ return {'Content-Type':'application/json','Authorization':'Bearer '+token}; }
+async function createMother(){
+  const body={fullName:document.getElementById('mName').value,phoneNumber:document.getElementById('mPhone').value,dateOfBirth:document.getElementById('mDob').value,facilityId:document.getElementById('mFacility').value,userId:null};
+  await fetch(API+'/api/mothers',{method:'POST',headers:H(),body:JSON.stringify(body)});
+  loadMothers();
+}
+async function loadMothers(){
+  const r=await fetch(API+'/api/mothers',{headers:H()});
+  const data=await r.json();
+  const tb=document.getElementById('mothersBody'); tb.innerHTML='';
+  data.forEach(m=>{
+    const tr=document.createElement('tr');
+    tr.innerHTML=`<td>${m.fullName}</td><td>${m.phoneNumber||''}</td><td>${m.dateOfBirth||''}</td><td>${m.facilityId||''}</td>`;
+    tb.appendChild(tr);
+  });
+}
+async function recordVitals(){
+  const body={motherId:document.getElementById('vMother').value,systolicBp:+document.getElementById('vSys').value,diastolicBp:+document.getElementById('vDia').value,weightKg:+document.getElementById('vWeight').value};
+  await fetch(API+'/api/vitals',{method:'POST',headers:H(),body:JSON.stringify(body)});
+  alert('saved');
+}
+async function scheduleAppt(){
+  const body={motherId:document.getElementById('aMother').value,type:document.getElementById('aType').value,scheduledAt:new Date(document.getElementById('aWhen').value).toISOString()};
+  await fetch(API+'/api/appointments',{method:'POST',headers:H(),body:JSON.stringify(body)});
+  alert('scheduled');
+}
+showApp();
+</script>
+</body>
+</html>
