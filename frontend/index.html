@@ -5,19 +5,26 @@
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>BabyHealth Guard — Health Worker Dashboard</title>
 <style>
-:root{
-  --primary:#0f766e;--primary-dark:#0b5f59;--bg:#f1f5f9;--card:#ffffff;
-  --text:#1e293b;--muted:#64748b;--border:#e2e8f0;--danger:#dc2626;
-}
+:root{--primary:#0f766e;--primary-dark:#0b5f59;--bg:#f1f5f9;--card:#fff;--text:#1e293b;--muted:#64748b;--border:#e2e8f0;--danger:#dc2626;--sidebar:#0b3d3a}
 *{box-sizing:border-box}
-body{margin:0;font-family:"Segoe UI",system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--text)}
-header{background:linear-gradient(135deg,var(--primary),var(--primary-dark));color:#fff;padding:14px 24px;display:flex;justify-content:space-between;align-items:center;box-shadow:0 2px 6px rgba(0,0,0,.15)}
-header h1{margin:0;font-size:1.25rem;font-weight:600}
-header .logout{background:rgba(255,255,255,.15);color:#fff;border:1px solid rgba(255,255,255,.4);padding:8px 14px;border-radius:6px;cursor:pointer}
-header .logout:hover{background:rgba(255,255,255,.25)}
-main{max-width:1100px;margin:24px auto;padding:0 16px}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:16px}
-.card{background:var(--card);border-radius:12px;padding:20px;box-shadow:0 1px 3px rgba(0,0,0,.08);border:1px solid var(--border)}
+body{margin:0;font-family:"Segoe UI",system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--text);display:flex;min-height:100vh}
+.sidebar{width:260px;background:var(--sidebar);color:#fff;display:flex;flex-direction:column;position:fixed;top:0;bottom:0;left:0;z-index:10}
+.sidebar .brand{padding:20px;font-size:1.1rem;font-weight:700;border-bottom:1px solid rgba(255,255,255,.1);display:flex;align-items:center;gap:10px}
+.sidebar nav{flex:1;padding:12px 8px}
+.nav-item{display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:8px;cursor:pointer;color:rgba(255,255,255,.75);margin-bottom:4px;transition:.15s}
+.nav-item:hover{background:rgba(255,255,255,.08);color:#fff}
+.nav-item.active{background:var(--primary);color:#fff}
+.profile{padding:16px;border-top:1px solid rgba(255,255,255,.1)}
+.profile-row{display:flex;align-items:center;gap:12px}
+.avatar{width:46px;height:46px;border-radius:50%;background:var(--primary);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:1.1rem;cursor:pointer;overflow:hidden;border:2px solid rgba(255,255,255,.3)}
+.avatar img{width:100%;height:100%;object-fit:cover}
+.profile-info{flex:1;min-width:0}
+.profile-name{font-weight:600;font-size:.9rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.profile-role{font-size:.75rem;color:rgba(255,255,255,.6)}
+.profile .logout{margin-top:10px;width:100%;background:rgba(255,255,255,.1);color:#fff;border:1px solid rgba(255,255,255,.25);padding:8px;border-radius:6px;cursor:pointer}
+.profile .logout:hover{background:rgba(255,255,255,.2)}
+main{margin-left:260px;flex:1;padding:24px;max-width:1180px}
+.card{background:var(--card);border-radius:12px;padding:20px;box-shadow:0 1px 3px rgba(0,0,0,.08);border:1px solid var(--border);margin-bottom:16px}
 .card h2{margin:0 0 12px;font-size:1.05rem;color:var(--primary)}
 input,select{width:100%;padding:10px;margin:6px 0;border:1px solid var(--border);border-radius:8px;font-size:.95rem}
 input:focus,select:focus{outline:none;border-color:var(--primary)}
@@ -31,24 +38,40 @@ th,td{padding:10px 8px;text-align:left;border-bottom:1px solid var(--border);fon
 th{background:#f8fafc;color:var(--muted);font-weight:600;text-transform:uppercase;font-size:.75rem;letter-spacing:.04em}
 tbody tr:hover{background:#f8fafc}
 .hidden{display:none}
-.login-wrap{max-width:420px;margin:60px auto}
+.login-wrap{max-width:420px;margin:80px auto}
 .login-card{text-align:center}
 .login-card h2{color:var(--primary)}
 .msg{color:var(--danger);font-size:.85rem;margin-top:8px;min-height:18px}
-.tabs{display:flex;gap:8px;margin-bottom:16px}
-.tab{padding:8px 14px;border-radius:8px;cursor:pointer;background:#fff;border:1px solid var(--border);color:var(--muted);font-weight:600}
-.tab.active{background:var(--primary);color:#fff;border-color:var(--primary)}
 .panel{display:none}
 .panel.active{display:block}
 .badge{display:inline-block;padding:2px 8px;border-radius:999px;font-size:.75rem;background:#e0f2f1;color:var(--primary);font-weight:600}
-.toast{position:fixed;bottom:20px;right:20px;background:var(--primary);color:#fff;padding:12px 18px;border-radius:8px;box-shadow:0 4px 12px rgba(0,0,0,.2);display:none}
+.toast{position:fixed;bottom:20px;right:20px;background:var(--primary);color:#fff;padding:12px 18px;border-radius:8px;box-shadow:0 4px 12px rgba(0,0,0,.2);display:none;z-index:100}
+@media(max-width:768px){.sidebar{transform:translateX(-100%)}.sidebar.open{transform:translateX(0)}main{margin-left:0}}
 </style>
 </head>
 <body>
-<header>
-  <h1>🍼 BabyHealth Guard — Health Worker Dashboard</h1>
-  <button id="logoutBtn" class="logout hidden" onclick="logout()">Logout</button>
-</header>
+<aside class="sidebar" id="sidebar">
+  <div class="brand">🍼 BabyHealth Guard</div>
+  <nav>
+    <div class="nav-item active" data-panel="mothers" onclick="switchTab(this)">👩‍⚕️ Mothers</div>
+    <div class="nav-item" data-panel="vitals" onclick="switchTab(this)">❤️ Vitals</div>
+    <div class="nav-item" data-panel="appointments" onclick="switchTab(this)">📅 Appointments</div>
+  </nav>
+  <div class="profile">
+    <div class="profile-row">
+      <label class="avatar" title="Click to change photo">
+        <span id="avatarInitials">?</span>
+        <img id="avatarImg" class="hidden" alt=""/>
+        <input type="file" id="avatarFile" accept="image/*" class="hidden"/>
+      </label>
+      <div class="profile-info">
+        <div class="profile-name" id="profileName">—</div>
+        <div class="profile-role" id="profileRole">—</div>
+      </div>
+    </div>
+    <button class="logout" onclick="logout()">Logout</button>
+  </div>
+</aside>
 
 <div id="loginCard" class="login-wrap">
   <div class="card login-card">
@@ -62,35 +85,27 @@ tbody tr:hover{background:#f8fafc}
 </div>
 
 <main id="app" class="hidden">
-  <div class="tabs">
-    <div class="tab active" data-panel="mothers" onclick="switchTab(this)">Mothers</div>
-    <div class="tab" data-panel="vitals" onclick="switchTab(this)">Vitals</div>
-    <div class="tab" data-panel="appointments" onclick="switchTab(this)">Appointments</div>
-  </div>
-
   <div id="panel-mothers" class="panel active">
-    <div class="grid">
-      <div class="card">
-        <h2>Register Mother</h2>
-        <input id="mName" placeholder="Full name"/>
-        <input id="mPhone" placeholder="Phone number"/>
-        <input id="mDob" type="date"/>
-        <input id="mFacility" placeholder="Facility id" value="F1"/>
-        <button class="btn" style="width:100%;margin-top:8px" onclick="createMother()">Create mother</button>
+    <div class="card">
+      <h2>Register Mother</h2>
+      <input id="mName" placeholder="Full name"/>
+      <input id="mPhone" placeholder="Phone number"/>
+      <input id="mDob" type="date"/>
+      <input id="mFacility" placeholder="Facility id" value="F1"/>
+      <button class="btn" style="width:100%;margin-top:8px" onclick="createMother()">Create mother</button>
+    </div>
+    <div class="card">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+        <h2 style="margin:0">Registered Mothers</h2>
+        <button class="btn btn-secondary" onclick="loadMothers()">Refresh</button>
       </div>
-      <div class="card" style="grid-column:1/-1">
-        <div style="display:flex;justify-content:space-between;align-items:center">
-          <h2 style="margin:0">Registered Mothers</h2>
-          <button class="btn btn-secondary" onclick="loadMothers()">Refresh</button>
-        </div>
-        <table><thead><tr><th>Name</th><th>Phone</th><th>Date of birth</th><th>Facility</th><th>ID</th></tr></thead>
-        <tbody id="mothersBody"></tbody></table>
-      </div>
+      <table><thead><tr><th>Name</th><th>Phone</th><th>Date of birth</th><th>Facility</th><th>ID</th></tr></thead>
+      <tbody id="mothersBody"></tbody></table>
     </div>
   </div>
 
   <div id="panel-vitals" class="panel">
-    <div class="card" style="max-width:520px">
+    <div class="card" style="max-width:560px">
       <h2>Record Vital Signs</h2>
       <input id="vMother" placeholder="Mother UUID"/>
       <div class="row">
@@ -103,7 +118,7 @@ tbody tr:hover{background:#f8fafc}
   </div>
 
   <div id="panel-appointments" class="panel">
-    <div class="card" style="max-width:520px">
+    <div class="card" style="max-width:560px">
       <h2>Schedule Appointment</h2>
       <input id="aMother" placeholder="Mother UUID"/>
       <select id="aType"><option>ANTENATAL</option><option>DELIVERY</option><option>IMMUNIZATION</option><option>POSTNATAL</option></select>
@@ -117,9 +132,14 @@ tbody tr:hover{background:#f8fafc}
 <script>
 const API='';
 let token=localStorage.getItem('token');
+let currentUser=null;
 function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.style.display='block';setTimeout(()=>t.style.display='none',2200);}
-function switchTab(el){document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));el.classList.add('active');document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));document.getElementById('panel-'+el.dataset.panel).classList.add('active');}
-function showApp(){ if(token){ document.getElementById('loginCard').classList.add('hidden'); document.getElementById('app').classList.remove('hidden'); document.getElementById('logoutBtn').classList.remove('hidden'); loadMothers(); } }
+function switchTab(el){document.querySelectorAll('.nav-item').forEach(t=>t.classList.remove('active'));el.classList.add('active');document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));document.getElementById('panel-'+el.dataset.panel).classList.add('active');}
+function initials(s){if(!s)return '?';const p=s.split(/[@.\s]/);return (p[0][0]||'?').toUpperCase()+(p[1]?p[1][0].toUpperCase():'');}
+function loadAvatar(uid){const src=localStorage.getItem('avatar_'+uid);const img=document.getElementById('avatarImg');const init=document.getElementById('avatarInitials');if(src){img.src=src;img.classList.remove('hidden');init.classList.add('hidden');}else{img.classList.add('hidden');init.classList.remove('hidden');}}
+function setProfile(u){currentUser=u;document.getElementById('profileName').textContent=u.email;document.getElementById('profileRole').textContent=u.role;document.getElementById('avatarInitials').textContent=initials(u.email);loadAvatar(u.id);}
+async function fetchMe(){const r=await fetch(API+'/api/auth/me',{headers:{'Authorization':'Bearer '+token}});if(!r.ok)return;const u=await r.json();setProfile(u);}
+function showApp(){ if(token){ document.getElementById('loginCard').classList.add('hidden'); document.getElementById('app').classList.remove('hidden'); fetchMe(); loadMothers(); } }
 async function login(){
   const r=await fetch(API+'/api/auth/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:document.getElementById('email').value,password:document.getElementById('password').value})});
   const d=await r.json();
@@ -130,8 +150,7 @@ function H(){ return {'Content-Type':'application/json','Authorization':'Bearer 
 async function createMother(){
   const body={fullName:document.getElementById('mName').value,phoneNumber:document.getElementById('mPhone').value,dateOfBirth:document.getElementById('mDob').value,facilityId:document.getElementById('mFacility').value,userId:null};
   const r=await fetch(API+'/api/mothers',{method:'POST',headers:H(),body:JSON.stringify(body)});
-  if(r.ok){ toast('Mother registered'); loadMothers(); }
-  else toast('Failed to register');
+  if(r.ok){ toast('Mother registered'); loadMothers(); } else toast('Failed to register');
 }
 async function loadMothers(){
   const r=await fetch(API+'/api/mothers',{headers:H()});
@@ -154,7 +173,13 @@ async function scheduleAppt(){
   const r=await fetch(API+'/api/appointments',{method:'POST',headers:H(),body:JSON.stringify(body)});
   toast(r.ok?'Appointment scheduled':'Failed to schedule');
 }
-function logout(){ token=null; localStorage.removeItem('token'); document.getElementById('app').classList.add('hidden'); document.getElementById('loginCard').classList.remove('hidden'); document.getElementById('logoutBtn').classList.add('hidden'); toast('Logged out'); }
+function logout(){ token=null; currentUser=null; localStorage.removeItem('token'); document.getElementById('app').classList.add('hidden'); document.getElementById('loginCard').classList.remove('hidden'); toast('Logged out'); }
+// avatar upload
+document.getElementById('avatarFile').addEventListener('change',e=>{
+  const f=e.target.files[0]; if(!f||!currentUser)return;
+  const r=new FileReader(); r.onload=ev=>{ localStorage.setItem('avatar_'+currentUser.id,ev.target.result); loadAvatar(currentUser.id); toast('Photo updated'); }; r.readAsDataURL(f);
+});
+document.querySelector('.avatar').addEventListener('click',()=>document.getElementById('avatarFile').click());
 showApp();
 </script>
 </body>

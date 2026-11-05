@@ -20,7 +20,7 @@ public class JwtAuthFilter implements Filter {
         HttpServletRequest request = (HttpServletRequest) req;
         HttpServletResponse response = (HttpServletResponse) res;
         String path = request.getRequestURI();
-        if (path.startsWith("/api/auth") || path.startsWith("/h2-console")) {
+        if (path.equals("/api/auth/login") || path.equals("/api/auth/register") || path.startsWith("/h2-console")) {
             chain.doFilter(req, res);
             return;
         }
