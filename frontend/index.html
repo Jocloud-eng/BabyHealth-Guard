@@ -50,7 +50,7 @@ tbody tr:hover{background:#f8fafc}
 </style>
 </head>
 <body>
-<aside class="sidebar" id="sidebar">
+<aside class="sidebar hidden" id="sidebar">
   <div class="brand">🍼 BabyHealth Guard</div>
   <nav>
     <div class="nav-item active" data-panel="mothers" onclick="switchTab(this)">👩‍⚕️ Mothers</div>
@@ -139,7 +139,7 @@ function initials(s){if(!s)return '?';const p=s.split(/[@.\s]/);return (p[0][0]|
 function loadAvatar(uid){const src=localStorage.getItem('avatar_'+uid);const img=document.getElementById('avatarImg');const init=document.getElementById('avatarInitials');if(src){img.src=src;img.classList.remove('hidden');init.classList.add('hidden');}else{img.classList.add('hidden');init.classList.remove('hidden');}}
 function setProfile(u){currentUser=u;document.getElementById('profileName').textContent=u.email;document.getElementById('profileRole').textContent=u.role;document.getElementById('avatarInitials').textContent=initials(u.email);loadAvatar(u.id);}
 async function fetchMe(){const r=await fetch(API+'/api/auth/me',{headers:{'Authorization':'Bearer '+token}});if(!r.ok)return;const u=await r.json();setProfile(u);}
-function showApp(){ if(token){ document.getElementById('loginCard').classList.add('hidden'); document.getElementById('app').classList.remove('hidden'); fetchMe(); loadMothers(); } }
+function showApp(){ if(token){ document.getElementById('loginCard').classList.add('hidden'); document.getElementById('app').classList.remove('hidden'); document.getElementById('sidebar').classList.remove('hidden'); fetchMe(); loadMothers(); } }
 async function login(){
   const r=await fetch(API+'/api/auth/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:document.getElementById('email').value,password:document.getElementById('password').value})});
   const d=await r.json();
@@ -173,7 +173,7 @@ async function scheduleAppt(){
   const r=await fetch(API+'/api/appointments',{method:'POST',headers:H(),body:JSON.stringify(body)});
   toast(r.ok?'Appointment scheduled':'Failed to schedule');
 }
-function logout(){ token=null; currentUser=null; localStorage.removeItem('token'); document.getElementById('app').classList.add('hidden'); document.getElementById('loginCard').classList.remove('hidden'); toast('Logged out'); }
+function logout(){ token=null; currentUser=null; localStorage.removeItem('token'); document.getElementById('app').classList.add('hidden'); document.getElementById('sidebar').classList.add('hidden'); document.getElementById('loginCard').classList.remove('hidden'); toast('Logged out'); }
 // avatar upload
 document.getElementById('avatarFile').addEventListener('change',e=>{
   const f=e.target.files[0]; if(!f||!currentUser)return;

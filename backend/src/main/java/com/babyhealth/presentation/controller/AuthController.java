@@ -4,6 +4,7 @@ import com.babyhealth.application.port.out.UserRepository;
 import com.babyhealth.application.usecase.AuthService;
 import com.babyhealth.domain.identity.User;
 import jakarta.servlet.http.HttpServletRequest;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import com.babyhealth.domain.identity.Role;
@@ -38,5 +39,12 @@ public class AuthController {
         if (uid == null) throw new IllegalArgumentException("Unauthorized");
         User u = users.findById(UUID.fromString(uid)).orElseThrow(() -> new IllegalArgumentException("User not found"));
         return Map.of("id", u.getId().toString(), "email", u.getEmail(), "role", u.getRole().name());
+    }
+
+    @GetMapping("/users")
+    public List<Map<String,String>> users() {
+        return users.findAll().stream()
+            .map(u -> Map.of("id", u.getId().toString(), "email", u.getEmail(), "role", u.getRole().name()))
+            .toList();
     }
 }
