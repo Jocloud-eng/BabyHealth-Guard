@@ -2,76 +2,136 @@
 <html lang="en">
 <head>
 <meta charset="utf-8"/>
-<title>BabyHealth Guard Dashboard</title>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>BabyHealth Guard — Health Worker Dashboard</title>
 <style>
-body{font-family:Arial,sans-serif;margin:0;background:#f5f7fa;color:#222}
-header{background:#2b7a78;color:#fff;padding:16px 24px}
-main{max-width:960px;margin:24px auto;padding:0 16px}
-.card{background:#fff;border-radius:8px;padding:16px;margin-bottom:16px;box-shadow:0 1px 3px rgba(0,0,0,.1)}
-input,select,button{padding:8px;margin:4px;border:1px solid #ccc;border-radius:4px}
-button{background:#2b7a78;color:#fff;border:none;cursor:pointer}
-button:hover{background:#205e5c}
-table{width:100%;border-collapse:collapse}
-th,td{padding:8px;border-bottom:1px solid #eee;text-align:left}
+:root{
+  --primary:#0f766e;--primary-dark:#0b5f59;--bg:#f1f5f9;--card:#ffffff;
+  --text:#1e293b;--muted:#64748b;--border:#e2e8f0;--danger:#dc2626;
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:"Segoe UI",system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--text)}
+header{background:linear-gradient(135deg,var(--primary),var(--primary-dark));color:#fff;padding:14px 24px;display:flex;justify-content:space-between;align-items:center;box-shadow:0 2px 6px rgba(0,0,0,.15)}
+header h1{margin:0;font-size:1.25rem;font-weight:600}
+header .logout{background:rgba(255,255,255,.15);color:#fff;border:1px solid rgba(255,255,255,.4);padding:8px 14px;border-radius:6px;cursor:pointer}
+header .logout:hover{background:rgba(255,255,255,.25)}
+main{max-width:1100px;margin:24px auto;padding:0 16px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:16px}
+.card{background:var(--card);border-radius:12px;padding:20px;box-shadow:0 1px 3px rgba(0,0,0,.08);border:1px solid var(--border)}
+.card h2{margin:0 0 12px;font-size:1.05rem;color:var(--primary)}
+input,select{width:100%;padding:10px;margin:6px 0;border:1px solid var(--border);border-radius:8px;font-size:.95rem}
+input:focus,select:focus{outline:none;border-color:var(--primary)}
+.btn{background:var(--primary);color:#fff;border:none;padding:10px 16px;border-radius:8px;cursor:pointer;font-weight:600;font-size:.95rem}
+.btn:hover{background:var(--primary-dark)}
+.btn-secondary{background:#fff;color:var(--primary);border:1px solid var(--primary)}
+.row{display:flex;gap:8px;flex-wrap:wrap}
+.row>*{flex:1}
+table{width:100%;border-collapse:collapse;margin-top:8px}
+th,td{padding:10px 8px;text-align:left;border-bottom:1px solid var(--border);font-size:.9rem}
+th{background:#f8fafc;color:var(--muted);font-weight:600;text-transform:uppercase;font-size:.75rem;letter-spacing:.04em}
+tbody tr:hover{background:#f8fafc}
 .hidden{display:none}
+.login-wrap{max-width:420px;margin:60px auto}
+.login-card{text-align:center}
+.login-card h2{color:var(--primary)}
+.msg{color:var(--danger);font-size:.85rem;margin-top:8px;min-height:18px}
+.tabs{display:flex;gap:8px;margin-bottom:16px}
+.tab{padding:8px 14px;border-radius:8px;cursor:pointer;background:#fff;border:1px solid var(--border);color:var(--muted);font-weight:600}
+.tab.active{background:var(--primary);color:#fff;border-color:var(--primary)}
+.panel{display:none}
+.panel.active{display:block}
+.badge{display:inline-block;padding:2px 8px;border-radius:999px;font-size:.75rem;background:#e0f2f1;color:var(--primary);font-weight:600}
+.toast{position:fixed;bottom:20px;right:20px;background:var(--primary);color:#fff;padding:12px 18px;border-radius:8px;box-shadow:0 4px 12px rgba(0,0,0,.2);display:none}
 </style>
 </head>
 <body>
-<header><h1>BabyHealth Guard — Health Worker Dashboard</h1></header>
-<main>
-  <div id="loginCard" class="card">
-    <h2>Login</h2>
-    <input id="email" placeholder="email" value="admin@babyhealth.local"/>
-    <input id="password" type="password" placeholder="password" value="admin123"/>
-    <button onclick="login()">Login</button>
-    <p id="loginMsg"></p>
+<header>
+  <h1>🍼 BabyHealth Guard — Health Worker Dashboard</h1>
+  <button id="logoutBtn" class="logout hidden" onclick="logout()">Logout</button>
+</header>
+
+<div id="loginCard" class="login-wrap">
+  <div class="card login-card">
+    <h2>Welcome back</h2>
+    <p style="color:var(--muted);margin-top:-6px">Sign in to continue</p>
+    <input id="email" placeholder="Email" value="admin@babyhealth.local"/>
+    <input id="password" type="password" placeholder="Password" value="admin123"/>
+    <button class="btn" style="width:100%;margin-top:8px" onclick="login()">Sign in</button>
+    <p class="msg" id="loginMsg"></p>
+  </div>
+</div>
+
+<main id="app" class="hidden">
+  <div class="tabs">
+    <div class="tab active" data-panel="mothers" onclick="switchTab(this)">Mothers</div>
+    <div class="tab" data-panel="vitals" onclick="switchTab(this)">Vitals</div>
+    <div class="tab" data-panel="appointments" onclick="switchTab(this)">Appointments</div>
   </div>
 
-  <div id="app" class="hidden">
-    <div class="card">
-      <h2>Register Mother</h2>
-      <input id="mName" placeholder="Full name"/>
-      <input id="mPhone" placeholder="Phone"/>
-      <input id="mDob" type="date"/>
-      <input id="mFacility" placeholder="Facility id" value="F1"/>
-      <button onclick="createMother()">Create</button>
+  <div id="panel-mothers" class="panel active">
+    <div class="grid">
+      <div class="card">
+        <h2>Register Mother</h2>
+        <input id="mName" placeholder="Full name"/>
+        <input id="mPhone" placeholder="Phone number"/>
+        <input id="mDob" type="date"/>
+        <input id="mFacility" placeholder="Facility id" value="F1"/>
+        <button class="btn" style="width:100%;margin-top:8px" onclick="createMother()">Create mother</button>
+      </div>
+      <div class="card" style="grid-column:1/-1">
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <h2 style="margin:0">Registered Mothers</h2>
+          <button class="btn btn-secondary" onclick="loadMothers()">Refresh</button>
+        </div>
+        <table><thead><tr><th>Name</th><th>Phone</th><th>Date of birth</th><th>Facility</th><th>ID</th></tr></thead>
+        <tbody id="mothersBody"></tbody></table>
+      </div>
     </div>
-    <div class="card">
-      <h2>Mothers</h2>
-      <button onclick="loadMothers()">Refresh</button>
-      <table><thead><tr><th>Name</th><th>Phone</th><th>DOB</th><th>Facility</th></tr></thead><tbody id="mothersBody"></tbody></table>
-    </div>
-    <div class="card">
-      <h2>Record Vitals</h2>
+  </div>
+
+  <div id="panel-vitals" class="panel">
+    <div class="card" style="max-width:520px">
+      <h2>Record Vital Signs</h2>
       <input id="vMother" placeholder="Mother UUID"/>
-      <input id="vSys" type="number" placeholder="Systolic"/>
-      <input id="vDia" type="number" placeholder="Diastolic"/>
-      <input id="vWeight" type="number" step="0.1" placeholder="Weight kg"/>
-      <button onclick="recordVitals()">Save</button>
+      <div class="row">
+        <input id="vSys" type="number" placeholder="Systolic BP"/>
+        <input id="vDia" type="number" placeholder="Diastolic BP"/>
+      </div>
+      <input id="vWeight" type="number" step="0.1" placeholder="Weight (kg)"/>
+      <button class="btn" style="width:100%;margin-top:8px" onclick="recordVitals()">Save vitals</button>
     </div>
-    <div class="card">
+  </div>
+
+  <div id="panel-appointments" class="panel">
+    <div class="card" style="max-width:520px">
       <h2>Schedule Appointment</h2>
       <input id="aMother" placeholder="Mother UUID"/>
       <select id="aType"><option>ANTENATAL</option><option>DELIVERY</option><option>IMMUNIZATION</option><option>POSTNATAL</option></select>
       <input id="aWhen" type="datetime-local"/>
-      <button onclick="scheduleAppt()">Schedule</button>
+      <button class="btn" style="width:100%;margin-top:8px" onclick="scheduleAppt()">Schedule</button>
     </div>
   </div>
 </main>
+<div class="toast" id="toast"></div>
+
 <script>
-const API = '';
-let token = localStorage.getItem('token');
-function showApp(){ if(token){ document.getElementById('loginCard').classList.add('hidden'); document.getElementById('app').classList.remove('hidden'); loadMothers(); } }
+const API='';
+let token=localStorage.getItem('token');
+function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.style.display='block';setTimeout(()=>t.style.display='none',2200);}
+function switchTab(el){document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));el.classList.add('active');document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));document.getElementById('panel-'+el.dataset.panel).classList.add('active');}
+function showApp(){ if(token){ document.getElementById('loginCard').classList.add('hidden'); document.getElementById('app').classList.remove('hidden'); document.getElementById('logoutBtn').classList.remove('hidden'); loadMothers(); } }
 async function login(){
-  const r = await fetch(API+'/api/auth/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:document.getElementById('email').value,password:document.getElementById('password').value})});
-  const d = await r.json();
-  if(d.token){ token=d.token; localStorage.setItem('token',token); showApp(); } else { document.getElementById('loginMsg').textContent='Login failed'; }
+  const r=await fetch(API+'/api/auth/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:document.getElementById('email').value,password:document.getElementById('password').value})});
+  const d=await r.json();
+  if(d.token){ token=d.token; localStorage.setItem('token',token); showApp(); toast('Welcome back'); }
+  else { document.getElementById('loginMsg').textContent='Invalid email or password'; }
 }
 function H(){ return {'Content-Type':'application/json','Authorization':'Bearer '+token}; }
 async function createMother(){
   const body={fullName:document.getElementById('mName').value,phoneNumber:document.getElementById('mPhone').value,dateOfBirth:document.getElementById('mDob').value,facilityId:document.getElementById('mFacility').value,userId:null};
-  await fetch(API+'/api/mothers',{method:'POST',headers:H(),body:JSON.stringify(body)});
-  loadMothers();
+  const r=await fetch(API+'/api/mothers',{method:'POST',headers:H(),body:JSON.stringify(body)});
+  if(r.ok){ toast('Mother registered'); loadMothers(); }
+  else toast('Failed to register');
 }
 async function loadMothers(){
   const r=await fetch(API+'/api/mothers',{headers:H()});
@@ -79,20 +139,22 @@ async function loadMothers(){
   const tb=document.getElementById('mothersBody'); tb.innerHTML='';
   data.forEach(m=>{
     const tr=document.createElement('tr');
-    tr.innerHTML=`<td>${m.fullName}</td><td>${m.phoneNumber||''}</td><td>${m.dateOfBirth||''}</td><td>${m.facilityId||''}</td>`;
+    tr.innerHTML=`<td><strong>${m.fullName}</strong></td><td>${m.phoneNumber||'—'}</td><td>${m.dateOfBirth||'—'}</td><td><span class="badge">${m.facilityId||'—'}</span></td><td style="font-size:.75rem;color:var(--muted)">${m.id}</td>`;
     tb.appendChild(tr);
   });
+  if(!data.length){ tb.innerHTML='<tr><td colspan="5" style="text-align:center;color:var(--muted)">No mothers yet</td></tr>'; }
 }
 async function recordVitals(){
   const body={motherId:document.getElementById('vMother').value,systolicBp:+document.getElementById('vSys').value,diastolicBp:+document.getElementById('vDia').value,weightKg:+document.getElementById('vWeight').value};
-  await fetch(API+'/api/vitals',{method:'POST',headers:H(),body:JSON.stringify(body)});
-  alert('saved');
+  const r=await fetch(API+'/api/vitals',{method:'POST',headers:H(),body:JSON.stringify(body)});
+  toast(r.ok?'Vitals saved':'Failed to save');
 }
 async function scheduleAppt(){
   const body={motherId:document.getElementById('aMother').value,type:document.getElementById('aType').value,scheduledAt:new Date(document.getElementById('aWhen').value).toISOString()};
-  await fetch(API+'/api/appointments',{method:'POST',headers:H(),body:JSON.stringify(body)});
-  alert('scheduled');
+  const r=await fetch(API+'/api/appointments',{method:'POST',headers:H(),body:JSON.stringify(body)});
+  toast(r.ok?'Appointment scheduled':'Failed to schedule');
 }
+function logout(){ token=null; localStorage.removeItem('token'); document.getElementById('app').classList.add('hidden'); document.getElementById('loginCard').classList.remove('hidden'); document.getElementById('logoutBtn').classList.add('hidden'); toast('Logged out'); }
 showApp();
 </script>
 </body>
