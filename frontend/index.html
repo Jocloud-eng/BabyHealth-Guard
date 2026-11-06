@@ -136,10 +136,6 @@ tailwind.config={
         <span class="material-symbols-outlined text-[20px] text-cyan-300">local_hospital</span>
         <span class="font-label-lg text-[14px]">Hospital Transfers</span>
       </a>
-      <a class="nav-btn flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-slate-200 hover:bg-white/10 hover:text-white transition-colors duration-150 cursor-pointer" data-view="patient-search" onclick="switchNavView('patient-search')">
-        <span class="material-symbols-outlined text-[20px] text-cyan-300">person_search</span>
-        <span class="font-label-lg text-[14px]">Find Patient</span>
-      </a>
     </nav>
   </div>
 
@@ -1142,39 +1138,6 @@ tailwind.config={
               </button>
             </div>
           </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- View 5: Find Patient (Patient Search) -->
-    <div id="view-patient-search" class="hidden p-8 max-w-[1720px] mx-auto w-full space-y-6">
-      <div>
-        <h1 class="font-headline-xl text-headline-xl text-slate-900">Find Patient</h1>
-        <p class="text-slate-500 mt-1 text-sm">Search and lookup records across all registered mothers, newborns, outpatient visits, and health worker assignments.</p>
-      </div>
-
-      <div class="bg-white rounded-xl p-5 shadow-xs space-y-4 border border-slate-200">
-        <div class="relative w-full">
-          <span class="material-symbols-outlined absolute left-3.5 top-3.5 text-slate-400 text-[20px]">search</span>
-          <input id="dedicatedSearchInput" oninput="executeDedicatedSearch(this.value)" class="w-full h-12 pl-12 pr-4 bg-slate-100 rounded-xl text-slate-800 font-body-md placeholder-slate-400 focus:outline-none focus:bg-white border-0 transition-all" placeholder="Type patient name, maternal ID (M-01), phone number, newborn name, or assigned health worker..." type="text">
-        </div>
-        <div class="flex items-center gap-2 flex-wrap text-xs">
-          <span class="text-slate-400 font-medium">Quick Filters:</span>
-          <button onclick="filterDedicatedBy('ALL')" class="search-tag px-3 py-1 rounded-full bg-[#0e7490] text-white font-semibold cursor-pointer">All Patients</button>
-          <button onclick="filterDedicatedBy('High Risk')" class="search-tag px-3 py-1 rounded-full bg-slate-100 text-slate-700 hover:bg-slate-200 cursor-pointer">High Risk Mothers</button>
-          <button onclick="filterDedicatedBy('Routine')" class="search-tag px-3 py-1 rounded-full bg-slate-100 text-slate-700 hover:bg-slate-200 cursor-pointer">Routine ANC</button>
-          <button onclick="filterDedicatedBy('3rd')" class="search-tag px-3 py-1 rounded-full bg-slate-100 text-slate-700 hover:bg-slate-200 cursor-pointer">3rd Trimester</button>
-        </div>
-      </div>
-
-      <!-- Search Results List -->
-      <div class="bg-white rounded-xl shadow-xs overflow-hidden border border-slate-200">
-        <div class="p-4 border-b border-slate-200 flex justify-between items-center text-xs text-slate-500">
-          <span id="searchResultCount">Showing all registered records</span>
-          <span>Click any patient to inspect clinical record</span>
-        </div>
-        <div id="searchResultsList" class="divide-y divide-slate-100">
-          <!-- Populated by JS -->
         </div>
       </div>
     </div>
@@ -2621,7 +2584,7 @@ function switchNavView(viewName) {
     }
   });
 
-  const views = ['maternal-care', 'newborn-care', 'appointments', 'referrals', 'patient-search'];
+  const views = ['maternal-care', 'newborn-care', 'appointments', 'referrals'];
   views.forEach(v => {
     const el = document.getElementById('view-' + v);
     if (el) {
@@ -2630,9 +2593,7 @@ function switchNavView(viewName) {
     }
   });
 
-  if (viewName === 'patient-search') {
-    executeDedicatedSearch('');
-  } else if (viewName === 'appointments') {
+  if (viewName === 'appointments') {
     renderAppointmentsList('ALL');
   } else if (viewName === 'newborn-care') {
     renderBabyTable();
@@ -2643,85 +2604,6 @@ function switchNavView(viewName) {
   }
 
   window.scrollTo({ top: 0, behavior: 'smooth' });
-}
-
-// Dedicated Patient Search page functions
-function executeDedicatedSearch(query = '') {
-  const container = document.getElementById('searchResultsList');
-  if (!container) return;
-  container.innerHTML = '';
-
-  const q = (query || '').toLowerCase().trim();
-  const matched = patients.filter(p => {
-    return !q || 
-      p.name.toLowerCase().includes(q) || 
-      p.id.toLowerCase().includes(q) || 
-      p.assignedWorker.toLowerCase().includes(q) ||
-      p.facility.toLowerCase().includes(q) ||
-      p.risk.toLowerCase().includes(q);
-  });
-
-  document.getElementById('searchResultCount').textContent = `Found ${matched.length} record(s)`;
-
-  matched.forEach(p => {
-    const div = document.createElement('div');
-    div.className = 'p-4 flex items-center justify-between hover:bg-slate-50 transition-colors cursor-pointer';
-    div.onclick = () => {
-      switchNavView('maternal-care');
-      selectPatient(p.id);
-      const idx = patients.findIndex(item => item.id === p.id);
-      if (idx !== -1) {
-        goToPage(Math.floor(idx / pageSize) + 1);
-      }
-    };
-
-    const riskBadgeClass = p.risk === 'High Risk'
-      ? 'bg-red-100 text-red-800'
-      : 'bg-slate-100 text-slate-700';
-
-    div.innerHTML = `
-      <div class="flex items-center gap-3.5">
-        <div class="w-10 h-10 rounded-full bg-[#0e7490] text-white flex items-center justify-center font-bold text-sm">
-          ${computeInitials(p.name)}
-        </div>
-        <div>
-          <div class="flex items-center gap-2">
-            <span class="font-semibold text-sm text-slate-900">${p.name}</span>
-            <span class="px-2 py-0.5 rounded-full text-[11px] font-medium ${riskBadgeClass}">${p.risk}</span>
-          </div>
-          <div class="text-xs text-slate-400 mt-0.5">ID: ${p.id} • ${p.week} • Facility: ${p.facility} • Assigned: ${p.assignedWorker}</div>
-        </div>
-      </div>
-      <div class="flex items-center gap-3">
-        <span class="text-xs text-slate-700 font-medium">${p.bp}</span>
-        <button class="px-3 py-1 rounded-lg bg-[#0e7490] text-white text-xs font-semibold hover:bg-[#0c627a]">Open Record</button>
-      </div>
-    `;
-    container.appendChild(div);
-  });
-
-  if (matched.length === 0) {
-    container.innerHTML = `<div class="p-8 text-center text-slate-400 text-sm">No matching records found for "${query}"</div>`;
-  }
-}
-
-function filterDedicatedBy(tag) {
-  document.querySelectorAll('.search-tag').forEach(b => {
-    b.className = 'search-tag px-3 py-1 rounded-full bg-slate-100 text-slate-700 hover:bg-slate-200 cursor-pointer';
-  });
-  if (event && event.target) {
-    event.target.className = 'search-tag px-3 py-1 rounded-full bg-[#0e7490] text-white font-semibold cursor-pointer';
-  }
-
-  if (tag === 'ALL') {
-    executeDedicatedSearch('');
-  } else if (tag === 'High Risk') {
-    executeDedicatedSearch('High Risk');
-  } else if (tag === 'Routine') {
-    executeDedicatedSearch('Routine');
-  } else if (tag === '3rd') {
-    executeDedicatedSearch('3rd');
-  }
 }
 
 // Healthcare Worker Profile Setup
