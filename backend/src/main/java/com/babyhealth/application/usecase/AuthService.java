@@ -19,7 +19,11 @@ public class AuthService {
     }
 
     public User register(String email, String password, Role role) {
-        User u = new User(UUID.randomUUID(), email, PasswordHasher.hash(password), role);
+        return register(email, password, role, null, null, null);
+    }
+
+    public User register(String email, String password, Role role, String fullName, String title, String facilityId) {
+        User u = new User(UUID.randomUUID(), email, PasswordHasher.hash(password), role, fullName, title, facilityId);
         return users.save(u);
     }
 

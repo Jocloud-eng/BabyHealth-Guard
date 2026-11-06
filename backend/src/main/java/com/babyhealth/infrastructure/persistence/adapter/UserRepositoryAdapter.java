@@ -18,7 +18,8 @@ public class UserRepositoryAdapter implements UserRepository {
 
     @Override
     public User save(User user) {
-        UserEntity e = new UserEntity(user.getId(), user.getEmail(), user.getPasswordHash(), user.getRole());
+        UserEntity e = new UserEntity(user.getId(), user.getEmail(), user.getPasswordHash(), user.getRole(),
+            user.getFullName(), user.getTitle(), user.getFacilityId());
         e.setActive(user.isActive());
         jpa.save(e);
         return user;
@@ -40,6 +41,9 @@ public class UserRepositoryAdapter implements UserRepository {
     }
 
     private User toDomain(UserEntity e) {
-        return new User(e.getId(), e.getEmail(), e.getPasswordHash(), e.getRole());
+        User u = new User(e.getId(), e.getEmail(), e.getPasswordHash(), e.getRole(),
+            e.getFullName(), e.getTitle(), e.getFacilityId());
+        u.setActive(e.isActive());
+        return u;
     }
 }

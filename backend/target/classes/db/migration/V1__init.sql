@@ -3,13 +3,16 @@ CREATE TABLE IF NOT EXISTS users (
     email VARCHAR(255) UNIQUE NOT NULL,
     password_hash VARCHAR(255) NOT NULL,
     role VARCHAR(50) NOT NULL,
+    full_name VARCHAR(255),
+    title VARCHAR(255),
+    facility_id VARCHAR(100),
     active BOOLEAN DEFAULT TRUE
 );
 
 CREATE TABLE IF NOT EXISTS mothers (
     id UUID PRIMARY KEY,
     full_name VARCHAR(255) NOT NULL,
-    phone_number VARCHAR(50),
+    phoneNumber VARCHAR(50),
     date_of_birth DATE,
     facility_id VARCHAR(100),
     user_id UUID
@@ -28,7 +31,7 @@ CREATE TABLE IF NOT EXISTS vital_signs (
     mother_id UUID NOT NULL,
     systolic_bp INT,
     diastolic_bp INT,
-    weight_kg DOUBLE,
+    weight_kg DOUBLE PRECISION,
     recorded_at TIMESTAMP
 );
 

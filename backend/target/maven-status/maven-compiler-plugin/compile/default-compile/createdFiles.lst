@@ -1,3 +1,4 @@
+com/babyhealth/presentation/controller/AuthController$1.class
 com/babyhealth/infrastructure/security/JwtService.class
 com/babyhealth/presentation/dto/AppointmentDtos$CreateAppointmentRequest.class
 com/babyhealth/BabyHealthApplication.class
