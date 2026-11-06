@@ -134,7 +134,7 @@ tailwind.config={
       </a>
       <a class="nav-btn flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-slate-200 hover:bg-white/10 hover:text-white transition-colors duration-150 cursor-pointer" data-view="referrals" onclick="switchNavView('referrals')">
         <span class="material-symbols-outlined text-[20px] text-cyan-300">local_hospital</span>
-        <span class="font-label-lg text-[14px]">Hospital Referrals</span>
+        <span class="font-label-lg text-[14px]">Hospital Transfers</span>
       </a>
       <a class="nav-btn flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-slate-200 hover:bg-white/10 hover:text-white transition-colors duration-150 cursor-pointer" data-view="patient-search" onclick="switchNavView('patient-search')">
         <span class="material-symbols-outlined text-[20px] text-cyan-300">person_search</span>
@@ -937,44 +937,210 @@ tailwind.config={
       </div>
     </div>
 
-    <!-- View 4: Hospital Referrals (Community Referrals) -->
-    <div id="view-referrals" class="hidden p-8 max-w-[1720px] mx-auto w-full space-y-6">
-      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+    <!-- View 4: Hospital Transfers (Regional Referral & Emergency Coordination) -->
+    <div id="view-referrals" class="hidden flex flex-col w-full p-8 max-w-[1720px] mx-auto space-y-6">
+      <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-space-md mb-space-xs">
         <div>
-          <h1 class="font-headline-xl text-headline-xl text-slate-900">Hospital Referrals</h1>
-          <p class="text-slate-500 mt-1 text-sm">CHW field referrals, hospital transfers, and emergency obstetric dispatch logs.</p>
+          <div class="flex items-center gap-space-sm mb-space-xs">
+            <span class="inline-flex items-center gap-1.5 px-space-sm py-0.5 rounded-full bg-surface-container text-on-surface-variant font-label-sm text-label-sm">
+              <span class="w-1.5 h-1.5 rounded-full bg-primary animate-pulse"></span>
+              St. Jude Rural Clinic • Sub-District Telemetry
+            </span>
+            <span class="font-label-sm text-label-sm text-outline">|</span>
+            <span class="font-label-sm text-label-sm text-outline">Updated 4 mins ago</span>
+          </div>
+          <h1 class="font-headline-xl text-headline-xl text-on-surface tracking-tight">Hospital Transfers</h1>
+          <p class="font-body-md text-body-md text-on-surface-variant mt-0.5">
+            Safe coordination of mothers and newborns traveling to regional referral care.
+          </p>
         </div>
-        <button onclick="openReferralSlipModal()" class="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg bg-[#0e7490] text-white font-semibold text-xs shadow-xs cursor-pointer hover:bg-[#0c627a]">
-          <span class="material-symbols-outlined text-[18px]">note_add</span> Issue Referral Slip
-        </button>
+        <div class="flex items-center gap-space-md">
+          <button onclick="openReferralSlipModal()" class="inline-flex items-center gap-space-xs px-space-md py-2.5 rounded-lg bg-surface-container text-on-surface font-label-lg text-label-lg shadow-sm hover:bg-surface-container-high transition-all cursor-pointer" type="button">
+            <span class="material-symbols-outlined text-[18px] text-outline">print</span>
+            <span>Transfer Slips</span>
+          </button>
+          <button onclick="openReferralSlipModal()" class="inline-flex items-center gap-space-xs px-space-lg py-2.5 rounded-lg bg-primary-container text-on-primary font-label-lg text-label-lg shadow-sm hover:opacity-95 transition-all cursor-pointer" type="button">
+            <span class="material-symbols-outlined text-[20px]">add_circle</span>
+            <span>Create New Transfer</span>
+          </button>
+        </div>
       </div>
 
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-        <div class="bg-white p-5 rounded-xl shadow-xs space-y-3 border border-slate-200">
-          <div class="flex items-center justify-between">
-            <span class="px-2.5 py-1 bg-amber-100 text-amber-800 rounded-full text-xs font-semibold">Priority 1 (Urgent Transfer)</span>
-            <span class="text-xs text-slate-400">Today, 09:40 AM</span>
+      <!-- 3 Metrics Cards -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-space-lg">
+        <div class="rounded-xl bg-surface-container-lowest p-space-lg shadow-sm border border-outline-variant/30 flex flex-col justify-between">
+          <span class="font-label-sm text-label-sm text-outline uppercase tracking-wider font-semibold">In Transit</span>
+          <div class="mt-space-sm flex items-baseline gap-space-xs">
+            <span class="font-data-metric text-data-metric text-on-surface">3</span>
+            <span class="font-body-sm text-body-sm text-on-surface-variant">mothers &amp; newborns</span>
           </div>
-          <h4 class="font-semibold text-slate-900 text-base">Zainab Bello (ID: M-01)</h4>
-          <p class="text-xs text-slate-600 leading-relaxed">Severe pre-eclampsia signs (BP 144/94, persistent headache). Referred to Sub-County Hospital Maternity Wing for immediate obstetric evaluation.</p>
-          <div class="pt-2 flex justify-between items-center text-xs text-slate-500 border-t border-slate-100">
-            <span>CHW: Mary Wambui (Maji Mazuri)</span>
-            <span class="text-emerald-700 font-semibold flex items-center gap-1">
-              <span class="material-symbols-outlined text-[16px]">local_shipping</span> Ambulance Dispatched
-            </span>
+        </div>
+        <div class="rounded-xl bg-surface-container-lowest p-space-lg shadow-sm border border-outline-variant/30 flex flex-col justify-between">
+          <span class="font-label-sm text-label-sm text-outline uppercase tracking-wider font-semibold">Awaiting Bed</span>
+          <div class="mt-space-sm flex items-baseline gap-space-xs">
+            <span class="font-data-metric text-data-metric text-on-surface">1</span>
+            <span class="font-body-sm text-body-sm text-on-surface-variant">referral pending</span>
+          </div>
+        </div>
+        <div class="rounded-xl bg-surface-container-lowest p-space-lg shadow-sm border border-outline-variant/30 flex flex-col justify-between">
+          <span class="font-label-sm text-label-sm text-outline uppercase tracking-wider font-semibold">Completed</span>
+          <div class="mt-space-sm flex items-baseline gap-space-xs">
+            <span class="font-data-metric text-data-metric text-on-surface">14</span>
+            <span class="font-body-sm text-body-sm text-on-surface-variant">safely received</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Main Transfers Workspace -->
+      <div class="grid grid-cols-1 xl:grid-cols-12 gap-space-xl items-start">
+        <div class="xl:col-span-8 flex flex-col gap-space-md">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-space-md">
+            <div class="flex items-center gap-space-xs p-1 rounded-xl bg-surface-container-low max-w-fit">
+              <button id="transferTabAll" onclick="filterTransfers('ALL')" class="px-space-md py-1.5 rounded-lg bg-surface-container-lowest text-on-surface font-label-sm text-label-sm shadow-sm transition-all font-semibold cursor-pointer" type="button">
+                All Transfers (18)
+              </button>
+              <button id="transferTabTransit" onclick="filterTransfers('TRANSIT')" class="px-space-md py-1.5 rounded-lg text-on-surface-variant hover:text-on-surface font-label-sm text-label-sm transition-all cursor-pointer" type="button">
+                In Transit (3)
+              </button>
+              <button id="transferTabCompleted" onclick="filterTransfers('COMPLETED')" class="px-space-md py-1.5 rounded-lg text-on-surface-variant hover:text-on-surface font-label-sm text-label-sm transition-all cursor-pointer" type="button">
+                Completed (15)
+              </button>
+            </div>
+          </div>
+
+          <div class="overflow-hidden rounded-xl bg-surface-container-lowest shadow-sm">
+            <div class="overflow-x-auto">
+              <table class="w-full text-left">
+                <thead class="bg-surface-container-low font-label-sm text-label-sm text-outline uppercase tracking-wider">
+                  <tr>
+                    <th class="py-3.5 px-space-lg font-semibold">Patient</th>
+                    <th class="py-3.5 px-space-md font-semibold">Destination</th>
+                    <th class="py-3.5 px-space-md font-semibold">Reason</th>
+                    <th class="py-3.5 px-space-md font-semibold">Status</th>
+                    <th class="py-3.5 px-space-lg text-right font-semibold"></th>
+                  </tr>
+                </thead>
+                <tbody id="transfersTableBody" class="divide-y-0">
+                  <tr class="hover:bg-surface-container-low/70 transition-colors cursor-pointer group" onclick="selectTransfer('FA')">
+                    <td class="py-4 px-space-lg">
+                      <div class="font-label-lg text-label-lg text-on-surface font-semibold group-hover:text-primary transition-colors">Fatima Aliyu</div>
+                      <div class="font-body-sm text-body-sm text-outline">Mother (34 wks) • M-03</div>
+                    </td>
+                    <td class="py-4 px-space-md">
+                      <div class="font-label-md text-label-md text-on-surface">District Referral Hospital</div>
+                      <div class="font-body-sm text-body-sm text-outline">Maternity Wing B</div>
+                    </td>
+                    <td class="py-4 px-space-md">
+                      <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-surface-container text-on-surface font-label-sm text-label-sm">
+                        <span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>High blood pressure
+                      </span>
+                    </td>
+                    <td class="py-4 px-space-md">
+                      <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-secondary-container/30 text-on-secondary-container font-label-sm text-label-sm font-semibold">
+                        <span class="material-symbols-outlined text-[14px]">airport_shuttle</span>In Transit
+                      </span>
+                    </td>
+                    <td class="py-4 px-space-lg text-right">
+                      <button onclick="event.stopPropagation(); selectTransfer('FA')" class="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-surface-container text-primary font-label-sm text-label-sm font-semibold hover:bg-surface-container-high transition-colors cursor-pointer" type="button">
+                        View<span class="material-symbols-outlined text-[14px]">chevron_right</span>
+                      </button>
+                    </td>
+                  </tr>
+                  <tr class="bg-surface-container-low/30 hover:bg-surface-container-low/70 transition-colors cursor-pointer group" onclick="selectTransfer('BA')">
+                    <td class="py-4 px-space-lg">
+                      <div class="font-label-lg text-label-lg text-on-surface font-semibold group-hover:text-primary transition-colors">Baby Amina</div>
+                      <div class="font-body-sm text-body-sm text-outline">Newborn (Day 3) • B-02</div>
+                    </td>
+                    <td class="py-4 px-space-md">
+                      <div class="font-label-md text-label-md text-on-surface">Regional Maternal Center</div>
+                      <div class="font-body-sm text-body-sm text-outline">Neonatal Unit</div>
+                    </td>
+                    <td class="py-4 px-space-md">
+                      <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-surface-container text-on-surface font-label-sm text-label-sm">
+                        <span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>Breathing difficulty
+                      </span>
+                    </td>
+                    <td class="py-4 px-space-md">
+                      <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-surface-container text-on-surface-variant font-label-sm text-label-sm">
+                        <span class="material-symbols-outlined text-[14px] text-outline">pending</span>Awaiting Bed
+                      </span>
+                    </td>
+                    <td class="py-4 px-space-lg text-right">
+                      <button onclick="event.stopPropagation(); selectTransfer('BA')" class="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-surface-container text-primary font-label-sm text-label-sm font-semibold hover:bg-surface-container-high transition-colors cursor-pointer" type="button">
+                        View<span class="material-symbols-outlined text-[14px]">chevron_right</span>
+                      </button>
+                    </td>
+                  </tr>
+                  <tr class="hover:bg-surface-container-low/70 transition-colors cursor-pointer group" onclick="selectTransfer('MK')">
+                    <td class="py-4 px-space-lg">
+                      <div class="font-label-lg text-label-lg text-on-surface font-semibold group-hover:text-primary transition-colors">Mary Kilonzo</div>
+                      <div class="font-body-sm text-body-sm text-outline">Mother (37 wks) • M-09</div>
+                    </td>
+                    <td class="py-4 px-space-md">
+                      <div class="font-label-md text-label-md text-on-surface">District Referral Hospital</div>
+                      <div class="font-body-sm text-body-sm text-outline">Labor &amp; Delivery</div>
+                    </td>
+                    <td class="py-4 px-space-md">
+                      <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-surface-container text-on-surface font-label-sm text-label-sm">
+                        <span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>Twin delivery support
+                      </span>
+                    </td>
+                    <td class="py-4 px-space-md">
+                      <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-secondary-container/30 text-on-secondary-container font-label-sm text-label-sm font-semibold">
+                        <span class="material-symbols-outlined text-[14px]">airport_shuttle</span>In Transit
+                      </span>
+                    </td>
+                    <td class="py-4 px-space-lg text-right">
+                      <button onclick="event.stopPropagation(); selectTransfer('MK')" class="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-surface-container text-primary font-label-sm text-label-sm font-semibold hover:bg-surface-container-high transition-colors cursor-pointer" type="button">
+                        View<span class="material-symbols-outlined text-[14px]">chevron_right</span>
+                      </button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div class="flex items-center justify-between px-space-sm py-space-sm text-on-surface-variant font-label-sm text-label-sm">
+            <span id="transfersCountLabel">Showing 3 active transfers from St. Jude Clinic</span>
+            <button onclick="toast('Transfer archive: 18 historical referrals loaded successfully.')" class="inline-flex items-center gap-1 text-primary hover:underline font-semibold cursor-pointer" type="button">
+              View full archive
+              <span class="material-symbols-outlined text-[14px]">arrow_forward</span>
+            </button>
           </div>
         </div>
 
-        <div class="bg-white p-5 rounded-xl shadow-xs space-y-3 border border-slate-200">
-          <div class="flex items-center justify-between">
-            <span class="px-2.5 py-1 bg-cyan-100 text-cyan-800 rounded-full text-xs font-semibold">Routine Clinic Referral</span>
-            <span class="text-xs text-slate-400">Yesterday, 03:15 PM</span>
-          </div>
-          <h4 class="font-semibold text-slate-900 text-base">Halima Kadogo (ID: M-02)</h4>
-          <p class="text-xs text-slate-600 leading-relaxed">Week 37 birth preparedness plan consultation and delivery kit distribution check.</p>
-          <div class="pt-2 flex justify-between items-center text-xs text-slate-500 border-t border-slate-100">
-            <span>CHW: David Ochieng (Silanga Valley)</span>
-            <span class="text-[#0e7490] font-medium">Completed ANC-4 Check</span>
+        <!-- Right Side: Active Focus Transfer Details -->
+        <div class="xl:col-span-4 flex flex-col gap-space-lg">
+          <div class="rounded-xl bg-surface-container-lowest p-space-lg shadow-sm border border-outline-variant/20">
+            <div class="flex items-center justify-between pb-space-sm border-b border-surface-container-low">
+              <div class="flex items-center gap-space-xs">
+                <span class="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
+                <span class="font-label-sm text-label-sm uppercase tracking-wider text-outline font-semibold">Active Focus</span>
+              </div>
+              <span id="transferEtaBadge" class="px-2.5 py-1 rounded-full bg-surface-container font-label-sm text-label-sm font-semibold text-secondary">ETA 25m</span>
+            </div>
+            <div class="py-space-md flex flex-col gap-space-sm">
+              <h3 id="transferPatientName" class="font-headline-sm text-headline-sm text-on-surface">Fatima Aliyu</h3>
+              <p id="transferPatientMeta" class="font-body-sm text-body-sm text-outline">Mother (34 wks) • Code M-03</p>
+              <div class="mt-space-xs p-space-sm rounded-lg bg-surface-container-low text-on-surface-variant font-body-sm text-body-sm leading-relaxed">
+                <span class="font-semibold text-on-surface">Referral Reason:</span>
+                <span id="transferReasonText"> Persistent elevated BP (148/95 mmHg) during routine antenatal check. Stable with midwife.</span>
+              </div>
+              <div class="flex items-center justify-between py-space-xs text-body-sm text-on-surface-variant border-b border-surface-container-low/60">
+                <span class="text-outline font-label-sm text-label-sm">Assigned Unit</span>
+                <span id="transferUnitText" class="font-medium text-on-surface">District Referral Maternity</span>
+              </div>
+              <div class="flex items-center justify-between py-space-xs text-body-sm text-on-surface-variant">
+                <span class="text-outline font-label-sm text-label-sm">Ambulance</span>
+                <span id="transferAmbulanceText" class="font-medium text-on-surface">Sub-District #4 (En Route)</span>
+              </div>
+            </div>
+            <div class="pt-space-xs">
+              <button onclick="triggerCallReceivingWard()" class="w-full inline-flex items-center justify-center gap-space-xs py-2.5 px-space-md rounded-lg bg-primary-container text-on-primary font-label-lg text-label-lg shadow-sm hover:opacity-95 transition-all cursor-pointer" type="button">
+                <span class="material-symbols-outlined text-[18px]">call</span>
+                <span>Call Receiving Ward</span>
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -2471,6 +2637,9 @@ function switchNavView(viewName) {
   } else if (viewName === 'newborn-care') {
     renderBabyTable();
     selectBaby(selectedBabyKey);
+  } else if (viewName === 'referrals') {
+    renderTransfersTable();
+    selectTransfer(selectedTransferKey);
   }
 
   window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -3250,6 +3419,192 @@ function filterAppointments(mode) {
   filterVisitsPill(mode);
 }
 
+// ==========================================
+// HOSPITAL TRANSFERS DATASET & CONTROLLERS
+// ==========================================
+let selectedTransferKey = 'FA';
+let transfersFilterMode = 'ALL';
+
+const transfersData = [
+  {
+    key: 'FA',
+    name: 'Fatima Aliyu',
+    meta: 'Mother (34 wks) • M-03',
+    patientCode: 'M-03',
+    destinationHospital: 'District Referral Hospital',
+    destinationUnit: 'Maternity Wing B',
+    assignedUnit: 'District Referral Maternity',
+    reasonShort: 'High blood pressure',
+    reasonFull: 'Persistent elevated BP (148/95 mmHg) during routine antenatal check. Stable with midwife.',
+    status: 'In Transit',
+    category: 'TRANSIT',
+    statusBadgeHtml: `<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-secondary-container/30 text-on-secondary-container font-label-sm text-label-sm font-semibold"><span class="material-symbols-outlined text-[14px]">airport_shuttle</span>In Transit</span>`,
+    eta: 'ETA 25m',
+    ambulance: 'Sub-District #4 (En Route)',
+    receivingWardPhone: '+254 700 123 456'
+  },
+  {
+    key: 'BA',
+    name: 'Baby Amina',
+    meta: 'Newborn (Day 3) • B-02',
+    patientCode: 'B-02',
+    destinationHospital: 'Regional Maternal Center',
+    destinationUnit: 'Neonatal Unit',
+    assignedUnit: 'Regional Neonatal Intensive Care',
+    reasonShort: 'Breathing difficulty',
+    reasonFull: 'Mild tachypnea (68 breaths/min) and subcostal retractions noted at day 3 postnatal visit. Supplemental oxygen initiated.',
+    status: 'Awaiting Bed',
+    category: 'TRANSIT',
+    statusBadgeHtml: `<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-surface-container text-on-surface-variant font-label-sm text-label-sm"><span class="material-symbols-outlined text-[14px] text-outline">pending</span>Awaiting Bed</span>`,
+    eta: 'Awaiting Bed',
+    ambulance: 'Sub-District #2 (Standby)',
+    receivingWardPhone: '+254 700 987 654'
+  },
+  {
+    key: 'MK',
+    name: 'Mary Kilonzo',
+    meta: 'Mother (37 wks) • M-09',
+    patientCode: 'M-09',
+    destinationHospital: 'District Referral Hospital',
+    destinationUnit: 'Labor & Delivery',
+    assignedUnit: 'Obstetrics & High Risk Delivery',
+    reasonShort: 'Twin delivery support',
+    reasonFull: 'Twin gestation in active labor. Transferred for surgical obstetric capability and twin delivery specialized team.',
+    status: 'In Transit',
+    category: 'TRANSIT',
+    statusBadgeHtml: `<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-secondary-container/30 text-on-secondary-container font-label-sm text-label-sm font-semibold"><span class="material-symbols-outlined text-[14px]">airport_shuttle</span>In Transit</span>`,
+    eta: 'ETA 40m',
+    ambulance: 'Sub-District #1 (En Route)',
+    receivingWardPhone: '+254 700 456 789'
+  },
+  {
+    key: 'JN',
+    name: 'Joyce Nakato',
+    meta: 'Mother (38 wks) • M-05',
+    patientCode: 'M-05',
+    destinationHospital: 'County General Hospital',
+    destinationUnit: 'Maternity Ward 4',
+    assignedUnit: 'County General Obstetrics',
+    reasonShort: 'Prolonged labor',
+    reasonFull: 'Primary arrest of cervical dilation. Transferred and received safely for emergency C-section.',
+    status: 'Completed',
+    category: 'COMPLETED',
+    statusBadgeHtml: `<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-800 font-label-sm text-label-sm font-semibold"><span class="material-symbols-outlined text-[14px]">check_circle</span>Completed</span>`,
+    eta: 'Received',
+    ambulance: 'Completed by Sub-District #3',
+    receivingWardPhone: '+254 700 321 654'
+  }
+];
+
+function selectTransfer(key) {
+  selectedTransferKey = key;
+  const t = transfersData.find(item => item.key === key) || transfersData[0];
+  if (!t) return;
+
+  const nameEl = document.getElementById('transferPatientName');
+  const metaEl = document.getElementById('transferPatientMeta');
+  const etaEl = document.getElementById('transferEtaBadge');
+  const reasonEl = document.getElementById('transferReasonText');
+  const unitEl = document.getElementById('transferUnitText');
+  const ambulanceEl = document.getElementById('transferAmbulanceText');
+
+  if (nameEl) nameEl.textContent = t.name;
+  if (metaEl) metaEl.textContent = t.meta;
+  if (etaEl) {
+    etaEl.textContent = t.eta;
+    if (t.status === 'Completed') {
+      etaEl.className = 'px-2.5 py-1 rounded-full bg-emerald-100 font-label-sm text-label-sm font-semibold text-emerald-800';
+    } else {
+      etaEl.className = 'px-2.5 py-1 rounded-full bg-surface-container font-label-sm text-label-sm font-semibold text-secondary';
+    }
+  }
+  if (reasonEl) reasonEl.textContent = ' ' + t.reasonFull;
+  if (unitEl) unitEl.textContent = t.assignedUnit;
+  if (ambulanceEl) ambulanceEl.textContent = t.ambulance;
+
+  // Highlight selected row in table
+  document.querySelectorAll('#transfersTableBody tr').forEach(row => {
+    if (row.getAttribute('data-transfer-key') === key) {
+      row.className = 'bg-surface-container-high/40 hover:bg-surface-container-high/60 transition-colors cursor-pointer group';
+    } else {
+      row.className = 'hover:bg-surface-container-low/70 transition-colors cursor-pointer group';
+    }
+  });
+}
+
+function filterTransfers(mode) {
+  transfersFilterMode = mode;
+  const btnAll = document.getElementById('transferTabAll');
+  const btnTransit = document.getElementById('transferTabTransit');
+  const btnCompleted = document.getElementById('transferTabCompleted');
+
+  const activeClass = 'px-space-md py-1.5 rounded-lg bg-surface-container-lowest text-on-surface font-label-sm text-label-sm shadow-sm transition-all font-semibold cursor-pointer';
+  const inactiveClass = 'px-space-md py-1.5 rounded-lg text-on-surface-variant hover:text-on-surface font-label-sm text-label-sm transition-all cursor-pointer';
+
+  if (btnAll) btnAll.className = mode === 'ALL' ? activeClass : inactiveClass;
+  if (btnTransit) btnTransit.className = mode === 'TRANSIT' ? activeClass : inactiveClass;
+  if (btnCompleted) btnCompleted.className = mode === 'COMPLETED' ? activeClass : inactiveClass;
+
+  renderTransfersTable();
+}
+
+function renderTransfersTable() {
+  const tbody = document.getElementById('transfersTableBody');
+  if (!tbody) return;
+  tbody.innerHTML = '';
+
+  const filtered = transfersData.filter(t => {
+    if (transfersFilterMode === 'TRANSIT') return t.category === 'TRANSIT';
+    if (transfersFilterMode === 'COMPLETED') return t.category === 'COMPLETED';
+    return true;
+  });
+
+  filtered.forEach(t => {
+    const isSelected = t.key === selectedTransferKey;
+    const tr = document.createElement('tr');
+    tr.setAttribute('data-transfer-key', t.key);
+    tr.className = isSelected
+      ? 'bg-surface-container-high/40 hover:bg-surface-container-high/60 transition-colors cursor-pointer group'
+      : 'hover:bg-surface-container-low/70 transition-colors cursor-pointer group';
+    tr.onclick = () => selectTransfer(t.key);
+
+    tr.innerHTML = `
+      <td class="py-4 px-space-lg">
+        <div class="font-label-lg text-label-lg text-on-surface font-semibold group-hover:text-primary transition-colors">${t.name}</div>
+        <div class="font-body-sm text-body-sm text-outline">${t.meta}</div>
+      </td>
+      <td class="py-4 px-space-md">
+        <div class="font-label-md text-label-md text-on-surface">${t.destinationHospital}</div>
+        <div class="font-body-sm text-body-sm text-outline">${t.destinationUnit}</div>
+      </td>
+      <td class="py-4 px-space-md">
+        <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-surface-container text-on-surface font-label-sm text-label-sm">
+          <span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>${t.reasonShort}
+        </span>
+      </td>
+      <td class="py-4 px-space-md">
+        ${t.statusBadgeHtml}
+      </td>
+      <td class="py-4 px-space-lg text-right">
+        <button onclick="event.stopPropagation(); selectTransfer('${t.key}')" class="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-surface-container text-primary font-label-sm text-label-sm font-semibold hover:bg-surface-container-high transition-colors cursor-pointer" type="button">
+          View<span class="material-symbols-outlined text-[14px]">chevron_right</span>
+        </button>
+      </td>
+    `;
+    tbody.appendChild(tr);
+  });
+
+  const label = document.getElementById('transfersCountLabel');
+  if (label) {
+    label.textContent = `Showing ${filtered.length} transfer(s) from St. Jude Clinic`;
+  }
+}
+
+function triggerCallReceivingWard() {
+  const t = transfersData.find(item => item.key === selectedTransferKey) || transfersData[0];
+  toast(`Connecting direct audio to ${t ? t.assignedUnit : 'Receiving Ward'} (${t ? t.receivingWardPhone : '+254 700 123 456'})...`);
+}
+
 // Referral Slip Modal
 function openReferralSlipModal() {
   const p = patients.find(i => i.id === selectedPatientId);
@@ -3336,6 +3691,10 @@ async function initDashboard() {
   // Render initial visits & reminders table
   renderVisitsTable();
   selectVisit('ZB');
+
+  // Render initial hospital transfers table
+  renderTransfersTable();
+  selectTransfer('FA');
 
   // Activate appointments (Visits & Reminders) view by default or by hash
   const initialView = (window.location.hash ? window.location.hash.replace('#', '') : '') || 'appointments';

@@ -2637,6 +2637,9 @@ function switchNavView(viewName) {
   } else if (viewName === 'newborn-care') {
     renderBabyTable();
     selectBaby(selectedBabyKey);
+  } else if (viewName === 'referrals') {
+    renderTransfersTable();
+    selectTransfer(selectedTransferKey);
   }
 
   window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -3416,6 +3419,192 @@ function filterAppointments(mode) {
   filterVisitsPill(mode);
 }
 
+// ==========================================
+// HOSPITAL TRANSFERS DATASET & CONTROLLERS
+// ==========================================
+let selectedTransferKey = 'FA';
+let transfersFilterMode = 'ALL';
+
+const transfersData = [
+  {
+    key: 'FA',
+    name: 'Fatima Aliyu',
+    meta: 'Mother (34 wks) • M-03',
+    patientCode: 'M-03',
+    destinationHospital: 'District Referral Hospital',
+    destinationUnit: 'Maternity Wing B',
+    assignedUnit: 'District Referral Maternity',
+    reasonShort: 'High blood pressure',
+    reasonFull: 'Persistent elevated BP (148/95 mmHg) during routine antenatal check. Stable with midwife.',
+    status: 'In Transit',
+    category: 'TRANSIT',
+    statusBadgeHtml: `<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-secondary-container/30 text-on-secondary-container font-label-sm text-label-sm font-semibold"><span class="material-symbols-outlined text-[14px]">airport_shuttle</span>In Transit</span>`,
+    eta: 'ETA 25m',
+    ambulance: 'Sub-District #4 (En Route)',
+    receivingWardPhone: '+254 700 123 456'
+  },
+  {
+    key: 'BA',
+    name: 'Baby Amina',
+    meta: 'Newborn (Day 3) • B-02',
+    patientCode: 'B-02',
+    destinationHospital: 'Regional Maternal Center',
+    destinationUnit: 'Neonatal Unit',
+    assignedUnit: 'Regional Neonatal Intensive Care',
+    reasonShort: 'Breathing difficulty',
+    reasonFull: 'Mild tachypnea (68 breaths/min) and subcostal retractions noted at day 3 postnatal visit. Supplemental oxygen initiated.',
+    status: 'Awaiting Bed',
+    category: 'TRANSIT',
+    statusBadgeHtml: `<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-surface-container text-on-surface-variant font-label-sm text-label-sm"><span class="material-symbols-outlined text-[14px] text-outline">pending</span>Awaiting Bed</span>`,
+    eta: 'Awaiting Bed',
+    ambulance: 'Sub-District #2 (Standby)',
+    receivingWardPhone: '+254 700 987 654'
+  },
+  {
+    key: 'MK',
+    name: 'Mary Kilonzo',
+    meta: 'Mother (37 wks) • M-09',
+    patientCode: 'M-09',
+    destinationHospital: 'District Referral Hospital',
+    destinationUnit: 'Labor & Delivery',
+    assignedUnit: 'Obstetrics & High Risk Delivery',
+    reasonShort: 'Twin delivery support',
+    reasonFull: 'Twin gestation in active labor. Transferred for surgical obstetric capability and twin delivery specialized team.',
+    status: 'In Transit',
+    category: 'TRANSIT',
+    statusBadgeHtml: `<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-secondary-container/30 text-on-secondary-container font-label-sm text-label-sm font-semibold"><span class="material-symbols-outlined text-[14px]">airport_shuttle</span>In Transit</span>`,
+    eta: 'ETA 40m',
+    ambulance: 'Sub-District #1 (En Route)',
+    receivingWardPhone: '+254 700 456 789'
+  },
+  {
+    key: 'JN',
+    name: 'Joyce Nakato',
+    meta: 'Mother (38 wks) • M-05',
+    patientCode: 'M-05',
+    destinationHospital: 'County General Hospital',
+    destinationUnit: 'Maternity Ward 4',
+    assignedUnit: 'County General Obstetrics',
+    reasonShort: 'Prolonged labor',
+    reasonFull: 'Primary arrest of cervical dilation. Transferred and received safely for emergency C-section.',
+    status: 'Completed',
+    category: 'COMPLETED',
+    statusBadgeHtml: `<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-800 font-label-sm text-label-sm font-semibold"><span class="material-symbols-outlined text-[14px]">check_circle</span>Completed</span>`,
+    eta: 'Received',
+    ambulance: 'Completed by Sub-District #3',
+    receivingWardPhone: '+254 700 321 654'
+  }
+];
+
+function selectTransfer(key) {
+  selectedTransferKey = key;
+  const t = transfersData.find(item => item.key === key) || transfersData[0];
+  if (!t) return;
+
+  const nameEl = document.getElementById('transferPatientName');
+  const metaEl = document.getElementById('transferPatientMeta');
+  const etaEl = document.getElementById('transferEtaBadge');
+  const reasonEl = document.getElementById('transferReasonText');
+  const unitEl = document.getElementById('transferUnitText');
+  const ambulanceEl = document.getElementById('transferAmbulanceText');
+
+  if (nameEl) nameEl.textContent = t.name;
+  if (metaEl) metaEl.textContent = t.meta;
+  if (etaEl) {
+    etaEl.textContent = t.eta;
+    if (t.status === 'Completed') {
+      etaEl.className = 'px-2.5 py-1 rounded-full bg-emerald-100 font-label-sm text-label-sm font-semibold text-emerald-800';
+    } else {
+      etaEl.className = 'px-2.5 py-1 rounded-full bg-surface-container font-label-sm text-label-sm font-semibold text-secondary';
+    }
+  }
+  if (reasonEl) reasonEl.textContent = ' ' + t.reasonFull;
+  if (unitEl) unitEl.textContent = t.assignedUnit;
+  if (ambulanceEl) ambulanceEl.textContent = t.ambulance;
+
+  // Highlight selected row in table
+  document.querySelectorAll('#transfersTableBody tr').forEach(row => {
+    if (row.getAttribute('data-transfer-key') === key) {
+      row.className = 'bg-surface-container-high/40 hover:bg-surface-container-high/60 transition-colors cursor-pointer group';
+    } else {
+      row.className = 'hover:bg-surface-container-low/70 transition-colors cursor-pointer group';
+    }
+  });
+}
+
+function filterTransfers(mode) {
+  transfersFilterMode = mode;
+  const btnAll = document.getElementById('transferTabAll');
+  const btnTransit = document.getElementById('transferTabTransit');
+  const btnCompleted = document.getElementById('transferTabCompleted');
+
+  const activeClass = 'px-space-md py-1.5 rounded-lg bg-surface-container-lowest text-on-surface font-label-sm text-label-sm shadow-sm transition-all font-semibold cursor-pointer';
+  const inactiveClass = 'px-space-md py-1.5 rounded-lg text-on-surface-variant hover:text-on-surface font-label-sm text-label-sm transition-all cursor-pointer';
+
+  if (btnAll) btnAll.className = mode === 'ALL' ? activeClass : inactiveClass;
+  if (btnTransit) btnTransit.className = mode === 'TRANSIT' ? activeClass : inactiveClass;
+  if (btnCompleted) btnCompleted.className = mode === 'COMPLETED' ? activeClass : inactiveClass;
+
+  renderTransfersTable();
+}
+
+function renderTransfersTable() {
+  const tbody = document.getElementById('transfersTableBody');
+  if (!tbody) return;
+  tbody.innerHTML = '';
+
+  const filtered = transfersData.filter(t => {
+    if (transfersFilterMode === 'TRANSIT') return t.category === 'TRANSIT';
+    if (transfersFilterMode === 'COMPLETED') return t.category === 'COMPLETED';
+    return true;
+  });
+
+  filtered.forEach(t => {
+    const isSelected = t.key === selectedTransferKey;
+    const tr = document.createElement('tr');
+    tr.setAttribute('data-transfer-key', t.key);
+    tr.className = isSelected
+      ? 'bg-surface-container-high/40 hover:bg-surface-container-high/60 transition-colors cursor-pointer group'
+      : 'hover:bg-surface-container-low/70 transition-colors cursor-pointer group';
+    tr.onclick = () => selectTransfer(t.key);
+
+    tr.innerHTML = `
+      <td class="py-4 px-space-lg">
+        <div class="font-label-lg text-label-lg text-on-surface font-semibold group-hover:text-primary transition-colors">${t.name}</div>
+        <div class="font-body-sm text-body-sm text-outline">${t.meta}</div>
+      </td>
+      <td class="py-4 px-space-md">
+        <div class="font-label-md text-label-md text-on-surface">${t.destinationHospital}</div>
+        <div class="font-body-sm text-body-sm text-outline">${t.destinationUnit}</div>
+      </td>
+      <td class="py-4 px-space-md">
+        <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-surface-container text-on-surface font-label-sm text-label-sm">
+          <span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>${t.reasonShort}
+        </span>
+      </td>
+      <td class="py-4 px-space-md">
+        ${t.statusBadgeHtml}
+      </td>
+      <td class="py-4 px-space-lg text-right">
+        <button onclick="event.stopPropagation(); selectTransfer('${t.key}')" class="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-surface-container text-primary font-label-sm text-label-sm font-semibold hover:bg-surface-container-high transition-colors cursor-pointer" type="button">
+          View<span class="material-symbols-outlined text-[14px]">chevron_right</span>
+        </button>
+      </td>
+    `;
+    tbody.appendChild(tr);
+  });
+
+  const label = document.getElementById('transfersCountLabel');
+  if (label) {
+    label.textContent = `Showing ${filtered.length} transfer(s) from St. Jude Clinic`;
+  }
+}
+
+function triggerCallReceivingWard() {
+  const t = transfersData.find(item => item.key === selectedTransferKey) || transfersData[0];
+  toast(`Connecting direct audio to ${t ? t.assignedUnit : 'Receiving Ward'} (${t ? t.receivingWardPhone : '+254 700 123 456'})...`);
+}
+
 // Referral Slip Modal
 function openReferralSlipModal() {
   const p = patients.find(i => i.id === selectedPatientId);
@@ -3502,6 +3691,10 @@ async function initDashboard() {
   // Render initial visits & reminders table
   renderVisitsTable();
   selectVisit('ZB');
+
+  // Render initial hospital transfers table
+  renderTransfersTable();
+  selectTransfer('FA');
 
   // Activate appointments (Visits & Reminders) view by default or by hash
   const initialView = (window.location.hash ? window.location.hash.replace('#', '') : '') || 'appointments';
