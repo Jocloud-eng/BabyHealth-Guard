@@ -124,17 +124,17 @@ tailwind.config={
         <span class="material-symbols-outlined text-[20px] text-cyan-300">pregnant_woman</span>
         <span class="font-label-lg text-[14px]">Pregnant Mothers</span>
       </a>
-      <a class="nav-btn flex items-center gap-3 px-3.5 py-2.5 rounded-lg bg-[#0e7490] text-white font-semibold shadow-sm transition-all cursor-pointer" data-view="newborn-care" onclick="switchNavView('newborn-care')">
-        <span class="material-symbols-outlined text-[20px] text-white">child_care</span>
+      <a class="nav-btn flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-slate-200 hover:bg-white/10 hover:text-white transition-colors duration-150 cursor-pointer" data-view="newborn-care" onclick="switchNavView('newborn-care')">
+        <span class="material-symbols-outlined text-[20px] text-cyan-300">child_care</span>
         <span class="font-label-lg text-[14px]">Baby Checks</span>
       </a>
-      <a class="nav-btn flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-slate-200 hover:bg-white/10 hover:text-white transition-colors duration-150 cursor-pointer" data-view="appointments" onclick="switchNavView('appointments')">
-        <span class="material-symbols-outlined text-[20px] text-cyan-300">calendar_month</span>
+      <a class="nav-btn flex items-center gap-3 px-3.5 py-2.5 rounded-lg bg-[#0e7490] text-white font-semibold shadow-sm transition-all cursor-pointer" data-view="appointments" onclick="switchNavView('appointments')">
+        <span class="material-symbols-outlined text-[20px] text-white">event_available</span>
         <span class="font-label-lg text-[14px]">Visits &amp; Reminders</span>
       </a>
       <a class="nav-btn flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-slate-200 hover:bg-white/10 hover:text-white transition-colors duration-150 cursor-pointer" data-view="referrals" onclick="switchNavView('referrals')">
         <span class="material-symbols-outlined text-[20px] text-cyan-300">local_hospital</span>
-        <span class="font-label-lg text-[14px]">Hospital Referrals</span>
+        <span class="font-label-lg text-[14px]">Hospital Transfers</span>
       </a>
       <a class="nav-btn flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-slate-200 hover:bg-white/10 hover:text-white transition-colors duration-150 cursor-pointer" data-view="patient-search" onclick="switchNavView('patient-search')">
         <span class="material-symbols-outlined text-[20px] text-cyan-300">person_search</span>
@@ -385,7 +385,7 @@ tailwind.config={
     </div>
 
     <!-- View 2: Baby Checks & Newborn Care (UPDATED WITH SPECIFICATION) -->
-    <div id="view-newborn-care" class="flex flex-col w-full">
+    <div id="view-newborn-care" class="hidden flex flex-col w-full">
       <!-- Top Header & Action Ribbon -->
       <div class="bg-white px-8 py-4 flex flex-wrap items-center justify-between gap-4 border-b border-slate-200 shadow-xs">
         <div class="flex items-center gap-3">
@@ -666,72 +666,481 @@ tailwind.config={
       </div>
     </div>
 
-    <!-- View 3: Visits & Reminders (Appointment Calendar) -->
-    <div id="view-appointments" class="hidden p-8 max-w-[1720px] mx-auto w-full space-y-6">
-      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div>
-          <h1 class="font-headline-xl text-headline-xl text-slate-900">Visits &amp; Reminders</h1>
-          <p class="text-slate-500 mt-1 text-sm">Upcoming Antenatal, Postnatal, and Immunization appointments with automated USSD/SMS alerts.</p>
+    <!-- View 3: Visits & Reminders (Appointment Calendar & SMS Reminders) -->
+    <div id="view-appointments" class="flex flex-col w-full p-8 max-w-[1720px] mx-auto space-y-6">
+      <!-- Top Banner / Header Area with Filter Tabs and Book New Visit Action -->
+      <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-space-md">
+        <div class="flex flex-col gap-space-xs">
+          <div class="flex items-center gap-space-sm">
+            <span class="p-space-xs rounded-lg bg-primary-fixed text-primary flex items-center justify-center">
+              <span class="material-symbols-outlined text-[24px]">event_available</span>
+            </span>
+            <h1 class="font-headline-lg text-headline-lg text-on-surface">Visits &amp; Reminders</h1>
+          </div>
+          <p class="font-body-md text-body-md text-on-surface-variant">
+            Schedule checkups and send phone reminders to mothers across the sub-county
+          </p>
         </div>
-        <button onclick="openScheduleApptModal()" class="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg bg-[#0e7490] text-white font-semibold text-xs shadow-xs cursor-pointer hover:bg-[#0c627a]">
-          <span class="material-symbols-outlined text-[18px]">add</span> New Appointment
-        </button>
+        <div class="flex items-center gap-space-sm">
+          <button onclick="toast('Downloading today\'s schedule export (CSV/PDF)...')" class="inline-flex items-center gap-space-xs px-space-md py-space-sm rounded-lg bg-surface-container hover:bg-surface-container-high text-on-surface font-label-md text-label-md transition-colors shadow-sm cursor-pointer" type="button">
+            <span class="material-symbols-outlined text-[18px]">download</span>
+            <span>Download Today's Schedule</span>
+          </button>
+          <button onclick="openScheduleApptModal()" class="inline-flex items-center gap-space-xs px-space-lg py-space-sm rounded-lg bg-primary hover:bg-primary-container text-on-primary font-label-lg text-label-lg transition-colors shadow-sm cursor-pointer" type="button">
+            <span class="material-symbols-outlined text-[20px]">add_circle</span>
+            <span>+ Book New Visit</span>
+          </button>
+        </div>
       </div>
 
-      <!-- Filter Tabs -->
-      <div class="flex gap-2 border-b border-slate-200 pb-3">
-        <button onclick="filterAppointments('ALL')" id="apptTabAll" class="px-4 py-1.5 rounded-lg bg-[#0e7490] text-white text-xs font-semibold cursor-pointer">All Appointments</button>
-        <button onclick="filterAppointments('ANTENATAL')" id="apptTabANC" class="px-4 py-1.5 rounded-lg bg-slate-100 text-slate-700 text-xs font-medium hover:bg-slate-200 cursor-pointer">Antenatal (ANC)</button>
-        <button onclick="filterAppointments('POSTNATAL')" id="apptTabPNC" class="px-4 py-1.5 rounded-lg bg-slate-100 text-slate-700 text-xs font-medium hover:bg-slate-200 cursor-pointer">Postnatal (PNC)</button>
-        <button onclick="filterAppointments('DELIVERY')" id="apptTabDelivery" class="px-4 py-1.5 rounded-lg bg-slate-100 text-slate-700 text-xs font-medium hover:bg-slate-200 cursor-pointer">Delivery Planning</button>
+      <!-- Filter Pills -->
+      <div class="flex flex-wrap items-center gap-space-xs">
+        <button id="apptFilterAll" onclick="filterVisitsPill('ALL')" class="px-space-md py-space-xs rounded-full bg-primary text-on-primary font-label-md text-label-md shadow-sm cursor-pointer">All Visits (42)</button>
+        <button id="apptFilterToday" onclick="filterVisitsPill('TODAY')" class="px-space-md py-space-xs rounded-full bg-surface-container-lowest hover:bg-surface-container text-on-surface-variant font-label-md text-label-md transition-colors cursor-pointer">Today (8)</button>
+        <button id="apptFilterMissed" onclick="filterVisitsPill('MISSED')" class="px-space-md py-space-xs rounded-full bg-surface-container-lowest hover:bg-surface-container text-on-surface-variant font-label-md text-label-md transition-colors cursor-pointer">Missed (4)</button>
       </div>
 
-      <div class="bg-white rounded-xl shadow-xs border border-slate-200 p-6 space-y-4">
-        <h3 class="text-[16px] font-bold text-slate-900">Scheduled Clinical Visits</h3>
-        <div id="appointmentsList" class="space-y-3">
-          <!-- Dynamically loaded appointments -->
+      <!-- Metric Overview Cards (Airy 3-Card Row) -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-space-md">
+        <div class="bg-surface-container-lowest rounded-xl p-space-lg shadow-sm flex flex-col justify-between border border-surface-container">
+          <div class="flex items-center justify-between">
+            <span class="font-label-sm text-label-sm uppercase tracking-wider text-outline">Clinic Attendance</span>
+            <span class="material-symbols-outlined text-primary text-[20px]">calendar_today</span>
+          </div>
+          <div class="mt-space-md">
+            <span class="font-data-metric text-data-metric text-on-surface leading-tight">8 visits</span>
+            <p class="font-body-sm text-body-sm text-on-surface-variant mt-space-xs">Scheduled for today</p>
+          </div>
+        </div>
+        <div class="bg-surface-container-lowest rounded-xl p-space-lg shadow-sm flex flex-col justify-between border border-surface-container">
+          <div class="flex items-center justify-between">
+            <span class="font-label-sm text-label-sm uppercase tracking-wider text-outline">Follow-up Needed</span>
+            <span class="material-symbols-outlined text-secondary text-[20px]">sms</span>
+          </div>
+          <div class="mt-space-md">
+            <span class="font-data-metric text-data-metric text-on-surface leading-tight">4 mothers</span>
+            <p class="font-body-sm text-body-sm text-on-surface-variant mt-space-xs">Missed scheduled appointment</p>
+          </div>
+        </div>
+        <div class="bg-surface-container-lowest rounded-xl p-space-lg shadow-sm flex flex-col justify-between border border-surface-container">
+          <div class="flex items-center justify-between">
+            <span class="font-label-sm text-label-sm uppercase tracking-wider text-outline">SMS Sent</span>
+            <span class="material-symbols-outlined text-primary text-[20px]">mark_chat_read</span>
+          </div>
+          <div class="mt-space-md">
+            <span class="font-data-metric text-data-metric text-on-surface leading-tight">96%</span>
+            <p class="font-body-sm text-body-sm text-on-surface-variant mt-space-xs">Delivery confirmation rate</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Main Content Workspace: Left Table & Right Selected Patient Panel -->
+      <div class="grid grid-cols-1 xl:grid-cols-12 gap-space-lg items-start">
+        <!-- Left Column: Search & Visits Roster (8 cols on XL) -->
+        <div class="xl:col-span-8 flex flex-col gap-space-md">
+          <!-- Search and Filter Bar -->
+          <div class="bg-surface-container-lowest rounded-xl p-space-md shadow-sm flex flex-col sm:flex-row gap-space-sm items-center justify-between">
+            <div class="relative w-full">
+              <span class="material-symbols-outlined absolute left-space-md top-2.5 text-outline text-[20px]">search</span>
+              <input id="visitsSearchInput" oninput="handleVisitsSearch(this.value)" class="w-full h-10 pl-10 pr-space-md bg-surface-container-low font-body-md text-body-md text-on-surface placeholder:text-outline rounded-lg outline-none focus:bg-surface-container-lowest transition-colors" placeholder="Search mother name or patient ID..." type="text">
+            </div>
+          </div>
+
+          <!-- Visits Table -->
+          <div class="bg-surface-container-lowest rounded-xl shadow-sm overflow-hidden">
+            <div class="overflow-x-auto">
+              <table class="w-full text-left border-collapse">
+                <thead>
+                  <tr class="bg-surface-container-low font-label-sm text-label-sm text-outline uppercase tracking-wider">
+                    <th class="py-space-md px-space-lg">Mother / Baby</th>
+                    <th class="py-space-md px-space-md">Visit Details</th>
+                    <th class="py-space-md px-space-md">Time / Date</th>
+                    <th class="py-space-md px-space-lg text-right">Status</th>
+                  </tr>
+                </thead>
+                <tbody id="visitsTableBody" class="divide-y divide-surface-container">
+                  <tr class="bg-surface-container-high/40 hover:bg-surface-container-high/60 transition-colors cursor-pointer group" onclick="selectVisit('ZB')">
+                    <td class="py-space-lg px-space-lg">
+                      <div class="flex items-center gap-space-md">
+                        <div class="w-10 h-10 rounded-full bg-primary-fixed text-primary font-label-md text-label-md flex items-center justify-center font-bold">ZB</div>
+                        <div class="flex flex-col">
+                          <span class="font-label-lg text-label-lg text-on-surface font-semibold group-hover:text-primary transition-colors">Zainab Bello</span>
+                          <span class="font-body-sm text-body-sm text-outline">ID: M-01 • Kileleshwa</span>
+                        </div>
+                      </div>
+                    </td>
+                    <td class="py-space-lg px-space-md">
+                      <span class="font-body-md text-body-md text-on-surface font-semibold">Month 8 Pregnancy Check</span>
+                      <p class="font-body-sm text-body-sm text-outline">Routine fetal heart &amp; BP</p>
+                    </td>
+                    <td class="py-space-lg px-space-md">
+                      <span class="font-label-md text-label-md text-on-surface">Today, 2:00 PM</span>
+                      <p class="font-body-sm text-body-sm text-secondary">In 1 hour</p>
+                    </td>
+                    <td class="py-space-lg px-space-lg text-right">
+                      <span class="px-space-md py-1 rounded-full bg-surface-container text-primary font-label-sm text-label-sm font-semibold">Waiting at Clinic</span>
+                    </td>
+                  </tr>
+                  <tr class="hover:bg-surface-container-low transition-colors cursor-pointer group" onclick="selectVisit('MO')">
+                    <td class="py-space-lg px-space-lg">
+                      <div class="flex items-center gap-space-md">
+                        <div class="w-10 h-10 rounded-full bg-surface-container text-on-surface-variant font-label-md text-label-md flex items-center justify-center font-bold">MO</div>
+                        <div class="flex flex-col">
+                          <span class="font-label-lg text-label-lg text-on-surface font-semibold group-hover:text-primary transition-colors">Mary Osei</span>
+                          <span class="font-body-sm text-body-sm text-outline">ID: M-02 • Eastleigh</span>
+                        </div>
+                      </div>
+                    </td>
+                    <td class="py-space-lg px-space-md">
+                      <span class="font-body-md text-body-md text-on-surface font-semibold">Day 3 Baby Check</span>
+                      <p class="font-body-sm text-body-sm text-outline">Weight &amp; Cord check</p>
+                    </td>
+                    <td class="py-space-lg px-space-md">
+                      <span class="font-label-md text-label-md text-on-surface">Today, 9:30 AM</span>
+                      <p class="font-body-sm text-body-sm text-outline">Scheduled slot</p>
+                    </td>
+                    <td class="py-space-lg px-space-lg text-right">
+                      <span class="px-space-md py-1 rounded-full bg-surface-container-high text-on-surface-variant font-label-sm text-label-sm">Completed</span>
+                    </td>
+                  </tr>
+                  <tr class="hover:bg-surface-container-low transition-colors cursor-pointer group" onclick="selectVisit('HK')">
+                    <td class="py-space-lg px-space-lg">
+                      <div class="flex items-center gap-space-md">
+                        <div class="w-10 h-10 rounded-full bg-surface-container text-on-surface-variant font-label-md text-label-md flex items-center justify-center font-bold">HK</div>
+                        <div class="flex flex-col">
+                          <span class="font-label-lg text-label-lg text-on-surface font-semibold group-hover:text-primary transition-colors">Halima Kadogo</span>
+                          <span class="font-body-sm text-body-sm text-outline">ID: M-03 • Kibera</span>
+                        </div>
+                      </div>
+                    </td>
+                    <td class="py-space-lg px-space-md">
+                      <span class="font-body-md text-body-md text-on-surface font-semibold">Blood Pressure Follow-up</span>
+                      <p class="font-body-sm text-body-sm text-outline">Mild swelling check</p>
+                    </td>
+                    <td class="py-space-lg px-space-md">
+                      <span class="font-label-md text-label-md text-on-surface">Yesterday, 11:00 AM</span>
+                      <p class="font-body-sm text-body-sm text-outline">Missed</p>
+                    </td>
+                    <td class="py-space-lg px-space-lg text-right">
+                      <span class="px-space-md py-1 rounded-full bg-surface-container text-on-surface-variant font-label-sm text-label-sm">Needs Call</span>
+                    </td>
+                  </tr>
+                  <tr class="hover:bg-surface-container-low transition-colors cursor-pointer group" onclick="selectVisit('GM')">
+                    <td class="py-space-lg px-space-lg">
+                      <div class="flex items-center gap-space-md">
+                        <div class="w-10 h-10 rounded-full bg-surface-container text-on-surface-variant font-label-md text-label-md flex items-center justify-center font-bold">GM</div>
+                        <div class="flex flex-col">
+                          <span class="font-label-lg text-label-lg text-on-surface font-semibold group-hover:text-primary transition-colors">Grace Mwangi</span>
+                          <span class="font-body-sm text-body-sm text-outline">ID: M-04 • Kawangware</span>
+                        </div>
+                      </div>
+                    </td>
+                    <td class="py-space-lg px-space-md">
+                      <span class="font-body-md text-body-md text-on-surface font-semibold">Day 14 Vaccine &amp; Weigh-in</span>
+                      <p class="font-body-sm text-body-sm text-outline">BCG follow-up</p>
+                    </td>
+                    <td class="py-space-lg px-space-md">
+                      <span class="font-label-md text-label-md text-on-surface">Tomorrow, 10:00 AM</span>
+                      <p class="font-body-sm text-body-sm text-outline">Morning clinic</p>
+                    </td>
+                    <td class="py-space-lg px-space-lg text-right">
+                      <span class="px-space-md py-1 rounded-full bg-surface-container-low text-outline font-label-sm text-label-sm">Upcoming</span>
+                    </td>
+                  </tr>
+                  <tr class="hover:bg-surface-container-low transition-colors cursor-pointer group" onclick="selectVisit('AH')">
+                    <td class="py-space-lg px-space-lg">
+                      <div class="flex items-center gap-space-md">
+                        <div class="w-10 h-10 rounded-full bg-surface-container text-on-surface-variant font-label-md text-label-md flex items-center justify-center font-bold">AH</div>
+                        <div class="flex flex-col">
+                          <span class="font-label-lg text-label-lg text-on-surface font-semibold group-hover:text-primary transition-colors">Amina Hassan</span>
+                          <span class="font-body-sm text-body-sm text-outline">ID: M-05 • Majengo</span>
+                        </div>
+                      </div>
+                    </td>
+                    <td class="py-space-lg px-space-md">
+                      <span class="font-body-md text-body-md text-on-surface font-semibold">Month 5 Ultrasound Review</span>
+                      <p class="font-body-sm text-body-sm text-outline">Growth check</p>
+                    </td>
+                    <td class="py-space-lg px-space-md">
+                      <span class="font-label-md text-label-md text-on-surface">Tomorrow, 11:30 AM</span>
+                      <p class="font-body-sm text-body-sm text-outline">Midday clinic</p>
+                    </td>
+                    <td class="py-space-lg px-space-lg text-right">
+                      <span class="px-space-md py-1 rounded-full bg-surface-container-low text-outline font-label-sm text-label-sm">Upcoming</span>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="px-space-lg py-space-md bg-surface-container-low flex items-center justify-between border-t border-surface-container">
+              <span id="visitsPaginationInfo" class="font-body-sm text-body-sm text-on-surface-variant">Showing 5 of 42 scheduled appointments</span>
+              <div id="visitsPaginationControls" class="flex items-center gap-space-xs">
+                <button onclick="toast('First page reached')" class="p-space-xs rounded-lg text-outline hover:text-on-surface hover:bg-surface-container transition-colors disabled:opacity-30 cursor-pointer" disabled>
+                  <span class="material-symbols-outlined text-[18px]">chevron_left</span>
+                </button>
+                <span id="visitsPageIndicator" class="font-label-sm text-label-sm text-on-surface px-space-sm">Page 1 of 9</span>
+                <button onclick="toast('Navigating to Page 2 of schedule...')" class="p-space-xs rounded-lg text-outline hover:text-on-surface hover:bg-surface-container transition-colors cursor-pointer">
+                  <span class="material-symbols-outlined text-[18px]">chevron_right</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Column: Selected Visit Detail & Communication Drawer (4 cols on XL) -->
+        <div class="xl:col-span-4 flex flex-col gap-space-md">
+          <!-- Primary Card: Selected Patient Details -->
+          <div class="bg-surface-container-lowest rounded-xl shadow-sm p-space-lg flex flex-col gap-space-md">
+            <div class="flex items-start justify-between pb-space-md border-b border-surface-container">
+              <div class="flex items-center gap-space-md">
+                <div id="visitDetailAvatar" class="w-12 h-12 rounded-full bg-primary-fixed text-primary font-headline-sm text-headline-sm flex items-center justify-center font-bold shadow-sm">ZB</div>
+                <div class="flex flex-col">
+                  <div class="flex items-center gap-space-xs">
+                    <h3 id="visitDetailName" class="font-headline-sm text-headline-sm text-on-surface font-semibold">Zainab Bello</h3>
+                    <span id="visitDetailId" class="px-space-xs py-0.5 rounded-full bg-surface-container text-primary font-label-sm text-label-sm font-semibold">M-01</span>
+                  </div>
+                  <span id="visitDetailMeta" class="font-body-sm text-body-sm text-on-surface-variant mt-0.5">Mother of 2 • Age 26 • Kileleshwa</span>
+                </div>
+              </div>
+              <button onclick="toast('Visit details active')" class="p-space-xs rounded-lg hover:bg-surface-container text-outline cursor-pointer" title="Close Panel">
+                <span class="material-symbols-outlined text-[20px]">close</span>
+              </button>
+            </div>
+
+            <div class="flex flex-col gap-space-sm pt-space-xs">
+              <span class="font-label-sm text-label-sm uppercase tracking-wider text-outline">Current Appointment</span>
+              <div class="bg-surface-container-low rounded-xl p-space-md flex flex-col gap-space-xs">
+                <div class="flex items-center justify-between">
+                  <span id="visitDetailTitle" class="font-label-lg text-label-lg text-on-surface font-semibold">Month 8 Pregnancy Checkup</span>
+                  <span id="visitDetailBadge" class="px-space-sm py-0.5 rounded-full bg-surface-container text-primary font-label-sm text-label-sm font-semibold">Today</span>
+                </div>
+                <div class="flex items-center gap-space-xs text-secondary font-body-sm text-body-sm mt-0.5">
+                  <span class="material-symbols-outlined text-[16px]">schedule</span>
+                  <span id="visitDetailSchedule">2:00 PM • Room 3B (Midwife Station)</span>
+                </div>
+                <p id="visitDetailDesc" class="font-body-sm text-body-sm text-on-surface-variant mt-space-xs leading-normal">Check maternal blood pressure, fetal growth measurements, and provide birth preparation kit counseling.</p>
+              </div>
+            </div>
+
+            <div class="flex flex-col gap-space-sm pt-space-md">
+              <button onclick="triggerSendInstantSms()" class="w-full py-space-sm px-space-md rounded-lg bg-primary hover:bg-primary-container text-on-primary font-label-lg text-label-lg flex items-center justify-center gap-space-xs shadow-sm transition-colors cursor-pointer" type="button">
+                <span class="material-symbols-outlined text-[20px]">send</span>
+                <span>Send Instant SMS Reminder</span>
+              </button>
+              <button onclick="triggerMarkVisited()" class="w-full py-space-sm px-space-md rounded-lg bg-surface-container hover:bg-surface-container-high text-primary font-label-lg text-label-lg flex items-center justify-center gap-space-xs transition-colors font-semibold cursor-pointer" type="button">
+                <span class="material-symbols-outlined text-[20px]">check_circle</span>
+                <span>Mark Visited</span>
+              </button>
+            </div>
+          </div>
         </div>
       </div>
     </div>
 
-    <!-- View 4: Hospital Referrals (Community Referrals) -->
-    <div id="view-referrals" class="hidden p-8 max-w-[1720px] mx-auto w-full space-y-6">
-      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+    <!-- View 4: Hospital Transfers (Regional Referral & Emergency Coordination) -->
+    <div id="view-referrals" class="hidden flex flex-col w-full p-8 max-w-[1720px] mx-auto space-y-6">
+      <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-space-md mb-space-xs">
         <div>
-          <h1 class="font-headline-xl text-headline-xl text-slate-900">Hospital Referrals</h1>
-          <p class="text-slate-500 mt-1 text-sm">CHW field referrals, hospital transfers, and emergency obstetric dispatch logs.</p>
+          <div class="flex items-center gap-space-sm mb-space-xs">
+            <span class="inline-flex items-center gap-1.5 px-space-sm py-0.5 rounded-full bg-surface-container text-on-surface-variant font-label-sm text-label-sm">
+              <span class="w-1.5 h-1.5 rounded-full bg-primary animate-pulse"></span>
+              St. Jude Rural Clinic • Sub-District Telemetry
+            </span>
+            <span class="font-label-sm text-label-sm text-outline">|</span>
+            <span class="font-label-sm text-label-sm text-outline">Updated 4 mins ago</span>
+          </div>
+          <h1 class="font-headline-xl text-headline-xl text-on-surface tracking-tight">Hospital Transfers</h1>
+          <p class="font-body-md text-body-md text-on-surface-variant mt-0.5">
+            Safe coordination of mothers and newborns traveling to regional referral care.
+          </p>
         </div>
-        <button onclick="openReferralSlipModal()" class="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg bg-[#0e7490] text-white font-semibold text-xs shadow-xs cursor-pointer hover:bg-[#0c627a]">
-          <span class="material-symbols-outlined text-[18px]">note_add</span> Issue Referral Slip
-        </button>
+        <div class="flex items-center gap-space-md">
+          <button onclick="openReferralSlipModal()" class="inline-flex items-center gap-space-xs px-space-md py-2.5 rounded-lg bg-surface-container text-on-surface font-label-lg text-label-lg shadow-sm hover:bg-surface-container-high transition-all cursor-pointer" type="button">
+            <span class="material-symbols-outlined text-[18px] text-outline">print</span>
+            <span>Transfer Slips</span>
+          </button>
+          <button onclick="openReferralSlipModal()" class="inline-flex items-center gap-space-xs px-space-lg py-2.5 rounded-lg bg-primary-container text-on-primary font-label-lg text-label-lg shadow-sm hover:opacity-95 transition-all cursor-pointer" type="button">
+            <span class="material-symbols-outlined text-[20px]">add_circle</span>
+            <span>Create New Transfer</span>
+          </button>
+        </div>
       </div>
 
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-        <div class="bg-white p-5 rounded-xl shadow-xs space-y-3 border border-slate-200">
-          <div class="flex items-center justify-between">
-            <span class="px-2.5 py-1 bg-amber-100 text-amber-800 rounded-full text-xs font-semibold">Priority 1 (Urgent Transfer)</span>
-            <span class="text-xs text-slate-400">Today, 09:40 AM</span>
+      <!-- 3 Metrics Cards -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-space-lg">
+        <div class="rounded-xl bg-surface-container-lowest p-space-lg shadow-sm border border-outline-variant/30 flex flex-col justify-between">
+          <span class="font-label-sm text-label-sm text-outline uppercase tracking-wider font-semibold">In Transit</span>
+          <div class="mt-space-sm flex items-baseline gap-space-xs">
+            <span class="font-data-metric text-data-metric text-on-surface">3</span>
+            <span class="font-body-sm text-body-sm text-on-surface-variant">mothers &amp; newborns</span>
           </div>
-          <h4 class="font-semibold text-slate-900 text-base">Zainab Bello (ID: M-01)</h4>
-          <p class="text-xs text-slate-600 leading-relaxed">Severe pre-eclampsia signs (BP 144/94, persistent headache). Referred to Sub-County Hospital Maternity Wing for immediate obstetric evaluation.</p>
-          <div class="pt-2 flex justify-between items-center text-xs text-slate-500 border-t border-slate-100">
-            <span>CHW: Mary Wambui (Maji Mazuri)</span>
-            <span class="text-emerald-700 font-semibold flex items-center gap-1">
-              <span class="material-symbols-outlined text-[16px]">local_shipping</span> Ambulance Dispatched
-            </span>
+        </div>
+        <div class="rounded-xl bg-surface-container-lowest p-space-lg shadow-sm border border-outline-variant/30 flex flex-col justify-between">
+          <span class="font-label-sm text-label-sm text-outline uppercase tracking-wider font-semibold">Awaiting Bed</span>
+          <div class="mt-space-sm flex items-baseline gap-space-xs">
+            <span class="font-data-metric text-data-metric text-on-surface">1</span>
+            <span class="font-body-sm text-body-sm text-on-surface-variant">referral pending</span>
+          </div>
+        </div>
+        <div class="rounded-xl bg-surface-container-lowest p-space-lg shadow-sm border border-outline-variant/30 flex flex-col justify-between">
+          <span class="font-label-sm text-label-sm text-outline uppercase tracking-wider font-semibold">Completed</span>
+          <div class="mt-space-sm flex items-baseline gap-space-xs">
+            <span class="font-data-metric text-data-metric text-on-surface">14</span>
+            <span class="font-body-sm text-body-sm text-on-surface-variant">safely received</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Main Transfers Workspace -->
+      <div class="grid grid-cols-1 xl:grid-cols-12 gap-space-xl items-start">
+        <div class="xl:col-span-8 flex flex-col gap-space-md">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-space-md">
+            <div class="flex items-center gap-space-xs p-1 rounded-xl bg-surface-container-low max-w-fit">
+              <button id="transferTabAll" onclick="filterTransfers('ALL')" class="px-space-md py-1.5 rounded-lg bg-surface-container-lowest text-on-surface font-label-sm text-label-sm shadow-sm transition-all font-semibold cursor-pointer" type="button">
+                All Transfers (18)
+              </button>
+              <button id="transferTabTransit" onclick="filterTransfers('TRANSIT')" class="px-space-md py-1.5 rounded-lg text-on-surface-variant hover:text-on-surface font-label-sm text-label-sm transition-all cursor-pointer" type="button">
+                In Transit (3)
+              </button>
+              <button id="transferTabCompleted" onclick="filterTransfers('COMPLETED')" class="px-space-md py-1.5 rounded-lg text-on-surface-variant hover:text-on-surface font-label-sm text-label-sm transition-all cursor-pointer" type="button">
+                Completed (15)
+              </button>
+            </div>
+          </div>
+
+          <div class="overflow-hidden rounded-xl bg-surface-container-lowest shadow-sm">
+            <div class="overflow-x-auto">
+              <table class="w-full text-left">
+                <thead class="bg-surface-container-low font-label-sm text-label-sm text-outline uppercase tracking-wider">
+                  <tr>
+                    <th class="py-3.5 px-space-lg font-semibold">Patient</th>
+                    <th class="py-3.5 px-space-md font-semibold">Destination</th>
+                    <th class="py-3.5 px-space-md font-semibold">Reason</th>
+                    <th class="py-3.5 px-space-md font-semibold">Status</th>
+                    <th class="py-3.5 px-space-lg text-right font-semibold"></th>
+                  </tr>
+                </thead>
+                <tbody id="transfersTableBody" class="divide-y-0">
+                  <tr class="hover:bg-surface-container-low/70 transition-colors cursor-pointer group" onclick="selectTransfer('FA')">
+                    <td class="py-4 px-space-lg">
+                      <div class="font-label-lg text-label-lg text-on-surface font-semibold group-hover:text-primary transition-colors">Fatima Aliyu</div>
+                      <div class="font-body-sm text-body-sm text-outline">Mother (34 wks) • M-03</div>
+                    </td>
+                    <td class="py-4 px-space-md">
+                      <div class="font-label-md text-label-md text-on-surface">District Referral Hospital</div>
+                      <div class="font-body-sm text-body-sm text-outline">Maternity Wing B</div>
+                    </td>
+                    <td class="py-4 px-space-md">
+                      <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-surface-container text-on-surface font-label-sm text-label-sm">
+                        <span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>High blood pressure
+                      </span>
+                    </td>
+                    <td class="py-4 px-space-md">
+                      <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-secondary-container/30 text-on-secondary-container font-label-sm text-label-sm font-semibold">
+                        <span class="material-symbols-outlined text-[14px]">airport_shuttle</span>In Transit
+                      </span>
+                    </td>
+                    <td class="py-4 px-space-lg text-right">
+                      <button onclick="event.stopPropagation(); selectTransfer('FA')" class="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-surface-container text-primary font-label-sm text-label-sm font-semibold hover:bg-surface-container-high transition-colors cursor-pointer" type="button">
+                        View<span class="material-symbols-outlined text-[14px]">chevron_right</span>
+                      </button>
+                    </td>
+                  </tr>
+                  <tr class="bg-surface-container-low/30 hover:bg-surface-container-low/70 transition-colors cursor-pointer group" onclick="selectTransfer('BA')">
+                    <td class="py-4 px-space-lg">
+                      <div class="font-label-lg text-label-lg text-on-surface font-semibold group-hover:text-primary transition-colors">Baby Amina</div>
+                      <div class="font-body-sm text-body-sm text-outline">Newborn (Day 3) • B-02</div>
+                    </td>
+                    <td class="py-4 px-space-md">
+                      <div class="font-label-md text-label-md text-on-surface">Regional Maternal Center</div>
+                      <div class="font-body-sm text-body-sm text-outline">Neonatal Unit</div>
+                    </td>
+                    <td class="py-4 px-space-md">
+                      <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-surface-container text-on-surface font-label-sm text-label-sm">
+                        <span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>Breathing difficulty
+                      </span>
+                    </td>
+                    <td class="py-4 px-space-md">
+                      <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-surface-container text-on-surface-variant font-label-sm text-label-sm">
+                        <span class="material-symbols-outlined text-[14px] text-outline">pending</span>Awaiting Bed
+                      </span>
+                    </td>
+                    <td class="py-4 px-space-lg text-right">
+                      <button onclick="event.stopPropagation(); selectTransfer('BA')" class="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-surface-container text-primary font-label-sm text-label-sm font-semibold hover:bg-surface-container-high transition-colors cursor-pointer" type="button">
+                        View<span class="material-symbols-outlined text-[14px]">chevron_right</span>
+                      </button>
+                    </td>
+                  </tr>
+                  <tr class="hover:bg-surface-container-low/70 transition-colors cursor-pointer group" onclick="selectTransfer('MK')">
+                    <td class="py-4 px-space-lg">
+                      <div class="font-label-lg text-label-lg text-on-surface font-semibold group-hover:text-primary transition-colors">Mary Kilonzo</div>
+                      <div class="font-body-sm text-body-sm text-outline">Mother (37 wks) • M-09</div>
+                    </td>
+                    <td class="py-4 px-space-md">
+                      <div class="font-label-md text-label-md text-on-surface">District Referral Hospital</div>
+                      <div class="font-body-sm text-body-sm text-outline">Labor &amp; Delivery</div>
+                    </td>
+                    <td class="py-4 px-space-md">
+                      <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-surface-container text-on-surface font-label-sm text-label-sm">
+                        <span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>Twin delivery support
+                      </span>
+                    </td>
+                    <td class="py-4 px-space-md">
+                      <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-secondary-container/30 text-on-secondary-container font-label-sm text-label-sm font-semibold">
+                        <span class="material-symbols-outlined text-[14px]">airport_shuttle</span>In Transit
+                      </span>
+                    </td>
+                    <td class="py-4 px-space-lg text-right">
+                      <button onclick="event.stopPropagation(); selectTransfer('MK')" class="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-surface-container text-primary font-label-sm text-label-sm font-semibold hover:bg-surface-container-high transition-colors cursor-pointer" type="button">
+                        View<span class="material-symbols-outlined text-[14px]">chevron_right</span>
+                      </button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div class="flex items-center justify-between px-space-sm py-space-sm text-on-surface-variant font-label-sm text-label-sm">
+            <span id="transfersCountLabel">Showing 3 active transfers from St. Jude Clinic</span>
+            <button onclick="toast('Transfer archive: 18 historical referrals loaded successfully.')" class="inline-flex items-center gap-1 text-primary hover:underline font-semibold cursor-pointer" type="button">
+              View full archive
+              <span class="material-symbols-outlined text-[14px]">arrow_forward</span>
+            </button>
           </div>
         </div>
 
-        <div class="bg-white p-5 rounded-xl shadow-xs space-y-3 border border-slate-200">
-          <div class="flex items-center justify-between">
-            <span class="px-2.5 py-1 bg-cyan-100 text-cyan-800 rounded-full text-xs font-semibold">Routine Clinic Referral</span>
-            <span class="text-xs text-slate-400">Yesterday, 03:15 PM</span>
-          </div>
-          <h4 class="font-semibold text-slate-900 text-base">Halima Kadogo (ID: M-02)</h4>
-          <p class="text-xs text-slate-600 leading-relaxed">Week 37 birth preparedness plan consultation and delivery kit distribution check.</p>
-          <div class="pt-2 flex justify-between items-center text-xs text-slate-500 border-t border-slate-100">
-            <span>CHW: David Ochieng (Silanga Valley)</span>
-            <span class="text-[#0e7490] font-medium">Completed ANC-4 Check</span>
+        <!-- Right Side: Active Focus Transfer Details -->
+        <div class="xl:col-span-4 flex flex-col gap-space-lg">
+          <div class="rounded-xl bg-surface-container-lowest p-space-lg shadow-sm border border-outline-variant/20">
+            <div class="flex items-center justify-between pb-space-sm border-b border-surface-container-low">
+              <div class="flex items-center gap-space-xs">
+                <span class="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
+                <span class="font-label-sm text-label-sm uppercase tracking-wider text-outline font-semibold">Active Focus</span>
+              </div>
+              <span id="transferEtaBadge" class="px-2.5 py-1 rounded-full bg-surface-container font-label-sm text-label-sm font-semibold text-secondary">ETA 25m</span>
+            </div>
+            <div class="py-space-md flex flex-col gap-space-sm">
+              <h3 id="transferPatientName" class="font-headline-sm text-headline-sm text-on-surface">Fatima Aliyu</h3>
+              <p id="transferPatientMeta" class="font-body-sm text-body-sm text-outline">Mother (34 wks) • Code M-03</p>
+              <div class="mt-space-xs p-space-sm rounded-lg bg-surface-container-low text-on-surface-variant font-body-sm text-body-sm leading-relaxed">
+                <span class="font-semibold text-on-surface">Referral Reason:</span>
+                <span id="transferReasonText"> Persistent elevated BP (148/95 mmHg) during routine antenatal check. Stable with midwife.</span>
+              </div>
+              <div class="flex items-center justify-between py-space-xs text-body-sm text-on-surface-variant border-b border-surface-container-low/60">
+                <span class="text-outline font-label-sm text-label-sm">Assigned Unit</span>
+                <span id="transferUnitText" class="font-medium text-on-surface">District Referral Maternity</span>
+              </div>
+              <div class="flex items-center justify-between py-space-xs text-body-sm text-on-surface-variant">
+                <span class="text-outline font-label-sm text-label-sm">Ambulance</span>
+                <span id="transferAmbulanceText" class="font-medium text-on-surface">Sub-District #4 (En Route)</span>
+              </div>
+            </div>
+            <div class="pt-space-xs">
+              <button onclick="triggerCallReceivingWard()" class="w-full inline-flex items-center justify-center gap-space-xs py-2.5 px-space-md rounded-lg bg-primary-container text-on-primary font-label-lg text-label-lg shadow-sm hover:opacity-95 transition-all cursor-pointer" type="button">
+                <span class="material-symbols-outlined text-[18px]">call</span>
+                <span>Call Receiving Ward</span>
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -2705,49 +3114,306 @@ async function handleSaveAppointment() {
     console.warn(e);
   }
 
+  // Prepend to Visits & Reminders dataset
+  const newVisitKey = 'V-' + Date.now();
+  const initials = computeInitials(p ? p.name : 'Patient');
+  visitsData.unshift({
+    key: newVisitKey,
+    name: p ? p.name : 'Scheduled Mother',
+    id: p ? p.id : 'M-0' + (visitsData.length + 1),
+    community: p ? p.facility : 'Sub-County Health Post',
+    meta: `ID: ${p ? p.id : 'M-0' + (visitsData.length + 1)} • ${p ? p.facility : 'Health Post'}`,
+    patientBio: `Registered Mother • ${p ? p.risk : 'Routine'} Care`,
+    visitTitle: `${type} Checkup`,
+    visitDetails: `${type} Consultation`,
+    visitDesc: `Scheduled Clinical Follow-up: ${when}`,
+    time: when ? new Date(when).toLocaleDateString(undefined, { weekday: 'short', hour: '2-digit', minute: '2-digit' }) : 'Tomorrow, 10:00 AM',
+    timeRelative: 'Upcoming',
+    timeRelativeColor: 'text-outline',
+    status: 'Upcoming',
+    statusBadgeClass: 'px-space-md py-1 rounded-full bg-surface-container-low text-outline font-label-sm text-label-sm',
+    category: 'UPCOMING',
+    room: 'Room 2B • Nurse Station',
+    instructions: 'Check vital signs, evaluate clinical progress, and provide counseling.',
+    currentBadge: 'Upcoming',
+    avatarBg: 'bg-surface-container text-on-surface-variant',
+    avatar: initials
+  });
+  renderVisitsTable();
+  selectVisit(newVisitKey);
+
   closeScheduleApptModal();
   toast(`Appointment confirmed! SMS dispatched to ${p ? p.name : 'mother'}`);
 }
 
-function renderAppointmentsList(filterType = 'ALL') {
-  const list = document.getElementById('appointmentsList');
-  if (!list) return;
-  list.innerHTML = '';
+// ==========================================
+// VISITS & REMINDERS (CALENDAR & SMS) DATASET & CONTROLLERS
+// ==========================================
+let selectedVisitKey = 'ZB';
+let visitsFilterMode = 'ALL';
+let visitsSearchQuery = '';
 
-  const filtered = appointments.filter(a => filterType === 'ALL' || a.type === filterType);
+let visitsData = [
+  {
+    key: 'ZB',
+    name: 'Zainab Bello',
+    id: 'M-01',
+    community: 'Kileleshwa',
+    meta: 'ID: M-01 • Kileleshwa',
+    patientBio: 'Mother of 2 • Age 26 • Kileleshwa',
+    visitTitle: 'Month 8 Pregnancy Check',
+    visitDetails: 'Month 8 Pregnancy Check',
+    visitDesc: 'Routine fetal heart & BP',
+    time: 'Today, 2:00 PM',
+    timeRelative: 'In 1 hour',
+    timeRelativeColor: 'text-secondary',
+    status: 'Waiting at Clinic',
+    statusBadgeClass: 'px-space-md py-1 rounded-full bg-surface-container text-primary font-label-sm text-label-sm font-semibold',
+    category: 'TODAY',
+    room: '2:00 PM • Room 3B (Midwife Station)',
+    instructions: 'Check maternal blood pressure, fetal growth measurements, and provide birth preparation kit counseling.',
+    currentBadge: 'Today',
+    avatarBg: 'bg-primary-fixed text-primary',
+    avatar: 'ZB'
+  },
+  {
+    key: 'MO',
+    name: 'Mary Osei',
+    id: 'M-02',
+    community: 'Eastleigh',
+    meta: 'ID: M-02 • Eastleigh',
+    patientBio: 'First-time Mother • Age 22 • Eastleigh',
+    visitTitle: 'Day 3 Baby Check',
+    visitDetails: 'Day 3 Baby Check',
+    visitDesc: 'Weight & Cord check',
+    time: 'Today, 9:30 AM',
+    timeRelative: 'Scheduled slot',
+    timeRelativeColor: 'text-outline',
+    status: 'Completed',
+    statusBadgeClass: 'px-space-md py-1 rounded-full bg-surface-container-high text-on-surface-variant font-label-sm text-label-sm',
+    category: 'TODAY',
+    room: '9:30 AM • Newborn Station A',
+    instructions: 'Weight measurement, cord hygiene check, and breastfeeding support counseling.',
+    currentBadge: 'Completed',
+    avatarBg: 'bg-surface-container text-on-surface-variant',
+    avatar: 'MO'
+  },
+  {
+    key: 'HK',
+    name: 'Halima Kadogo',
+    id: 'M-03',
+    community: 'Kibera',
+    meta: 'ID: M-03 • Kibera',
+    patientBio: 'Mother of 3 • Age 31 • Kibera',
+    visitTitle: 'Blood Pressure Follow-up',
+    visitDetails: 'Blood Pressure Follow-up',
+    visitDesc: 'Mild swelling check',
+    time: 'Yesterday, 11:00 AM',
+    timeRelative: 'Missed',
+    timeRelativeColor: 'text-outline',
+    status: 'Needs Call',
+    statusBadgeClass: 'px-space-md py-1 rounded-full bg-surface-container text-on-surface-variant font-label-sm text-label-sm',
+    category: 'MISSED',
+    room: '11:00 AM • Triage Desk',
+    instructions: 'Urgent maternal hypertension follow-up. Check for pre-eclampsia symptoms and dispatch CHW if unreachable.',
+    currentBadge: 'Missed',
+    avatarBg: 'bg-surface-container text-on-surface-variant',
+    avatar: 'HK'
+  },
+  {
+    key: 'GM',
+    name: 'Grace Mwangi',
+    id: 'M-04',
+    community: 'Kawangware',
+    meta: 'ID: M-04 • Kawangware',
+    patientBio: 'Mother of 1 • Age 24 • Kawangware',
+    visitTitle: 'Day 14 Vaccine & Weigh-in',
+    visitDetails: 'Day 14 Vaccine & Weigh-in',
+    visitDesc: 'BCG follow-up',
+    time: 'Tomorrow, 10:00 AM',
+    timeRelative: 'Morning clinic',
+    timeRelativeColor: 'text-outline',
+    status: 'Upcoming',
+    statusBadgeClass: 'px-space-md py-1 rounded-full bg-surface-container-low text-outline font-label-sm text-label-sm',
+    category: 'UPCOMING',
+    room: '10:00 AM • Immunization Bay 2',
+    instructions: 'Administer scheduled immunization, evaluate neonatal weight trajectory, and check maternal recovery.',
+    currentBadge: 'Upcoming',
+    avatarBg: 'bg-surface-container text-on-surface-variant',
+    avatar: 'GM'
+  },
+  {
+    key: 'AH',
+    name: 'Amina Hassan',
+    id: 'M-05',
+    community: 'Majengo',
+    meta: 'ID: M-05 • Majengo',
+    patientBio: 'Mother of 2 • Age 28 • Majengo',
+    visitTitle: 'Month 5 Ultrasound Review',
+    visitDetails: 'Month 5 Ultrasound Review',
+    visitDesc: 'Growth check',
+    time: 'Tomorrow, 11:30 AM',
+    timeRelative: 'Midday clinic',
+    timeRelativeColor: 'text-outline',
+    status: 'Upcoming',
+    statusBadgeClass: 'px-space-md py-1 rounded-full bg-surface-container-low text-outline font-label-sm text-label-sm',
+    category: 'UPCOMING',
+    room: '11:30 AM • Ultrasound Suite',
+    instructions: 'Mid-trimester scan review, placental localization, and iron-folate supplementation review.',
+    currentBadge: 'Upcoming',
+    avatarBg: 'bg-surface-container text-on-surface-variant',
+    avatar: 'AH'
+  }
+];
 
-  filtered.forEach(a => {
-    const div = document.createElement('div');
-    div.className = 'p-3.5 bg-slate-50 rounded-xl flex items-center justify-between border border-slate-200';
-    div.innerHTML = `
-      <div class="flex items-center gap-3">
-        <div class="w-9 h-9 rounded-lg bg-[#0e7490] text-white flex items-center justify-center font-bold text-xs shadow-xs">
-          <span class="material-symbols-outlined text-[18px]">event</span>
-        </div>
-        <div>
-          <div class="font-semibold text-sm text-slate-900">${a.patientName} — ${a.type}</div>
-          <div class="text-xs text-slate-400">${a.when} • ${a.facility} • SMS Reminder Scheduled</div>
-        </div>
-      </div>
-      <span class="px-2.5 py-1 rounded-full text-xs font-semibold ${a.status.includes('High') ? 'bg-red-100 text-red-800' : 'bg-emerald-100 text-emerald-800'}">${a.status}</span>
-    `;
-    list.appendChild(div);
+function selectVisit(key) {
+  selectedVisitKey = key;
+  const visit = visitsData.find(v => v.key === key);
+  if (!visit) return;
+
+  const av = document.getElementById('visitDetailAvatar');
+  if (av) {
+    av.className = `w-12 h-12 rounded-full font-headline-sm text-headline-sm flex items-center justify-center font-bold shadow-sm ${visit.avatarBg}`;
+    av.textContent = visit.avatar;
+  }
+  const nameEl = document.getElementById('visitDetailName');
+  if (nameEl) nameEl.textContent = visit.name;
+
+  const idEl = document.getElementById('visitDetailId');
+  if (idEl) idEl.textContent = visit.id;
+
+  const metaEl = document.getElementById('visitDetailMeta');
+  if (metaEl) metaEl.textContent = visit.patientBio;
+
+  const titleEl = document.getElementById('visitDetailTitle');
+  if (titleEl) titleEl.textContent = visit.visitTitle;
+
+  const badgeEl = document.getElementById('visitDetailBadge');
+  if (badgeEl) badgeEl.textContent = visit.currentBadge;
+
+  const schedEl = document.getElementById('visitDetailSchedule');
+  if (schedEl) schedEl.textContent = visit.room;
+
+  const descEl = document.getElementById('visitDetailDesc');
+  if (descEl) descEl.textContent = visit.instructions;
+
+  // Highlight selected row in visits table
+  const rows = document.querySelectorAll('#visitsTableBody tr');
+  rows.forEach(r => {
+    if (r.getAttribute('data-visit-key') === key) {
+      r.className = 'bg-surface-container-high/40 hover:bg-surface-container-high/60 transition-colors cursor-pointer group';
+    } else {
+      r.className = 'hover:bg-surface-container-low transition-colors cursor-pointer group';
+    }
   });
+}
 
-  if (filtered.length === 0) {
-    list.innerHTML = '<div class="text-center py-6 text-slate-400 text-xs">No scheduled appointments for this filter.</div>';
+function filterVisitsPill(mode) {
+  visitsFilterMode = mode;
+  ['All', 'Today', 'Missed'].forEach(m => {
+    const btn = document.getElementById('apptFilter' + m);
+    if (!btn) return;
+    if (m.toUpperCase() === mode) {
+      btn.className = 'px-space-md py-space-xs rounded-full bg-primary text-on-primary font-label-md text-label-md shadow-sm cursor-pointer';
+    } else {
+      btn.className = 'px-space-md py-space-xs rounded-full bg-surface-container-lowest hover:bg-surface-container text-on-surface-variant font-label-md text-label-md transition-colors cursor-pointer';
+    }
+  });
+  renderVisitsTable();
+}
+
+function handleVisitsSearch(val) {
+  visitsSearchQuery = (val || '').toLowerCase().trim();
+  renderVisitsTable();
+}
+
+function triggerSendInstantSms() {
+  const visit = visitsData.find(v => v.key === selectedVisitKey) || visitsData[0];
+  if (visit) {
+    toast(`SMS reminder dispatched to ${visit.name} (${visit.time}): "Reminder: Your checkup is scheduled at ${visit.room}"`);
   }
 }
 
-function filterAppointments(type) {
-  ['All', 'ANC', 'PNC', 'Delivery'].forEach(t => {
-    const el = document.getElementById('apptTab' + t);
-    if (el) el.className = 'px-4 py-1.5 rounded-lg bg-slate-100 text-slate-700 text-xs font-medium hover:bg-slate-200 cursor-pointer';
-  });
-  if (event && event.target) {
-    event.target.className = 'px-4 py-1.5 rounded-lg bg-[#0e7490] text-white text-xs font-semibold cursor-pointer';
+function triggerMarkVisited() {
+  const visit = visitsData.find(v => v.key === selectedVisitKey) || visitsData[0];
+  if (visit) {
+    visit.status = 'Completed';
+    visit.currentBadge = 'Completed';
+    visit.statusBadgeClass = 'px-space-md py-1 rounded-full bg-surface-container-high text-on-surface-variant font-label-sm text-label-sm';
+    selectVisit(visit.key);
+    renderVisitsTable();
+    toast(`Visit marked as completed for ${visit.name}. Medical record updated.`);
   }
-  renderAppointmentsList(type);
+}
+
+function renderVisitsTable() {
+  const tbody = document.getElementById('visitsTableBody');
+  if (!tbody) return;
+  tbody.innerHTML = '';
+
+  const filtered = visitsData.filter(v => {
+    if (visitsFilterMode === 'TODAY' && v.category !== 'TODAY') return false;
+    if (visitsFilterMode === 'MISSED' && v.category !== 'MISSED') return false;
+    if (visitsSearchQuery) {
+      const match = v.name.toLowerCase().includes(visitsSearchQuery) ||
+                    v.id.toLowerCase().includes(visitsSearchQuery) ||
+                    v.community.toLowerCase().includes(visitsSearchQuery) ||
+                    v.visitTitle.toLowerCase().includes(visitsSearchQuery);
+      if (!match) return false;
+    }
+    return true;
+  });
+
+  filtered.forEach(v => {
+    const isSelected = v.key === selectedVisitKey;
+    const tr = document.createElement('tr');
+    tr.setAttribute('data-visit-key', v.key);
+    tr.className = isSelected
+      ? 'bg-surface-container-high/40 hover:bg-surface-container-high/60 transition-colors cursor-pointer group'
+      : 'hover:bg-surface-container-low transition-colors cursor-pointer group';
+    tr.onclick = () => selectVisit(v.key);
+
+    tr.innerHTML = `
+      <td class="py-space-lg px-space-lg">
+        <div class="flex items-center gap-space-md">
+          <div class="w-10 h-10 rounded-full ${v.avatarBg} font-label-md text-label-md flex items-center justify-center font-bold">${v.avatar}</div>
+          <div class="flex flex-col">
+            <span class="font-label-lg text-label-lg text-on-surface font-semibold group-hover:text-primary transition-colors">${v.name}</span>
+            <span class="font-body-sm text-body-sm text-outline">${v.meta}</span>
+          </div>
+        </div>
+      </td>
+      <td class="py-space-lg px-space-md">
+        <span class="font-body-md text-body-md text-on-surface font-semibold">${v.visitTitle}</span>
+        <p class="font-body-sm text-body-sm text-outline">${v.visitDesc}</p>
+      </td>
+      <td class="py-space-lg px-space-md">
+        <span class="font-label-md text-label-md text-on-surface">${v.time}</span>
+        <p class="font-body-sm text-body-sm ${v.timeRelativeColor}">${v.timeRelative}</p>
+      </td>
+      <td class="py-space-lg px-space-lg text-right">
+        <span class="${v.statusBadgeClass}">${v.status}</span>
+      </td>
+    `;
+    tbody.appendChild(tr);
+  });
+
+  const info = document.getElementById('visitsPaginationInfo');
+  if (info) {
+    info.textContent = `Showing ${filtered.length} of ${visitsData.length} scheduled appointments`;
+  }
+  const pageIndicator = document.getElementById('visitsPageIndicator');
+  if (pageIndicator) {
+    pageIndicator.textContent = `Page 1 of ${Math.max(1, Math.ceil(filtered.length / 5))}`;
+  }
+}
+
+// Fallback alias for legacy calls
+function renderAppointmentsList() {
+  renderVisitsTable();
+}
+function filterAppointments(mode) {
+  filterVisitsPill(mode);
 }
 
 // Referral Slip Modal
@@ -2833,11 +3499,12 @@ async function initDashboard() {
   renderBabyTable();
   selectBaby('mary_osei');
 
-  // Render initial appointments
-  renderAppointmentsList('ALL');
+  // Render initial visits & reminders table
+  renderVisitsTable();
+  selectVisit('ZB');
 
-  // Activate newborn-care (Baby Checks) view by default or by hash
-  const initialView = (window.location.hash ? window.location.hash.replace('#', '') : '') || 'newborn-care';
+  // Activate appointments (Visits & Reminders) view by default or by hash
+  const initialView = (window.location.hash ? window.location.hash.replace('#', '') : '') || 'appointments';
   switchNavView(initialView);
 }
 
