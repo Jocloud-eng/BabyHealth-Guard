@@ -4,6 +4,9 @@
 <meta charset="utf-8">
 <meta content="width=device-width, initial-scale=1.0" name="viewport">
 <meta content="web_dashboard" name="shell-type">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
 <title>BabyHealth Guard — Maternal &amp; Newborn Care Dashboard</title>
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
 <link href="https://fonts.googleapis.com" rel="preconnect">
@@ -23,7 +26,7 @@
   vertical-align: middle;
 }
 </style>
-<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
 <script id="tailwind-config">
 tailwind.config={
   "darkMode":"class",
@@ -44,16 +47,16 @@ tailwind.config={
         "on-secondary":"#ffffff",
         "on-tertiary-fixed":"#40000d",
         "tertiary-fixed-dim":"#ffb2b7",
-        "secondary-container":"#57dffe",
+        "secondary-container":"#e0f2fe",
         "on-error":"#ffffff",
         "on-tertiary-container":"#ffe7e7",
         "surface-container":"#eaedff",
         "error":"#ba1a1a",
-        "surface":"#faf8ff",
+        "surface":"#f8fafc",
         "tertiary":"#a80032",
-        "primary":"#005a71",
+        "primary":"#0e7490",
         "inverse-surface":"#283044",
-        "surface-container-low":"#f2f3ff",
+        "surface-container-low":"#f1f5f9",
         "surface-container-highest":"#dae2fd",
         "secondary-fixed-dim":"#4cd7f6",
         "on-secondary-fixed":"#001f26",
@@ -66,10 +69,10 @@ tailwind.config={
         "on-tertiary-fixed-variant":"#92002a",
         "surface-variant":"#dae2fd",
         "surface-dim":"#d2d9f4",
-        "outline":"#6f787d",
+        "outline":"#64748b",
         "tertiary-container":"#ce2046",
-        "outline-variant":"#bec8cd",
-        "on-primary-container":"#d3f1ff",
+        "outline-variant":"#cbd5e1",
+        "on-primary-container":"#ffffff",
         "primary-fixed-dim":"#81d1f0",
         "on-error-container":"#93000a",
         "on-tertiary":"#ffffff",
@@ -78,7 +81,7 @@ tailwind.config={
         "surface-container-lowest":"#ffffff",
         "surface-bright":"#faf8ff"
       },
-      "borderRadius":{"DEFAULT":"0.125rem","lg":"0.25rem","xl":"0.5rem","full":"0.75rem"},
+      "borderRadius":{"DEFAULT":"0.25rem","lg":"0.375rem","xl":"0.5rem","full":"0.75rem"},
       "spacing":{"space-xl":"2rem","space-md":"1rem","gutter":"1rem","margin-desktop":"2rem","gutter-desktop":"1.5rem","margin":"1rem","space-xs":"0.25rem","space-lg":"1.5rem","space-sm":"0.5rem"},
       "fontFamily":{
         "headline-xl":["Inter"],"label-md":["Inter"],"headline-md":["Inter"],"body-md":["Inter"],
@@ -87,11 +90,11 @@ tailwind.config={
         "headline-xl-mobile":["Inter"]
       },
       "fontSize":{
-        "headline-xl":["32px",{"lineHeight":"40px","letterSpacing":"-0.02em","fontWeight":"700"}],
+        "headline-xl":["30px",{"lineHeight":"38px","letterSpacing":"-0.02em","fontWeight":"700"}],
         "label-md":["12px",{"lineHeight":"16px","letterSpacing":"0.02em","fontWeight":"600"}],
         "headline-md":["20px",{"lineHeight":"28px","fontWeight":"600"}],
         "body-md":["14px",{"lineHeight":"20px","fontWeight":"400"}],
-        "headline-lg":["24px",{"lineHeight":"32px","letterSpacing":"-0.01em","fontWeight":"600"}],
+        "headline-lg":["22px",{"lineHeight":"30px","letterSpacing":"-0.01em","fontWeight":"600"}],
         "data-metric":["28px",{"lineHeight":"32px","letterSpacing":"-0.02em","fontWeight":"700"}],
         "label-lg":["14px",{"lineHeight":"20px","letterSpacing":"0.01em","fontWeight":"600"}],
         "headline-sm":["16px",{"lineHeight":"24px","fontWeight":"600"}],
@@ -106,105 +109,96 @@ tailwind.config={
 };
 </script>
 </head>
-<body class="bg-surface font-body-md text-on-surface antialiased">
+<body class="bg-slate-50 font-body-md text-slate-800 antialiased">
 
 <!-- Sidebar Navigation -->
-<aside class="fixed left-0 top-0 h-full w-72 bg-cyan-950 border-r border-cyan-900/60 shadow-md z-50 flex flex-col justify-between text-white">
+<aside class="fixed left-0 top-0 h-full w-64 bg-[#0b313d] text-white border-r border-[#0f3d4c] shadow-lg z-50 flex flex-col justify-between">
   <div class="flex flex-col">
-    <!-- Health Monitoring Header -->
-    <div class="px-space-md py-space-sm">
-      <div class="flex items-center justify-between px-space-sm py-space-xs">
-        <span class="font-label-sm text-label-sm text-cyan-300/80 uppercase font-semibold tracking-wider">Health Monitoring</span>
-      </div>
+    <!-- CARE MENU Header -->
+    <div class="px-5 py-6 border-b border-[#144758]/50">
+      <div class="text-xs uppercase tracking-wider text-cyan-300/80 font-bold">CARE MENU</div>
     </div>
     <!-- Navigation Links -->
-    <nav class="px-space-sm space-y-1" id="mainSidebarNav">
-      <a class="nav-btn flex items-center gap-space-sm px-space-md py-2.5 rounded-lg bg-cyan-700 text-white font-semibold transition-all shadow-sm cursor-pointer" data-view="maternal-care" onclick="switchNavView('maternal-care')">
-        <span class="material-symbols-outlined text-[20px] text-cyan-200">pregnant_woman</span>
-        <span class="font-label-lg text-label-lg">Pregnancy &amp; Maternal Care</span>
+    <nav class="px-3 py-4 space-y-1.5" id="mainSidebarNav">
+      <a class="nav-btn flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-slate-200 hover:bg-white/10 hover:text-white transition-colors duration-150 cursor-pointer" data-view="maternal-care" onclick="switchNavView('maternal-care')">
+        <span class="material-symbols-outlined text-[20px] text-cyan-300">pregnant_woman</span>
+        <span class="font-label-lg text-[14px]">Pregnant Mothers</span>
       </a>
-      <a class="nav-btn flex items-center gap-space-sm px-space-md py-2.5 rounded-lg text-cyan-100/80 hover:bg-white/10 hover:text-white transition-all cursor-pointer" data-view="newborn-care" onclick="switchNavView('newborn-care')">
-        <span class="material-symbols-outlined text-[20px] text-cyan-300/70">child_care</span>
-        <span class="font-label-lg text-label-lg">Newborn Care &amp; Health Checks</span>
+      <a class="nav-btn flex items-center gap-3 px-3.5 py-2.5 rounded-lg bg-[#0e7490] text-white font-semibold shadow-sm transition-all cursor-pointer" data-view="newborn-care" onclick="switchNavView('newborn-care')">
+        <span class="material-symbols-outlined text-[20px] text-white">child_care</span>
+        <span class="font-label-lg text-[14px]">Baby Checks</span>
       </a>
-      <a class="nav-btn flex items-center gap-space-sm px-space-md py-2.5 rounded-lg text-cyan-100/80 hover:bg-white/10 hover:text-white transition-all cursor-pointer" data-view="appointments" onclick="switchNavView('appointments')">
-        <span class="material-symbols-outlined text-[20px] text-cyan-300/70">calendar_month</span>
-        <span class="font-label-lg text-label-lg">Appointment Calendar &amp; SMS Reminders</span>
+      <a class="nav-btn flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-slate-200 hover:bg-white/10 hover:text-white transition-colors duration-150 cursor-pointer" data-view="appointments" onclick="switchNavView('appointments')">
+        <span class="material-symbols-outlined text-[20px] text-cyan-300">calendar_month</span>
+        <span class="font-label-lg text-[14px]">Visits &amp; Reminders</span>
       </a>
-      <a class="nav-btn flex items-center gap-space-sm px-space-md py-2.5 rounded-lg text-cyan-100/80 hover:bg-white/10 hover:text-white transition-all cursor-pointer" data-view="referrals" onclick="switchNavView('referrals')">
-        <span class="material-symbols-outlined text-[20px] text-cyan-300/70">badge</span>
-        <span class="font-label-lg text-label-lg">Community Referrals</span>
+      <a class="nav-btn flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-slate-200 hover:bg-white/10 hover:text-white transition-colors duration-150 cursor-pointer" data-view="referrals" onclick="switchNavView('referrals')">
+        <span class="material-symbols-outlined text-[20px] text-cyan-300">local_hospital</span>
+        <span class="font-label-lg text-[14px]">Hospital Referrals</span>
       </a>
-      <a class="nav-btn flex items-center gap-space-sm px-space-md py-2.5 rounded-lg text-cyan-100/80 hover:bg-white/10 hover:text-white transition-all cursor-pointer" data-view="patient-search" onclick="focusSearchInput()">
-        <span class="material-symbols-outlined text-[20px] text-cyan-300/70">person_search</span>
-        <span class="font-label-lg text-label-lg">Patient Search</span>
+      <a class="nav-btn flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-slate-200 hover:bg-white/10 hover:text-white transition-colors duration-150 cursor-pointer" data-view="patient-search" onclick="switchNavView('patient-search')">
+        <span class="material-symbols-outlined text-[20px] text-cyan-300">person_search</span>
+        <span class="font-label-lg text-[14px]">Find Patient</span>
       </a>
     </nav>
   </div>
 
-  <!-- Sidebar Footer: Healthcare Worker Accounts & Actions -->
-  <div class="p-space-md border-t border-cyan-900/60 bg-cyan-950/80 space-y-2">
-    <div class="flex items-center justify-between text-xs text-cyan-300/80 px-1 font-semibold uppercase tracking-wider">
-      <span>Healthcare Staff</span>
-      <span class="inline-flex items-center gap-1 text-[11px] text-emerald-400 font-medium">
-        <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span> Online
-      </span>
+  <!-- Sidebar Footer: Healthcare Worker Accounts & Status -->
+  <div class="p-4 border-t border-[#144758]/40 space-y-2">
+    <div class="flex items-center justify-between text-xs text-cyan-200/70">
+      <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span> System Online</span>
+      <span class="text-[11px]">v2.4 Simple Care</span>
     </div>
-    <!-- Quick Action: Create Healthcare Worker Account -->
-    <button onclick="openWorkerAccountModal('create')" class="w-full flex items-center justify-center gap-2 px-3 py-2 rounded-lg bg-cyan-900/70 hover:bg-cyan-800 text-cyan-100 text-xs font-semibold border border-cyan-700/50 transition-all shadow-sm">
-      <span class="material-symbols-outlined text-[16px] text-cyan-300">person_add</span>
-      <span>Create Worker Account</span>
-    </button>
-    <!-- Switch Worker Account -->
-    <button onclick="openWorkerAccountModal('switch')" class="w-full flex items-center justify-center gap-2 px-3 py-2 rounded-lg bg-white/5 hover:bg-white/10 text-cyan-200 text-xs font-medium border border-cyan-800/40 transition-all">
-      <span class="material-symbols-outlined text-[16px]">switch_account</span>
-      <span>Switch Staff (Nurse / Doctor / Midwife)</span>
-    </button>
+    <div class="pt-1 flex gap-2">
+      <button onclick="openWorkerAccountModal('create')" class="flex-1 flex items-center justify-center gap-1.5 py-2 px-2 rounded-lg bg-cyan-900/60 hover:bg-cyan-800 text-cyan-100 text-[11px] font-semibold border border-cyan-700/50 transition-all cursor-pointer">
+        <span class="material-symbols-outlined text-[15px]">person_add</span> New Staff
+      </button>
+      <button onclick="openWorkerAccountModal('switch')" class="flex-1 flex items-center justify-center gap-1.5 py-2 px-2 rounded-lg bg-white/5 hover:bg-white/10 text-cyan-200 text-[11px] font-medium border border-cyan-800/40 transition-all cursor-pointer">
+        <span class="material-symbols-outlined text-[15px]">swap_horiz</span> Switch
+      </button>
+    </div>
   </div>
 </aside>
 
 <!-- Main Wrapper with Left Margin for Fixed Sidebar -->
-<div class="pl-72">
+<div class="pl-64">
   <!-- Top Fixed Header -->
-  <header class="fixed top-0 left-72 right-0 h-16 bg-surface-container-lowest shadow-[0_1px_8px_rgba(0,0,0,0.04)] z-40">
-    <div class="h-16 w-full px-space-lg flex items-center justify-between gap-space-md">
-      <!-- App Logo & Branding -->
-      <div class="flex items-center gap-3 shrink-0 cursor-pointer" onclick="switchNavView('maternal-care')">
-        <div class="w-9 h-9 rounded-xl bg-primary-container flex items-center justify-center text-on-primary shadow-sm">
-          <span class="material-symbols-outlined text-[22px]">shield_with_heart</span>
+  <header class="fixed top-0 left-64 right-0 h-16 bg-white border-b border-slate-200 shadow-xs z-40">
+    <div class="h-16 w-full px-6 flex items-center justify-between gap-4">
+      <!-- App Branding -->
+      <div class="flex items-center gap-3 cursor-pointer" onclick="switchNavView('maternal-care')">
+        <div class="w-9 h-9 rounded-lg bg-[#0e7490] text-white flex items-center justify-center shadow-xs">
+          <span class="material-symbols-outlined text-[22px]">health_and_safety</span>
         </div>
         <div class="flex flex-col">
-          <span class="font-headline-sm text-headline-sm font-bold tracking-tight text-on-surface leading-tight">BabyHealth Guard</span>
-          <span class="text-[11px] text-on-surface-variant font-medium tracking-wide uppercase">Maternal &amp; Newborn Care</span>
+          <span class="font-bold text-[16px] tracking-tight text-[#0e7490] leading-tight">BabyHealth Guard</span>
+          <span class="text-[11px] font-semibold text-slate-500 tracking-wider uppercase">MOTHER &amp; BABY CARE</span>
         </div>
       </div>
 
       <!-- Search Input -->
-      <div class="flex items-center gap-space-sm flex-1 max-w-xl mx-4">
-        <div class="relative flex-1">
-          <span class="material-symbols-outlined absolute left-3 top-2.5 text-outline text-[18px]">search</span>
-          <input id="globalSearchInput" oninput="handleSearch(this.value)" class="w-full h-10 pl-10 pr-space-md bg-surface-container-low rounded-lg text-on-surface font-body-sm placeholder-outline focus:outline-none focus:bg-surface-container-lowest transition-colors border border-outline-variant/30" placeholder="Search mothers, health workers, IDs..." type="text" value="">
+      <div class="flex items-center gap-3 flex-1 max-w-xl mx-4">
+        <div class="relative w-full">
+          <span class="material-symbols-outlined absolute left-3.5 top-2.5 text-slate-400 text-[18px]">search</span>
+          <input id="globalSearchInput" oninput="handleGlobalHeaderSearch(this.value)" class="w-full h-10 pl-10 pr-4 bg-slate-100 rounded-lg text-slate-800 text-[14px] placeholder-slate-400 border-0 focus:ring-2 focus:ring-[#0e7490] focus:bg-white transition-all" placeholder="Search baby name, mother name, or ID..." type="text">
         </div>
-        <div class="relative shrink-0"></div>
       </div>
 
-      <!-- Right Header Actions & Current Healthcare Worker Profile -->
-      <div class="flex items-center gap-3 shrink-0">
-        <!-- Notification Bell -->
-        <div class="relative flex items-center justify-center w-9 h-9 rounded-lg text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface transition-colors cursor-pointer" onclick="toggleNotifications()">
+      <!-- Right Header Profile & Notifications -->
+      <div class="flex items-center gap-4 shrink-0">
+        <button onclick="toggleNotifications()" class="p-2 text-slate-500 hover:text-[#0e7490] hover:bg-slate-100 rounded-lg transition-colors relative cursor-pointer" title="Notifications">
           <span class="material-symbols-outlined text-[20px]">notifications</span>
-          <span id="notifBadge" class="absolute top-1.5 right-1.5 w-4 h-4 bg-primary text-on-primary text-[10px] font-bold rounded-full flex items-center justify-center">3</span>
-        </div>
+          <span class="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-[#0e7490]"></span>
+        </button>
 
-        <div class="h-6 w-px bg-outline-variant/30"></div>
+        <div class="h-6 w-px bg-slate-200"></div>
 
-        <!-- Healthcare Worker Profile Card (Click to open Account / Switch Staff modal) -->
-        <div class="flex items-center gap-2.5 pl-1 cursor-pointer group" onclick="openWorkerAccountModal('switch')">
+        <div class="flex items-center gap-3 cursor-pointer group" onclick="openWorkerAccountModal('switch')">
           <div class="flex flex-col text-right">
-            <span id="headerWorkerName" class="font-label-md text-label-md text-on-surface font-semibold leading-tight group-hover:text-primary transition-colors">Sr. Sarah Omondi</span>
-            <span id="headerWorkerRole" class="text-[11px] text-on-surface-variant leading-tight">Facility Nurse / Midwife</span>
+            <span id="headerWorkerName" class="text-[13px] font-semibold text-slate-800 leading-tight group-hover:text-[#0e7490] transition-colors">Sr. Sarah Omondi</span>
+            <span id="headerWorkerRole" class="text-[11px] text-slate-500 leading-tight">Facility Nurse &amp; Midwife</span>
           </div>
-          <div id="headerWorkerAvatar" class="w-9 h-9 rounded-full bg-cyan-700 text-white flex items-center justify-center font-bold text-[13px] shadow-sm border border-cyan-400/30">
+          <div id="headerWorkerAvatar" class="w-9 h-9 rounded-full bg-[#0e7490] text-white flex items-center justify-center font-bold text-xs tracking-wider shadow-xs">
             SO
           </div>
         </div>
@@ -213,51 +207,51 @@ tailwind.config={
   </header>
 
   <!-- Main Content Body -->
-  <main class="w-full pt-16 bg-surface">
-    <!-- View 1: Maternal Health & Pregnancy Care Tracker (Default View) -->
-    <div id="view-maternal-care" class="flex flex-col w-full">
-      <div class="p-space-lg max-w-[1720px] mx-auto w-full space-y-space-lg">
+  <main class="w-full pt-16 bg-slate-50">
+    <!-- View 1: Pregnant Mothers (Maternal Health Tracker) -->
+    <div id="view-maternal-care" class="hidden flex flex-col w-full">
+      <div class="p-8 max-w-[1720px] mx-auto w-full space-y-6">
         
         <!-- Top Registry Context Bar & Global Quick Actions -->
-        <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-space-md">
+        <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
           <div class="space-y-1">
-            <div class="flex items-center gap-2"></div>
-            <h1 class="font-headline-xl text-headline-xl text-on-surface tracking-tight">Maternal Health &amp; Pregnancy Care Tracker</h1>
+            <h1 class="font-headline-xl text-headline-xl text-slate-900 tracking-tight">Maternal Health &amp; Pregnancy Care Tracker</h1>
+            <p class="text-xs text-slate-500">Antenatal care registry, vital signs monitoring, and longitudinal patient inspections.</p>
           </div>
           <div class="flex items-center flex-wrap gap-2.5">
-            <button onclick="openRegisterMotherModal()" class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-primary-container text-on-primary font-label-md text-label-md hover:opacity-95 transition-opacity shadow-sm">
-              <span class="material-symbols-outlined text-[20px]">add_circle</span>
+            <button onclick="openRegisterMotherModal()" class="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg bg-[#0e7490] text-white text-[13px] font-semibold hover:bg-[#0c627a] transition-all shadow-xs cursor-pointer">
+              <span class="material-symbols-outlined text-[18px]">add_circle</span>
               <span>Register Expectant Mother</span>
             </button>
           </div>
         </div>
 
         <!-- Filter & Stratification Console -->
-        <div class="bg-surface-container-lowest rounded-xl p-space-md shadow-sm space-y-3">
+        <div class="bg-white rounded-xl p-4 shadow-xs border border-slate-200 space-y-3">
           <div class="flex flex-col md:flex-row items-center justify-between gap-3">
             <div class="relative flex-1 w-full">
-              <span class="material-symbols-outlined absolute left-3 top-2.5 text-outline text-[20px]">search</span>
-              <input id="rosterSearchInput" oninput="filterPatients()" class="w-full h-10 pl-10 pr-space-md bg-surface-container-low rounded-lg text-on-surface font-body-sm text-body-sm placeholder-outline focus:outline-none focus:bg-surface-container-lowest transition-colors" placeholder="Search by Patient name, ID, or phone number..." type="text" value="">
+              <span class="material-symbols-outlined absolute left-3 top-2.5 text-slate-400 text-[20px]">search</span>
+              <input id="rosterSearchInput" oninput="filterPatients()" class="w-full h-10 pl-10 pr-4 bg-slate-100 rounded-lg text-slate-800 text-sm placeholder-slate-400 focus:outline-none focus:bg-white border-0 transition-colors" placeholder="Search by Patient name, ID, or phone number..." type="text" value="">
             </div>
             <div class="flex items-center gap-2.5 w-full md:w-auto">
               <div class="relative min-w-[160px]">
-                <select id="trimesterFilter" onchange="filterPatients()" class="w-full h-10 px-3 pr-8 appearance-none bg-surface-container-low rounded-lg text-on-surface font-body-sm text-body-sm focus:outline-none cursor-pointer">
+                <select id="trimesterFilter" onchange="filterPatients()" class="w-full h-10 px-3 pr-8 appearance-none bg-slate-100 rounded-lg text-slate-800 text-sm focus:outline-none cursor-pointer border-0">
                   <option value="ALL">All Trimesters</option>
                   <option value="3rd">3rd Trimester</option>
                   <option value="2nd">2nd Trimester</option>
                   <option value="1st">1st Trimester</option>
                 </select>
-                <span class="material-symbols-outlined absolute right-2.5 top-2.5 text-outline pointer-events-none text-[20px]">expand_more</span>
+                <span class="material-symbols-outlined absolute right-2.5 top-2.5 text-slate-400 pointer-events-none text-[20px]">expand_more</span>
               </div>
               <div class="relative min-w-[160px]">
-                <select id="riskFilter" onchange="filterPatients()" class="w-full h-10 px-3 pr-8 appearance-none bg-surface-container-low rounded-lg text-on-surface font-body-sm text-body-sm focus:outline-none cursor-pointer">
+                <select id="riskFilter" onchange="filterPatients()" class="w-full h-10 px-3 pr-8 appearance-none bg-slate-100 rounded-lg text-slate-800 text-sm focus:outline-none cursor-pointer border-0">
                   <option value="ALL">All Risk Levels</option>
                   <option value="High Risk">High Risk Only</option>
                   <option value="Routine">Routine Care</option>
                 </select>
-                <span class="material-symbols-outlined absolute right-2.5 top-2.5 text-outline pointer-events-none text-[20px]">expand_more</span>
+                <span class="material-symbols-outlined absolute right-2.5 top-2.5 text-slate-400 pointer-events-none text-[20px]">expand_more</span>
               </div>
-              <button onclick="resetFilters()" class="px-3 h-10 rounded-lg text-on-surface-variant font-label-md text-label-md hover:bg-surface-container-low transition-colors flex items-center gap-1 shrink-0">
+              <button onclick="resetFilters()" class="px-3 h-10 rounded-lg bg-slate-100 text-slate-700 text-sm hover:bg-slate-200 transition-colors flex items-center gap-1 shrink-0 cursor-pointer font-medium">
                 <span class="material-symbols-outlined text-[18px]">filter_list</span> Filters
               </button>
             </div>
@@ -265,18 +259,18 @@ tailwind.config={
         </div>
 
         <!-- Main Workspace: Split-view Master Roster and Clinical Inspection Drawer -->
-        <div class="grid grid-cols-1 xl:grid-cols-12 gap-space-lg items-start">
+        <div class="grid grid-cols-1 xl:grid-cols-12 gap-6 items-start">
           
           <!-- Left Column: Master Maternal ANC Table (7 cols on 12-col grid) -->
-          <div class="xl:col-span-7 bg-surface-container-lowest rounded-xl shadow-sm overflow-hidden flex flex-col">
-            <div class="px-6 py-5 bg-surface-container-lowest border-b border-outline-variant/30 flex items-center justify-between">
+          <div class="xl:col-span-7 bg-white rounded-xl shadow-xs border border-slate-200 overflow-hidden flex flex-col">
+            <div class="px-6 py-5 bg-white border-b border-slate-200 flex items-center justify-between">
               <div class="flex items-center gap-3">
-                <h2 class="font-headline-sm text-headline-sm text-on-surface font-semibold">Registered Expectant Mothers</h2>
-                <span id="activeCountBadge" class="px-2.5 py-0.5 rounded-full bg-surface-container text-on-surface-variant text-label-sm font-label-sm font-medium">89 active</span>
+                <h2 class="font-headline-sm text-headline-sm text-slate-900 font-semibold">Registered Expectant Mothers</h2>
+                <span id="activeCountBadge" class="px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-700 text-xs font-medium">16 active</span>
               </div>
-              <div class="flex items-center gap-2 font-label-sm text-label-sm text-on-surface-variant">
-                <span class="text-outline">Sort:</span>
-                <button onclick="toggleSort()" class="px-2.5 py-1 rounded-lg bg-surface-container-low font-semibold text-primary flex items-center gap-1 hover:bg-surface-container-high transition-colors">
+              <div class="flex items-center gap-2 text-xs text-slate-500">
+                <span>Sort:</span>
+                <button onclick="toggleSort()" class="px-2.5 py-1 rounded-lg bg-slate-100 font-semibold text-[#0e7490] flex items-center gap-1 hover:bg-slate-200 transition-colors cursor-pointer">
                   Pregnancy Week <span id="sortIcon" class="material-symbols-outlined text-[14px]">arrow_downward</span>
                 </button>
               </div>
@@ -285,112 +279,104 @@ tailwind.config={
             <!-- Table -->
             <div class="overflow-x-auto">
               <table class="w-full text-left font-body-md">
-                <thead class="bg-surface-container-low/70 border-b border-outline-variant/30 text-outline font-label-sm text-label-sm uppercase tracking-wider">
+                <thead class="bg-slate-50 border-b border-slate-200 text-slate-500 text-xs uppercase tracking-wider font-semibold">
                   <tr>
-                    <th class="py-4 px-6 font-semibold">Mother</th>
-                    <th class="py-4 px-5 font-semibold">Stage &amp; Due Date</th>
-                    <th class="py-4 px-5 font-semibold">Key Vitals</th>
-                    <th class="py-4 px-5 font-semibold">Risk Status</th>
-                    <th class="py-4 px-5 font-semibold">Assigned Worker</th>
-                    <th class="py-4 px-6 text-right font-semibold">Action</th>
+                    <th class="py-4 px-6">Mother</th>
+                    <th class="py-4 px-5">Stage &amp; Due Date</th>
+                    <th class="py-4 px-5">Key Vitals</th>
+                    <th class="py-4 px-5">Risk Status</th>
+                    <th class="py-4 px-5">Assigned Worker</th>
+                    <th class="py-4 px-6 text-right">Action</th>
                   </tr>
                 </thead>
-                <tbody id="maternalTableBody" class="text-on-surface divide-y divide-outline-variant/20">
-                  <!-- Dynamically populated rows with default fallback rows -->
+                <tbody id="maternalTableBody" class="text-slate-800 divide-y divide-slate-100">
+                  <!-- Dynamically populated page rows with real pagination -->
                 </tbody>
               </table>
             </div>
 
-            <!-- Table Pagination & Bulk USSD Dispatch -->
-            <div class="px-6 py-4 bg-surface-container-low/60 border-t border-outline-variant/20 flex flex-col sm:flex-row items-center justify-between gap-3 font-label-sm text-label-sm text-on-surface-variant">
+            <!-- Table Pagination (Working Dynamic Controls) -->
+            <div class="px-6 py-4 bg-slate-50 border-t border-slate-200 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-slate-600">
               <div class="flex items-center gap-2">
-                <span id="paginationInfo">Showing 1-4 of 89 expectant mothers</span>
-                <span class="text-outline">•</span>
-                <span class="text-primary font-medium flex items-center gap-1">
+                <span id="paginationInfo">Showing 1-4 of 16 expectant mothers</span>
+                <span class="text-slate-300">•</span>
+                <span class="text-[#0e7490] font-medium flex items-center gap-1">
                   <span class="w-2 h-2 rounded-full bg-emerald-500 inline-block"></span>
                   All records synchronized
                 </span>
               </div>
-              <div class="flex items-center gap-1.5">
-                <button class="px-3 py-1.5 rounded-lg bg-surface-container-lowest text-on-surface disabled:opacity-50 hover:bg-surface-container-high transition-colors">Prev</button>
-                <button class="px-3 py-1.5 rounded-lg bg-primary-container text-on-primary font-semibold">1</button>
-                <button class="px-3 py-1.5 rounded-lg bg-surface-container-lowest text-on-surface hover:bg-surface-container-high transition-colors">2</button>
-                <button class="px-3 py-1.5 rounded-lg bg-surface-container-lowest text-on-surface hover:bg-surface-container-high transition-colors">3</button>
-                <button class="px-3 py-1.5 rounded-lg bg-surface-container-lowest text-on-surface hover:bg-surface-container-high transition-colors">Next</button>
+              <div id="paginationControls" class="flex items-center gap-1.5">
+                <!-- Dynamically generated Prev, 1, 2, 3, 4, Next buttons -->
               </div>
             </div>
           </div>
 
           <!-- Right Column: Deep Longitudinal Clinical Inspection Drawer (5 cols on 12-col grid) -->
-          <div class="xl:col-span-5 bg-surface-container-lowest rounded-xl shadow-md p-space-md space-y-space-md">
-            <div class="p-space-lg space-y-space-lg">
-              
-              <!-- Patient Drawer Header -->
-              <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-space-sm pb-1 border-b border-outline-variant/20">
-                <div class="flex items-center gap-3.5">
-                  <div id="drawerAvatar" class="w-12 h-12 rounded-full bg-primary flex items-center justify-center text-on-primary font-headline-sm text-headline-sm font-bold shadow-sm shrink-0">
-                    ZB
+          <div class="xl:col-span-5 bg-white rounded-xl shadow-xs border border-slate-200 p-6 space-y-6">
+            <!-- Patient Drawer Header -->
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-slate-100">
+              <div class="flex items-center gap-3.5">
+                <div id="drawerAvatar" class="w-12 h-12 rounded-full bg-[#0e7490] flex items-center justify-center text-white font-bold text-sm shadow-xs shrink-0">
+                  ZB
+                </div>
+                <div class="flex flex-col">
+                  <div class="flex items-center gap-2">
+                    <h3 id="drawerPatientName" class="text-[17px] font-bold text-slate-900 leading-tight">Zainab Bello</h3>
+                    <span id="drawerRiskBadge" class="px-2.5 py-0.5 rounded-full text-xs bg-slate-100 text-slate-800 font-semibold border border-slate-200">High Risk</span>
                   </div>
-                  <div class="flex flex-col">
-                    <div class="flex items-center gap-2">
-                      <h3 id="drawerPatientName" class="font-headline-md text-headline-md text-on-surface font-bold leading-tight">Zainab Bello</h3>
-                      <span id="drawerRiskBadge" class="px-2.5 py-0.5 rounded-full text-label-sm font-label-sm bg-surface-container-high text-on-surface font-semibold border border-outline-variant/30">High Risk</span>
-                    </div>
-                    <span id="drawerPatientMeta" class="text-[12px] text-outline font-normal mt-0.5">ID: M-01 • 32 yrs</span>
-                  </div>
-                </div>
-                <div class="flex items-center gap-2 shrink-0">
-                  <button onclick="handleAlertCHW()" class="px-3.5 py-2 rounded-xl bg-surface-container-low hover:bg-surface-container-high text-on-surface border border-outline-variant/30 font-label-md text-label-md font-semibold flex items-center gap-1.5 shadow-sm transition-colors">
-                    <span class="material-symbols-outlined text-[18px] text-primary">notifications_active</span>
-                    <span>Alert CHW</span>
-                  </button>
+                  <span id="drawerPatientMeta" class="text-xs text-slate-500 mt-0.5">ID: M-01 • 32 yrs</span>
                 </div>
               </div>
-
-              <!-- 3 Clinical Stat Cards -->
-              <div class="grid grid-cols-3 gap-3">
-                <div class="bg-surface-container-low p-3 rounded-xl text-center">
-                  <span class="font-label-sm text-label-sm text-outline uppercase block">Pregnancy Week</span>
-                  <span id="drawerStatWeek" class="font-headline-md text-headline-md text-on-surface font-bold mt-0.5 block">32w 4d</span>
-                  <span id="drawerStatTrimester" class="text-[12px] text-on-surface-variant block mt-0.5">3rd Trimester</span>
-                </div>
-                <div class="bg-surface-container-low p-3 rounded-xl text-center">
-                  <span class="font-label-sm text-label-sm text-outline uppercase block font-semibold">Blood Pressure</span>
-                  <span id="drawerStatBP" class="font-headline-md text-headline-md text-on-surface font-bold mt-0.5 block">144/94</span>
-                  <span id="drawerStatBPStatus" class="text-[12px] text-on-surface-variant font-medium block mt-0.5">Stage 1 High</span>
-                </div>
-                <div class="bg-surface-container-low p-3 rounded-xl text-center">
-                  <span class="font-label-sm text-label-sm text-outline uppercase block">Hemoglobin</span>
-                  <span id="drawerStatHb" class="font-headline-md text-headline-md text-on-surface font-bold mt-0.5 block">9.8 <span class="text-[12px] font-normal">g/dL</span></span>
-                  <span id="drawerStatHbStatus" class="text-[12px] text-on-surface-variant font-medium block mt-0.5">Mild Anemia</span>
-                </div>
-              </div>
-
-              <!-- Clinical Summary & Notes -->
-              <div class="bg-surface-container-low p-space-md rounded-xl space-y-2">
-                <span class="font-label-lg text-label-lg text-on-surface font-bold block">Clinical Summary &amp; Notes</span>
-                <p id="drawerNotes" class="text-body-sm font-body-sm text-on-surface-variant leading-relaxed">
-                  Patient reported persistent morning headache and mild ankle swelling during the last outreach visit. Currently prescribed supplemental iron with weekly BP checks.
-                </p>
-                <div class="pt-2 flex items-center justify-between text-label-sm font-label-sm text-on-surface-variant border-t border-outline-variant/30">
-                  <span>Assigned CHW: <strong id="drawerAssignedCHW" class="text-on-surface">Mary Wambui</strong></span>
-                </div>
-              </div>
-
-              <!-- Clinical Actions -->
-              <div class="flex items-center gap-3 pt-2">
-                <button onclick="openScheduleApptModal()" class="flex-1 py-2.5 rounded-xl bg-primary text-on-primary font-label-md text-label-md font-semibold text-center hover:opacity-95 transition-opacity shadow-sm flex items-center justify-center gap-1.5">
-                  <span class="material-symbols-outlined text-[18px]">calendar_month</span>
-                  <span>Schedule Appt</span>
-                </button>
-                <button onclick="openRecordCheckupModal()" class="flex-1 py-2.5 rounded-xl bg-primary-container text-on-primary font-label-md text-label-md font-semibold text-center hover:opacity-95 transition-opacity shadow-sm">
-                  Record Pregnancy Checkup
-                </button>
-                <button onclick="openReferralSlipModal()" class="flex-1 py-2.5 rounded-xl bg-surface-container-high text-on-surface font-label-md text-label-md font-semibold text-center hover:bg-surface-container-highest transition-colors">
-                  Referral Slip
+              <div class="flex items-center gap-2 shrink-0">
+                <button onclick="handleAlertCHW()" class="px-3.5 py-2 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-semibold flex items-center gap-1.5 shadow-xs transition-colors cursor-pointer">
+                  <span class="material-symbols-outlined text-[18px] text-[#0e7490]">notifications_active</span>
+                  <span>Alert CHW</span>
                 </button>
               </div>
+            </div>
 
+            <!-- 3 Clinical Stat Cards -->
+            <div class="grid grid-cols-3 gap-3">
+              <div class="bg-slate-50 p-3 rounded-xl border border-slate-100 text-center">
+                <span class="text-[11px] text-slate-500 uppercase block font-semibold">Pregnancy Week</span>
+                <span id="drawerStatWeek" class="text-[18px] font-bold text-slate-900 mt-0.5 block">32w 4d</span>
+                <span id="drawerStatTrimester" class="text-[11px] text-slate-500 block mt-0.5">3rd Trimester</span>
+              </div>
+              <div class="bg-slate-50 p-3 rounded-xl border border-slate-100 text-center">
+                <span class="text-[11px] text-slate-500 uppercase block font-semibold">Blood Pressure</span>
+                <span id="drawerStatBP" class="text-[18px] font-bold text-slate-900 mt-0.5 block">144/94</span>
+                <span id="drawerStatBPStatus" class="text-[11px] text-[#0e7490] font-medium block mt-0.5">Stage 1 High</span>
+              </div>
+              <div class="bg-slate-50 p-3 rounded-xl border border-slate-100 text-center">
+                <span class="text-[11px] text-slate-500 uppercase block font-semibold">Hemoglobin</span>
+                <span id="drawerStatHb" class="text-[18px] font-bold text-slate-900 mt-0.5 block">9.8 <span class="text-xs font-normal">g/dL</span></span>
+                <span id="drawerStatHbStatus" class="text-[11px] text-slate-500 font-medium block mt-0.5">Mild Anemia</span>
+              </div>
+            </div>
+
+            <!-- Clinical Summary & Notes -->
+            <div class="bg-slate-50 p-4 rounded-xl border border-slate-100 space-y-2">
+              <span class="text-xs font-bold text-slate-900 block uppercase tracking-wider">Clinical Summary &amp; Notes</span>
+              <p id="drawerNotes" class="text-xs text-slate-600 leading-relaxed">
+                Patient reported persistent morning headache and mild ankle swelling during the last outreach visit. Currently prescribed supplemental iron with weekly BP checks.
+              </p>
+              <div class="pt-2 flex items-center justify-between text-xs text-slate-500 border-t border-slate-200">
+                <span>Assigned CHW: <strong id="drawerAssignedCHW" class="text-slate-800">Mary Wambui</strong></span>
+              </div>
+            </div>
+
+            <!-- Clinical Actions -->
+            <div class="flex items-center gap-2 pt-2">
+              <button onclick="openScheduleApptModal()" class="flex-1 py-2.5 rounded-lg bg-[#0e7490] text-white text-xs font-semibold hover:bg-[#0c627a] transition-all shadow-xs flex items-center justify-center gap-1.5 cursor-pointer">
+                <span class="material-symbols-outlined text-[16px]">calendar_month</span>
+                <span>Schedule Appt</span>
+              </button>
+              <button onclick="openRecordCheckupModal()" class="flex-1 py-2.5 rounded-lg bg-teal-50 border border-teal-200 text-[#0e7490] text-xs font-semibold hover:bg-teal-100 transition-all shadow-xs cursor-pointer">
+                Record Checkup
+              </button>
+              <button onclick="openReferralSlipModal()" class="flex-1 py-2.5 rounded-lg bg-slate-100 text-slate-800 text-xs font-semibold hover:bg-slate-200 transition-colors cursor-pointer">
+                Referral Slip
+              </button>
             </div>
           </div>
 
@@ -398,140 +384,388 @@ tailwind.config={
       </div>
     </div>
 
-    <!-- View 2: Newborn Care & Health Checks -->
-    <div id="view-newborn-care" class="hidden p-space-lg max-w-[1720px] mx-auto w-full space-y-space-lg">
-      <div class="flex items-center justify-between">
-        <div>
-          <h1 class="font-headline-xl text-headline-xl text-on-surface">Newborn Care &amp; Health Checks</h1>
-          <p class="text-on-surface-variant mt-1 text-sm">Postnatal monitoring, Apgar scores, immunization registry, and early newborn danger signs.</p>
-        </div>
-        <button onclick="toast('Newborn registration enabled in maternal record')" class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-primary text-on-primary font-semibold text-sm shadow-sm">
-          <span class="material-symbols-outlined text-[20px]">add</span> Register Newborn
-        </button>
-      </div>
-
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div class="bg-surface-container-lowest p-5 rounded-xl shadow-sm border border-outline-variant/30">
-          <div class="flex items-center justify-between">
-            <span class="text-outline text-xs font-semibold uppercase">Total Newborns (PNC)</span>
-            <span class="material-symbols-outlined text-primary text-[22px]">child_care</span>
+    <!-- View 2: Baby Checks & Newborn Care (UPDATED WITH SPECIFICATION) -->
+    <div id="view-newborn-care" class="flex flex-col w-full">
+      <!-- Top Header & Action Ribbon -->
+      <div class="bg-white px-8 py-4 flex flex-wrap items-center justify-between gap-4 border-b border-slate-200 shadow-xs">
+        <div class="flex items-center gap-3">
+          <h1 class="text-[20px] font-bold text-slate-900 leading-tight">Baby Checks &amp; Newborn Care</h1>
+          <div class="flex items-center gap-2">
+            <span class="bg-slate-100 text-slate-700 px-3 py-1 rounded-full text-xs font-semibold">After Birth Checks (First 28 Days)</span>
+            <span class="bg-teal-50 border border-teal-200 text-[#0e7490] px-3 py-1 rounded-full text-xs font-semibold flex items-center gap-1.5">
+              <span class="w-2 h-2 rounded-full bg-[#0e7490] animate-pulse"></span> 5 Babies Need Quick Attention
+            </span>
           </div>
-          <div class="text-2xl font-bold text-on-surface mt-2">42 Active</div>
-          <span class="text-xs text-emerald-600 font-medium">96% immunized on schedule</span>
         </div>
-        <div class="bg-surface-container-lowest p-5 rounded-xl shadow-sm border border-outline-variant/30">
-          <div class="flex items-center justify-between">
-            <span class="text-outline text-xs font-semibold uppercase">Exclusive Breastfeeding</span>
-            <span class="material-symbols-outlined text-cyan-600 text-[22px]">water_drop</span>
-          </div>
-          <div class="text-2xl font-bold text-on-surface mt-2">88.5%</div>
-          <span class="text-xs text-on-surface-variant font-medium">Community target: &gt;85%</span>
-        </div>
-        <div class="bg-surface-container-lowest p-5 rounded-xl shadow-sm border border-outline-variant/30">
-          <div class="flex items-center justify-between">
-            <span class="text-outline text-xs font-semibold uppercase">High-Risk Neonates</span>
-            <span class="material-symbols-outlined text-tertiary-container text-[22px]">warning</span>
-          </div>
-          <div class="text-2xl font-bold text-tertiary mt-2">3 Flagged</div>
-          <span class="text-xs text-tertiary font-medium">Under daily surveillance</span>
+        <div class="flex items-center gap-3">
+          <button onclick="openRegisterNewbornModal()" class="flex items-center gap-1.5 bg-[#0e7490] text-white px-4 py-2 rounded-lg text-[13px] font-semibold hover:bg-[#0c627a] shadow-xs transition-colors cursor-pointer">
+            <span class="material-symbols-outlined text-[18px]">add</span>
+            <span>+ Register New Baby</span>
+          </button>
         </div>
       </div>
 
-      <!-- Newborn Table -->
-      <div class="bg-surface-container-lowest rounded-xl shadow-sm overflow-hidden">
-        <div class="p-5 border-b border-outline-variant/20 flex justify-between items-center">
-          <h3 class="font-headline-sm text-headline-sm font-semibold text-on-surface">Postnatal Newborn Registry</h3>
+      <div class="p-8 space-y-6">
+        <!-- Top Summary Cards (KPIs) -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-xs flex flex-col justify-between">
+            <div class="flex items-center justify-between">
+              <span class="text-[11px] font-bold tracking-wider text-slate-500 uppercase">BABIES MONITORED</span>
+              <span class="material-symbols-outlined text-[#0e7490] text-[22px]">child_care</span>
+            </div>
+            <div class="mt-4">
+              <div class="text-[28px] font-bold text-slate-900 leading-none">312</div>
+              <div class="mt-2 text-xs text-[#0e7490] font-semibold">+18 registered this week</div>
+            </div>
+          </div>
+          <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-xs flex flex-col justify-between">
+            <div class="flex items-center justify-between">
+              <span class="text-[11px] font-bold tracking-wider text-slate-500 uppercase">NEEDS QUICK ATTENTION</span>
+              <span class="material-symbols-outlined text-[#0e7490] text-[22px]">error_outline</span>
+            </div>
+            <div class="mt-4">
+              <div class="text-[28px] font-bold text-slate-900 leading-none">5</div>
+              <div class="mt-2 text-xs text-slate-600 font-medium">Babies flagged with warning signs</div>
+            </div>
+          </div>
+          <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-xs flex flex-col justify-between">
+            <div class="flex items-center justify-between">
+              <span class="text-[11px] font-bold tracking-wider text-slate-500 uppercase">VISITS COMPLETED</span>
+              <span class="material-symbols-outlined text-[#0e7490] text-[22px]">check_circle</span>
+            </div>
+            <div class="mt-4">
+              <div class="text-[28px] font-bold text-slate-900 leading-none">88.6%</div>
+              <div class="mt-2 text-xs text-slate-600 font-medium">Days 1, 3, 7 &amp; 28 checkups</div>
+            </div>
+          </div>
         </div>
-        <table class="w-full text-left font-body-md">
-          <thead class="bg-surface-container-low/70 border-b border-outline-variant/30 text-outline text-xs uppercase">
-            <tr>
-              <th class="p-4">Baby Name</th>
-              <th class="p-4">Mother Name</th>
-              <th class="p-4">Age / DOB</th>
-              <th class="p-4">Birth Weight</th>
-              <th class="p-4">Status / Vaccines</th>
-              <th class="p-4 text-right">Action</th>
-            </tr>
-          </thead>
-          <tbody class="divide-y divide-outline-variant/20 text-on-surface text-sm">
-            <tr class="hover:bg-surface-container-low/50">
-              <td class="p-4 font-semibold">Baby Brian Bello</td>
-              <td class="p-4">Zainab Bello (M-01)</td>
-              <td class="p-4">8 Days (Oct 29, 2024)</td>
-              <td class="p-4">3.2 kg</td>
-              <td class="p-4"><span class="px-2.5 py-1 rounded-full text-xs font-medium bg-emerald-100 text-emerald-800">BCG &amp; OPV 0 Given</span></td>
-              <td class="p-4 text-right"><button onclick="toast('Viewing Baby Brian clinical record')" class="px-3 py-1 bg-surface-container text-on-surface rounded-lg text-xs font-medium hover:bg-primary hover:text-white">View Record</button></td>
-            </tr>
-            <tr class="hover:bg-surface-container-low/50">
-              <td class="p-4 font-semibold">Baby Achieng</td>
-              <td class="p-4">Amina Hassan (M-04)</td>
-              <td class="p-4">14 Days (Oct 23, 2024)</td>
-              <td class="p-4">2.8 kg</td>
-              <td class="p-4"><span class="px-2.5 py-1 rounded-full text-xs font-medium bg-amber-100 text-amber-800">PNC-2 Due</span></td>
-              <td class="p-4 text-right"><button onclick="toast('Viewing Baby Achieng clinical record')" class="px-3 py-1 bg-surface-container text-on-surface rounded-lg text-xs font-medium hover:bg-primary hover:text-white">View Record</button></td>
-            </tr>
-          </tbody>
-        </table>
+
+        <!-- Main Registry Table & Detail Panel -->
+        <div class="grid grid-cols-1 xl:grid-cols-12 gap-6 items-start">
+          <!-- Detailed Table (8 Cols) -->
+          <div class="xl:col-span-8 bg-white rounded-xl shadow-xs border border-slate-200 overflow-hidden flex flex-col">
+            <div class="p-4 flex flex-wrap items-center justify-between gap-3 border-b border-slate-200">
+              <div>
+                <h3 class="text-[16px] font-bold text-slate-900">Babies Under Care</h3>
+                <p class="text-xs text-slate-500 mt-0.5">Community health visits &amp; clinic check records</p>
+              </div>
+              <div class="flex items-center gap-2">
+                <div class="flex rounded-lg bg-slate-100 p-1 text-xs font-semibold">
+                  <button id="babyFilterAll" onclick="filterBabyTable('ALL')" class="px-3 py-1 bg-white text-[#0e7490] rounded shadow-xs cursor-pointer">All Babies (312)</button>
+                  <button id="babyFilterAttention" onclick="filterBabyTable('ATTENTION')" class="px-3 py-1 text-slate-600 hover:text-slate-900 cursor-pointer">Needs Quick Attention (5)</button>
+                  <button id="babyFilterDoingWell" onclick="filterBabyTable('NORMAL')" class="px-3 py-1 text-slate-600 hover:text-slate-900 cursor-pointer">Doing Well (307)</button>
+                </div>
+                <button onclick="toast('Exporting baby registry to CSV...')" class="p-2 bg-slate-100 text-slate-600 rounded-lg hover:bg-slate-200 hover:text-[#0e7490] transition-colors cursor-pointer" title="Download List">
+                  <span class="material-symbols-outlined text-[18px]">download</span>
+                </button>
+              </div>
+            </div>
+            <div class="overflow-x-auto w-full">
+              <table class="w-full text-left text-xs text-slate-800">
+                <thead class="bg-slate-50 text-slate-500 uppercase tracking-wider font-semibold border-b border-slate-200">
+                  <tr>
+                    <th class="py-3.5 px-5">BABY &amp; MOTHER</th>
+                    <th class="py-3.5 px-4">AGE &amp; WEIGHT</th>
+                    <th class="py-3.5 px-4">BODY CHECKS</th>
+                    <th class="py-3.5 px-5 text-right">CARE STATUS</th>
+                  </tr>
+                </thead>
+                <tbody id="babyTableBody" class="divide-y divide-slate-100">
+                  <tr class="bg-teal-50/40 hover:bg-teal-50/70 transition-colors cursor-pointer group" onclick="selectBaby('mary_osei')">
+                    <td class="py-4 px-5">
+                      <div class="flex items-center gap-3">
+                        <div class="w-2.5 h-2.5 rounded-full bg-[#0e7490] shrink-0"></div>
+                        <div>
+                          <div class="text-[14px] font-bold text-slate-900 group-hover:text-[#0e7490] transition-colors">Baby of Mary Osei</div>
+                          <div class="text-slate-400 font-medium text-[11px]">#B-01 • Asamankese</div>
+                        </div>
+                      </div>
+                    </td>
+                    <td class="py-4 px-4">
+                      <div class="font-bold text-slate-800">Day 3</div>
+                      <div class="text-slate-500">2.45 kg</div>
+                    </td>
+                    <td class="py-4 px-4">
+                      <div>Temp: <span class="font-bold text-slate-800">35.3°C</span></div>
+                      <div class="text-slate-500">Breath: 52/min</div>
+                    </td>
+                    <td class="py-4 px-5 text-right">
+                      <span class="bg-teal-100/80 text-[#0e7490] px-3 py-1 rounded-full text-[11px] font-bold uppercase">Needs Urgent Care</span>
+                    </td>
+                  </tr>
+                  <tr class="hover:bg-slate-50 transition-colors cursor-pointer group" onclick="selectBaby('fatima_a')">
+                    <td class="py-4 px-5">
+                      <div class="flex items-center gap-3">
+                        <div class="w-2.5 h-2.5 rounded-full bg-[#0e7490] shrink-0"></div>
+                        <div>
+                          <div class="text-[14px] font-bold text-slate-900 group-hover:text-[#0e7490] transition-colors">Baby of Fatima Abubakar</div>
+                          <div class="text-slate-400 font-medium text-[11px]">#B-02 • Beposo</div>
+                        </div>
+                      </div>
+                    </td>
+                    <td class="py-4 px-4">
+                      <div class="font-bold text-slate-800">Day 6</div>
+                      <div class="text-slate-500">3.10 kg</div>
+                    </td>
+                    <td class="py-4 px-4">
+                      <div>Breath: <span class="font-bold text-slate-800">68/min</span></div>
+                      <div class="text-slate-500">Temp: 37.8°C</div>
+                    </td>
+                    <td class="py-4 px-5 text-right">
+                      <span class="bg-teal-100/80 text-[#0e7490] px-3 py-1 rounded-full text-[11px] font-bold uppercase">Needs Urgent Care</span>
+                    </td>
+                  </tr>
+                  <tr class="hover:bg-slate-50 transition-colors cursor-pointer group" onclick="selectBaby('esther_m')">
+                    <td class="py-4 px-5">
+                      <div class="flex items-center gap-3">
+                        <div class="w-2.5 h-2.5 rounded-full bg-slate-300 shrink-0"></div>
+                        <div>
+                          <div class="text-[14px] font-bold text-slate-900 group-hover:text-[#0e7490] transition-colors">Baby of Esther Mensah</div>
+                          <div class="text-slate-400 font-medium text-[11px]">#B-03 • Kwahu Ridge</div>
+                        </div>
+                      </div>
+                    </td>
+                    <td class="py-4 px-4">
+                      <div class="font-bold text-slate-800">Day 2</div>
+                      <div class="text-slate-500">2.80 kg</div>
+                    </td>
+                    <td class="py-4 px-4">
+                      <div>Temp: <span class="text-slate-800">36.7°C</span></div>
+                      <div class="text-slate-500">Breath: 48/min</div>
+                    </td>
+                    <td class="py-4 px-5 text-right">
+                      <span class="bg-slate-100 text-slate-700 px-3 py-1 rounded-full text-[11px] font-bold uppercase">Needs Attention</span>
+                    </td>
+                  </tr>
+                  <tr class="hover:bg-slate-50 transition-colors cursor-pointer group" onclick="selectBaby('grace_k')">
+                    <td class="py-4 px-5">
+                      <div class="flex items-center gap-3">
+                        <div class="w-2.5 h-2.5 rounded-full bg-slate-300 shrink-0"></div>
+                        <div>
+                          <div class="text-[14px] font-bold text-slate-900 group-hover:text-[#0e7490] transition-colors">Baby of Grace Kwarteng</div>
+                          <div class="text-slate-400 font-medium text-[11px]">#B-04 • Donkorkrom</div>
+                        </div>
+                      </div>
+                    </td>
+                    <td class="py-4 px-4">
+                      <div class="font-bold text-slate-800">Day 7</div>
+                      <div class="text-slate-500">3.40 kg</div>
+                    </td>
+                    <td class="py-4 px-4">
+                      <div>Temp: <span class="text-slate-800">37.9°C</span></div>
+                      <div class="text-slate-500">Breath: 44/min</div>
+                    </td>
+                    <td class="py-4 px-5 text-right">
+                      <span class="bg-slate-100 text-slate-700 px-3 py-1 rounded-full text-[11px] font-bold uppercase">Needs Attention</span>
+                    </td>
+                  </tr>
+                  <tr class="hover:bg-slate-50 transition-colors cursor-pointer group" onclick="selectBaby('comfort_b')">
+                    <td class="py-4 px-5">
+                      <div class="flex items-center gap-3">
+                        <div class="w-2.5 h-2.5 rounded-full bg-emerald-400 shrink-0"></div>
+                        <div>
+                          <div class="text-[14px] font-bold text-slate-900 group-hover:text-[#0e7490] transition-colors">Baby of Comfort Boateng</div>
+                          <div class="text-slate-400 font-medium text-[11px]">#B-05 • Akosombo</div>
+                        </div>
+                      </div>
+                    </td>
+                    <td class="py-4 px-4">
+                      <div class="font-bold text-slate-800">Day 14</div>
+                      <div class="text-slate-500">3.65 kg</div>
+                    </td>
+                    <td class="py-4 px-4">
+                      <div>Temp: <span class="text-slate-800">36.6°C</span></div>
+                      <div class="text-slate-500">Breath: 40/min</div>
+                    </td>
+                    <td class="py-4 px-5 text-right">
+                      <span class="bg-emerald-50 text-emerald-700 border border-emerald-200 px-3 py-1 rounded-full text-[11px] font-semibold uppercase">Healthy &amp; Normal</span>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="p-3 px-4 bg-slate-50 flex flex-wrap items-center justify-between gap-2 text-xs text-slate-600 border-t border-slate-200">
+              <div id="babyPaginationInfo">Showing <strong class="text-slate-900">5 of 312</strong> registered babies • <span class="text-[#0e7490] font-semibold">5 babies need quick attention</span></div>
+              <div id="babyPaginationControls" class="flex items-center gap-1">
+                <button class="px-2.5 py-1 rounded bg-white text-slate-700 border border-slate-200 hover:bg-slate-100 font-semibold">Prev</button>
+                <button class="px-2.5 py-1 rounded bg-[#0e7490] text-white font-bold">1</button>
+                <button class="px-2.5 py-1 rounded bg-white text-slate-700 border border-slate-200 hover:bg-slate-100">2</button>
+                <button class="px-2.5 py-1 rounded bg-white text-slate-700 border border-slate-200 hover:bg-slate-100">3</button>
+                <span class="px-1 text-slate-400">...</span>
+                <button class="px-2.5 py-1 rounded bg-white text-slate-700 border border-slate-200 hover:bg-slate-100 font-semibold">Next</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right Side Detail Panel (4 Cols) -->
+          <div class="xl:col-span-4 bg-white rounded-xl shadow-xs border border-slate-200 p-6 flex flex-col space-y-6 relative">
+            <div class="flex items-start justify-between pb-4 border-b border-slate-100">
+              <div class="flex items-center gap-3">
+                <div id="panel-baby-avatar" class="w-10 h-10 rounded-full bg-teal-100 text-[#0e7490] flex items-center justify-center font-bold text-sm">MO</div>
+                <div>
+                  <div class="flex items-center gap-2">
+                    <h3 class="text-[15px] font-bold text-slate-900" id="panel-baby-name">Baby of Mary Osei</h3>
+                    <span class="bg-teal-100 text-[#0e7490] text-[10px] px-2 py-0.5 rounded-full font-bold uppercase" id="panel-baby-tag">Urgent</span>
+                  </div>
+                  <p class="text-xs text-slate-500" id="panel-baby-meta">B-01 • Age: 3 days • Asamankese</p>
+                </div>
+              </div>
+              <button onclick="toast('Inspection drawer active')" class="p-1 text-slate-400 hover:text-slate-700 rounded-lg cursor-pointer">
+                <span class="material-symbols-outlined text-[18px]">close</span>
+              </button>
+            </div>
+
+            <!-- 3 Stat Cards -->
+            <div class="grid grid-cols-3 gap-3">
+              <div class="bg-slate-50 p-3.5 rounded-lg border border-slate-100">
+                <span class="text-[10px] text-slate-500 block uppercase font-bold tracking-wider">WEIGHT</span>
+                <div class="text-[15px] font-bold text-slate-900 mt-1" id="panel-weight">2.45 kg</div>
+                <span class="text-[11px] text-slate-500" id="panel-birth-weight">Birth: 2.50 kg</span>
+              </div>
+              <div class="bg-slate-50 p-3.5 rounded-lg border border-slate-100">
+                <span class="text-[10px] text-slate-500 block uppercase font-bold tracking-wider">BODY TEMP</span>
+                <div class="text-[15px] font-bold text-slate-900 mt-1" id="panel-temp">35.3°C</div>
+                <span class="text-[11px] text-[#0e7490] font-semibold" id="panel-temp-status">Too Cold</span>
+              </div>
+              <div class="bg-slate-50 p-3.5 rounded-lg border border-slate-100">
+                <span class="text-[10px] text-slate-500 block uppercase font-bold tracking-wider">BREATHING</span>
+                <div class="text-[15px] font-bold text-slate-900 mt-1" id="panel-breath">52 / min</div>
+                <span class="text-[11px] text-slate-500" id="panel-breath-status">Normal</span>
+              </div>
+            </div>
+
+            <!-- Kangaroo Mother Care (KMC) Skin-to-Skin progress block -->
+            <div class="bg-slate-50 p-3.5 rounded-lg border border-slate-100 space-y-1.5">
+              <div class="flex items-center justify-between text-[11px]">
+                <span class="text-slate-500 font-bold uppercase tracking-wider">KMC SKIN-TO-SKIN CARE</span>
+                <span class="font-bold text-[#0e7490]" id="panel-kmc-pct">54%</span>
+              </div>
+              <div class="w-full bg-slate-200 h-2 rounded-full overflow-hidden">
+                <div id="panel-kmc-bar" class="bg-[#0e7490] h-2 rounded-full transition-all duration-300" style="width: 54%"></div>
+              </div>
+              <p class="text-[11px] text-slate-500 leading-tight" id="panel-kmc-text">Mother holding baby skin-to-skin: 9 of 18 hours done today (54%).</p>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="space-y-3 pt-2">
+              <button class="w-full bg-[#0e7490] text-white py-3 px-4 rounded-lg text-xs font-bold hover:bg-[#0c627a] transition-colors flex items-center justify-center gap-2 shadow-xs cursor-pointer" onclick="triggerAction(document.getElementById('panel-baby-name').innerText, 'Send Health Worker to Home')">
+                <span class="material-symbols-outlined text-[18px]">person_pin_circle</span>
+                <span>Send Health Worker to Home</span>
+              </button>
+              <button class="w-full bg-slate-100 text-slate-700 py-3 px-4 rounded-lg text-xs font-semibold hover:bg-slate-200 transition-colors flex items-center justify-center gap-2 shadow-xs cursor-pointer" onclick="triggerAction(document.getElementById('panel-baby-name').innerText, 'Record Today\'s Checkup')">
+                <span class="material-symbols-outlined text-[18px]">assignment_turned_in</span>
+                <span>Record Today's Checkup</span>
+              </button>
+              <button class="w-full bg-slate-100 text-[#0e7490] py-3 px-4 rounded-lg text-xs font-semibold hover:bg-slate-200 transition-colors flex items-center justify-center gap-2 shadow-xs cursor-pointer" onclick="triggerAction(document.getElementById('panel-baby-name').innerText, 'Transfer to Hospital')">
+                <span class="material-symbols-outlined text-[18px]">local_hospital</span>
+                <span>Transfer to Hospital</span>
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
 
-    <!-- View 3: Appointment Calendar & SMS Reminders -->
-    <div id="view-appointments" class="hidden p-space-lg max-w-[1720px] mx-auto w-full space-y-space-lg">
-      <div class="flex items-center justify-between">
+    <!-- View 3: Visits & Reminders (Appointment Calendar) -->
+    <div id="view-appointments" class="hidden p-8 max-w-[1720px] mx-auto w-full space-y-6">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 class="font-headline-xl text-headline-xl text-on-surface">Appointment Calendar &amp; SMS Reminders</h1>
-          <p class="text-on-surface-variant mt-1 text-sm">Upcoming Antenatal, Postnatal, and Immunization appointments with automated USSD/SMS alerts.</p>
+          <h1 class="font-headline-xl text-headline-xl text-slate-900">Visits &amp; Reminders</h1>
+          <p class="text-slate-500 mt-1 text-sm">Upcoming Antenatal, Postnatal, and Immunization appointments with automated USSD/SMS alerts.</p>
         </div>
-        <button onclick="openScheduleApptModal()" class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-primary text-on-primary font-semibold text-sm shadow-sm">
-          <span class="material-symbols-outlined text-[20px]">add</span> New Appointment
+        <button onclick="openScheduleApptModal()" class="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg bg-[#0e7490] text-white font-semibold text-xs shadow-xs cursor-pointer hover:bg-[#0c627a]">
+          <span class="material-symbols-outlined text-[18px]">add</span> New Appointment
         </button>
       </div>
 
-      <div class="bg-surface-container-lowest rounded-xl shadow-sm p-5 space-y-4">
-        <h3 class="font-headline-sm text-headline-sm font-semibold text-on-surface">Upcoming Scheduled Visits</h3>
+      <!-- Filter Tabs -->
+      <div class="flex gap-2 border-b border-slate-200 pb-3">
+        <button onclick="filterAppointments('ALL')" id="apptTabAll" class="px-4 py-1.5 rounded-lg bg-[#0e7490] text-white text-xs font-semibold cursor-pointer">All Appointments</button>
+        <button onclick="filterAppointments('ANTENATAL')" id="apptTabANC" class="px-4 py-1.5 rounded-lg bg-slate-100 text-slate-700 text-xs font-medium hover:bg-slate-200 cursor-pointer">Antenatal (ANC)</button>
+        <button onclick="filterAppointments('POSTNATAL')" id="apptTabPNC" class="px-4 py-1.5 rounded-lg bg-slate-100 text-slate-700 text-xs font-medium hover:bg-slate-200 cursor-pointer">Postnatal (PNC)</button>
+        <button onclick="filterAppointments('DELIVERY')" id="apptTabDelivery" class="px-4 py-1.5 rounded-lg bg-slate-100 text-slate-700 text-xs font-medium hover:bg-slate-200 cursor-pointer">Delivery Planning</button>
+      </div>
+
+      <div class="bg-white rounded-xl shadow-xs border border-slate-200 p-6 space-y-4">
+        <h3 class="text-[16px] font-bold text-slate-900">Scheduled Clinical Visits</h3>
         <div id="appointmentsList" class="space-y-3">
           <!-- Dynamically loaded appointments -->
         </div>
       </div>
     </div>
 
-    <!-- View 4: Community Referrals -->
-    <div id="view-referrals" class="hidden p-space-lg max-w-[1720px] mx-auto w-full space-y-space-lg">
-      <div class="flex items-center justify-between">
+    <!-- View 4: Hospital Referrals (Community Referrals) -->
+    <div id="view-referrals" class="hidden p-8 max-w-[1720px] mx-auto w-full space-y-6">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 class="font-headline-xl text-headline-xl text-on-surface">Community Referrals</h1>
-          <p class="text-on-surface-variant mt-1 text-sm">CHW field referrals, hospital transfers, and emergency obstetric dispatch logs.</p>
+          <h1 class="font-headline-xl text-headline-xl text-slate-900">Hospital Referrals</h1>
+          <p class="text-slate-500 mt-1 text-sm">CHW field referrals, hospital transfers, and emergency obstetric dispatch logs.</p>
         </div>
-        <button onclick="openReferralSlipModal()" class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-primary text-on-primary font-semibold text-sm shadow-sm">
-          <span class="material-symbols-outlined text-[20px]">note_add</span> Issue Referral Slip
+        <button onclick="openReferralSlipModal()" class="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg bg-[#0e7490] text-white font-semibold text-xs shadow-xs cursor-pointer hover:bg-[#0c627a]">
+          <span class="material-symbols-outlined text-[18px]">note_add</span> Issue Referral Slip
         </button>
       </div>
 
       <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-        <div class="bg-surface-container-lowest p-5 rounded-xl shadow-sm space-y-3 border border-outline-variant/30">
+        <div class="bg-white p-5 rounded-xl shadow-xs space-y-3 border border-slate-200">
           <div class="flex items-center justify-between">
             <span class="px-2.5 py-1 bg-amber-100 text-amber-800 rounded-full text-xs font-semibold">Priority 1 (Urgent Transfer)</span>
-            <span class="text-xs text-outline">Today, 09:40 AM</span>
+            <span class="text-xs text-slate-400">Today, 09:40 AM</span>
           </div>
-          <h4 class="font-semibold text-on-surface">Zainab Bello (ID: M-01)</h4>
-          <p class="text-xs text-on-surface-variant">Severe pre-eclampsia signs (BP 144/94, persistent headache). Referred to Sub-County Hospital Maternity Wing for immediate obstetric evaluation.</p>
-          <div class="pt-2 flex justify-between items-center text-xs text-outline border-t border-outline-variant/20">
-            <span>CHW: Mary Wambui</span>
-            <span class="text-emerald-700 font-medium">Ambulance dispatched</span>
+          <h4 class="font-semibold text-slate-900 text-base">Zainab Bello (ID: M-01)</h4>
+          <p class="text-xs text-slate-600 leading-relaxed">Severe pre-eclampsia signs (BP 144/94, persistent headache). Referred to Sub-County Hospital Maternity Wing for immediate obstetric evaluation.</p>
+          <div class="pt-2 flex justify-between items-center text-xs text-slate-500 border-t border-slate-100">
+            <span>CHW: Mary Wambui (Maji Mazuri)</span>
+            <span class="text-emerald-700 font-semibold flex items-center gap-1">
+              <span class="material-symbols-outlined text-[16px]">local_shipping</span> Ambulance Dispatched
+            </span>
           </div>
         </div>
 
-        <div class="bg-surface-container-lowest p-5 rounded-xl shadow-sm space-y-3 border border-outline-variant/30">
+        <div class="bg-white p-5 rounded-xl shadow-xs space-y-3 border border-slate-200">
           <div class="flex items-center justify-between">
             <span class="px-2.5 py-1 bg-cyan-100 text-cyan-800 rounded-full text-xs font-semibold">Routine Clinic Referral</span>
-            <span class="text-xs text-outline">Yesterday, 03:15 PM</span>
+            <span class="text-xs text-slate-400">Yesterday, 03:15 PM</span>
           </div>
-          <h4 class="font-semibold text-on-surface">Halima Kadogo (ID: M-02)</h4>
-          <p class="text-xs text-on-surface-variant">Week 37 birth preparedness plan consultation and delivery kit distribution check.</p>
-          <div class="pt-2 flex justify-between items-center text-xs text-outline border-t border-outline-variant/20">
-            <span>CHW: David Ochieng</span>
-            <span class="text-primary font-medium">Completed ANC-4</span>
+          <h4 class="font-semibold text-slate-900 text-base">Halima Kadogo (ID: M-02)</h4>
+          <p class="text-xs text-slate-600 leading-relaxed">Week 37 birth preparedness plan consultation and delivery kit distribution check.</p>
+          <div class="pt-2 flex justify-between items-center text-xs text-slate-500 border-t border-slate-100">
+            <span>CHW: David Ochieng (Silanga Valley)</span>
+            <span class="text-[#0e7490] font-medium">Completed ANC-4 Check</span>
           </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- View 5: Find Patient (Patient Search) -->
+    <div id="view-patient-search" class="hidden p-8 max-w-[1720px] mx-auto w-full space-y-6">
+      <div>
+        <h1 class="font-headline-xl text-headline-xl text-slate-900">Find Patient</h1>
+        <p class="text-slate-500 mt-1 text-sm">Search and lookup records across all registered mothers, newborns, outpatient visits, and health worker assignments.</p>
+      </div>
+
+      <div class="bg-white rounded-xl p-5 shadow-xs space-y-4 border border-slate-200">
+        <div class="relative w-full">
+          <span class="material-symbols-outlined absolute left-3.5 top-3.5 text-slate-400 text-[20px]">search</span>
+          <input id="dedicatedSearchInput" oninput="executeDedicatedSearch(this.value)" class="w-full h-12 pl-12 pr-4 bg-slate-100 rounded-xl text-slate-800 font-body-md placeholder-slate-400 focus:outline-none focus:bg-white border-0 transition-all" placeholder="Type patient name, maternal ID (M-01), phone number, newborn name, or assigned health worker..." type="text">
+        </div>
+        <div class="flex items-center gap-2 flex-wrap text-xs">
+          <span class="text-slate-400 font-medium">Quick Filters:</span>
+          <button onclick="filterDedicatedBy('ALL')" class="search-tag px-3 py-1 rounded-full bg-[#0e7490] text-white font-semibold cursor-pointer">All Patients</button>
+          <button onclick="filterDedicatedBy('High Risk')" class="search-tag px-3 py-1 rounded-full bg-slate-100 text-slate-700 hover:bg-slate-200 cursor-pointer">High Risk Mothers</button>
+          <button onclick="filterDedicatedBy('Routine')" class="search-tag px-3 py-1 rounded-full bg-slate-100 text-slate-700 hover:bg-slate-200 cursor-pointer">Routine ANC</button>
+          <button onclick="filterDedicatedBy('3rd')" class="search-tag px-3 py-1 rounded-full bg-slate-100 text-slate-700 hover:bg-slate-200 cursor-pointer">3rd Trimester</button>
+        </div>
+      </div>
+
+      <!-- Search Results List -->
+      <div class="bg-white rounded-xl shadow-xs overflow-hidden border border-slate-200">
+        <div class="p-4 border-b border-slate-200 flex justify-between items-center text-xs text-slate-500">
+          <span id="searchResultCount">Showing all registered records</span>
+          <span>Click any patient to inspect clinical record</span>
+        </div>
+        <div id="searchResultsList" class="divide-y divide-slate-100">
+          <!-- Populated by JS -->
         </div>
       </div>
     </div>
@@ -540,14 +774,13 @@ tailwind.config={
 
 <!-- ========================================== -->
 <!-- MODAL: HEALTHCARE WORKER ACCOUNT MANAGEMENT -->
-<!-- (Register nurses, midwives, doctors & switch staff) -->
 <!-- ========================================== -->
-<div id="workerAccountModal" class="fixed inset-0 bg-cyan-950/70 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-  <div class="bg-surface-container-lowest rounded-2xl shadow-2xl max-w-lg w-full overflow-hidden border border-cyan-800/20 animate-in fade-in zoom-in duration-150">
+<div id="workerAccountModal" class="fixed inset-0 bg-[#0b313d]/70 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+  <div class="bg-white rounded-2xl shadow-2xl max-w-lg w-full overflow-hidden border border-slate-200 animate-in fade-in zoom-in duration-150">
     <!-- Modal Header -->
-    <div class="px-6 py-5 bg-gradient-to-r from-cyan-900 to-cyan-950 text-white flex items-center justify-between">
+    <div class="px-6 py-5 bg-[#0b313d] text-white flex items-center justify-between">
       <div class="flex items-center gap-3">
-        <div class="w-10 h-10 rounded-xl bg-cyan-700 flex items-center justify-center text-white shadow-sm">
+        <div class="w-10 h-10 rounded-xl bg-[#0e7490] flex items-center justify-center text-white shadow-xs">
           <span class="material-symbols-outlined text-[24px]">medical_services</span>
         </div>
         <div>
@@ -555,44 +788,44 @@ tailwind.config={
           <p class="text-xs text-cyan-200/80">Manage Nurses, Midwives, Doctors &amp; Clinicians</p>
         </div>
       </div>
-      <button onclick="closeWorkerAccountModal()" class="text-white/70 hover:text-white rounded-lg p-1.5 transition-colors">
+      <button onclick="closeWorkerAccountModal()" class="text-white/70 hover:text-white rounded-lg p-1.5 transition-colors cursor-pointer">
         <span class="material-symbols-outlined text-[22px]">close</span>
       </button>
     </div>
 
     <!-- Modal Tabs -->
-    <div class="flex border-b border-outline-variant/30 bg-surface-container-low px-6">
-      <button id="tabBtnCreate" onclick="switchAccountTab('create')" class="py-3 px-4 font-semibold text-xs border-b-2 border-primary text-primary flex items-center gap-1.5">
+    <div class="flex border-b border-slate-200 bg-slate-50 px-6">
+      <button id="tabBtnCreate" onclick="switchAccountTab('create')" class="py-3 px-4 font-semibold text-xs border-b-2 border-[#0e7490] text-[#0e7490] flex items-center gap-1.5 cursor-pointer">
         <span class="material-symbols-outlined text-[16px]">person_add</span> Create Worker Account
       </button>
-      <button id="tabBtnSwitch" onclick="switchAccountTab('switch')" class="py-3 px-4 font-semibold text-xs border-b-2 border-transparent text-on-surface-variant hover:text-on-surface flex items-center gap-1.5">
+      <button id="tabBtnSwitch" onclick="switchAccountTab('switch')" class="py-3 px-4 font-semibold text-xs border-b-2 border-transparent text-slate-500 hover:text-slate-800 flex items-center gap-1.5 cursor-pointer">
         <span class="material-symbols-outlined text-[16px]">swap_horiz</span> Quick Staff Switch
       </button>
-      <button id="tabBtnLogin" onclick="switchAccountTab('login')" class="py-3 px-4 font-semibold text-xs border-b-2 border-transparent text-on-surface-variant hover:text-on-surface flex items-center gap-1.5">
+      <button id="tabBtnLogin" onclick="switchAccountTab('login')" class="py-3 px-4 font-semibold text-xs border-b-2 border-transparent text-slate-500 hover:text-slate-800 flex items-center gap-1.5 cursor-pointer">
         <span class="material-symbols-outlined text-[16px]">login</span> Sign In
       </button>
     </div>
 
     <!-- Tab Content 1: Create Worker Account Form -->
     <div id="accountTabContentCreate" class="p-6 space-y-4 max-h-[75vh] overflow-y-auto">
-      <p class="text-xs text-on-surface-variant leading-relaxed">
+      <p class="text-xs text-slate-600 leading-relaxed">
         Register a verified healthcare worker account for nurses, midwives, or doctors to access clinical registries and manage maternal cases.
       </p>
 
       <div class="space-y-3">
         <!-- Cadre / Profession Selection -->
         <div>
-          <label class="block text-xs font-semibold text-on-surface mb-1.5">Healthcare Cadre / Profession <span class="text-tertiary">*</span></label>
+          <label class="block text-xs font-semibold text-slate-800 mb-1.5">Healthcare Cadre / Profession <span class="text-red-500">*</span></label>
           <div class="grid grid-cols-3 gap-2">
-            <button type="button" onclick="selectWorkerRole('NURSE')" id="roleBtn-NURSE" class="role-select-btn py-2.5 px-2 rounded-xl border border-primary bg-primary/10 text-primary font-semibold text-xs flex flex-col items-center gap-1 transition-all">
+            <button type="button" onclick="selectWorkerRole('NURSE')" id="roleBtn-NURSE" class="role-select-btn py-2.5 px-2 rounded-xl border border-[#0e7490] bg-teal-50 text-[#0e7490] font-semibold text-xs flex flex-col items-center gap-1 transition-all cursor-pointer">
               <span class="material-symbols-outlined text-[20px]">medical_services</span>
               <span>Nurse</span>
             </button>
-            <button type="button" onclick="selectWorkerRole('MIDWIFE')" id="roleBtn-MIDWIFE" class="role-select-btn py-2.5 px-2 rounded-xl border border-outline-variant/40 bg-surface-container-low text-on-surface font-medium text-xs flex flex-col items-center gap-1 transition-all">
+            <button type="button" onclick="selectWorkerRole('MIDWIFE')" id="roleBtn-MIDWIFE" class="role-select-btn py-2.5 px-2 rounded-xl border border-slate-200 bg-slate-50 text-slate-700 font-medium text-xs flex flex-col items-center gap-1 transition-all cursor-pointer">
               <span class="material-symbols-outlined text-[20px]">pregnant_woman</span>
               <span>Midwife</span>
             </button>
-            <button type="button" onclick="selectWorkerRole('DOCTOR')" id="roleBtn-DOCTOR" class="role-select-btn py-2.5 px-2 rounded-xl border border-outline-variant/40 bg-surface-container-low text-on-surface font-medium text-xs flex flex-col items-center gap-1 transition-all">
+            <button type="button" onclick="selectWorkerRole('DOCTOR')" id="roleBtn-DOCTOR" class="role-select-btn py-2.5 px-2 rounded-xl border border-slate-200 bg-slate-50 text-slate-700 font-medium text-xs flex flex-col items-center gap-1 transition-all cursor-pointer">
               <span class="material-symbols-outlined text-[20px]">health_and_safety</span>
               <span>Doctor</span>
             </button>
@@ -602,37 +835,37 @@ tailwind.config={
 
         <!-- Full Name -->
         <div>
-          <label class="block text-xs font-semibold text-on-surface mb-1">Full Name &amp; Title <span class="text-tertiary">*</span></label>
-          <input id="hwFullName" class="w-full h-10 px-3 bg-surface-container-low rounded-lg text-on-surface text-sm border border-outline-variant/30 focus:outline-none focus:border-primary" placeholder="e.g. Sr. Sarah Omondi, Dr. Anthony Karanja" type="text" value="Sr. Sarah Omondi">
+          <label class="block text-xs font-semibold text-slate-800 mb-1">Full Name &amp; Title <span class="text-red-500">*</span></label>
+          <input id="hwFullName" class="w-full h-10 px-3 bg-slate-50 rounded-lg text-slate-800 text-sm border border-slate-200 focus:outline-none focus:border-[#0e7490]" placeholder="e.g. Sr. Sarah Omondi, Dr. Anthony Karanja" type="text" value="Sr. Sarah Omondi">
         </div>
 
         <!-- Professional Designation / Title -->
         <div>
-          <label class="block text-xs font-semibold text-on-surface mb-1">Clinical Designation</label>
-          <input id="hwTitle" class="w-full h-10 px-3 bg-surface-container-low rounded-lg text-on-surface text-sm border border-outline-variant/30 focus:outline-none focus:border-primary" placeholder="e.g. Facility Nurse / Midwife" type="text" value="Facility Nurse / Midwife">
+          <label class="block text-xs font-semibold text-slate-800 mb-1">Clinical Designation</label>
+          <input id="hwTitle" class="w-full h-10 px-3 bg-slate-50 rounded-lg text-slate-800 text-sm border border-slate-200 focus:outline-none focus:border-[#0e7490]" placeholder="e.g. Facility Nurse & Midwife" type="text" value="Facility Nurse & Midwife">
         </div>
 
         <!-- Health Facility / Outpost -->
         <div>
-          <label class="block text-xs font-semibold text-on-surface mb-1">Health Facility / Sub-County Outpost</label>
-          <input id="hwFacility" class="w-full h-10 px-3 bg-surface-container-low rounded-lg text-on-surface text-sm border border-outline-variant/30 focus:outline-none focus:border-primary" placeholder="e.g. Maji Mazuri Health Centre" type="text" value="Maji Mazuri Health Centre">
+          <label class="block text-xs font-semibold text-slate-800 mb-1">Health Facility / Sub-County Outpost</label>
+          <input id="hwFacility" class="w-full h-10 px-3 bg-slate-50 rounded-lg text-slate-800 text-sm border border-slate-200 focus:outline-none focus:border-[#0e7490]" placeholder="e.g. Maji Mazuri Health Centre" type="text" value="Maji Mazuri Health Centre">
         </div>
 
         <!-- Email Address -->
         <div>
-          <label class="block text-xs font-semibold text-on-surface mb-1">Official Email Address <span class="text-tertiary">*</span></label>
-          <input id="hwEmail" class="w-full h-10 px-3 bg-surface-container-low rounded-lg text-on-surface text-sm border border-outline-variant/30 focus:outline-none focus:border-primary" placeholder="sarah.omondi@babyhealth.local" type="email">
+          <label class="block text-xs font-semibold text-slate-800 mb-1">Official Email Address <span class="text-red-500">*</span></label>
+          <input id="hwEmail" class="w-full h-10 px-3 bg-slate-50 rounded-lg text-slate-800 text-sm border border-slate-200 focus:outline-none focus:border-[#0e7490]" placeholder="sarah.omondi@babyhealth.local" type="email">
         </div>
 
         <!-- Password -->
         <div>
-          <label class="block text-xs font-semibold text-on-surface mb-1">Account Password <span class="text-tertiary">*</span></label>
-          <input id="hwPassword" class="w-full h-10 px-3 bg-surface-container-low rounded-lg text-on-surface text-sm border border-outline-variant/30 focus:outline-none focus:border-primary" placeholder="Enter secure password" type="password" value="nurse123">
+          <label class="block text-xs font-semibold text-slate-800 mb-1">Account Password <span class="text-red-500">*</span></label>
+          <input id="hwPassword" class="w-full h-10 px-3 bg-slate-50 rounded-lg text-slate-800 text-sm border border-slate-200 focus:outline-none focus:border-[#0e7490]" placeholder="Enter secure password" type="password" value="nurse123">
         </div>
       </div>
 
       <div class="pt-3">
-        <button onclick="handleRegisterWorkerAccount()" class="w-full py-2.5 rounded-xl bg-primary hover:bg-cyan-800 text-on-primary font-semibold text-sm transition-all shadow-sm flex items-center justify-center gap-2">
+        <button onclick="handleRegisterWorkerAccount()" class="w-full py-2.5 rounded-lg bg-[#0e7490] hover:bg-[#0c627a] text-white font-semibold text-sm transition-all shadow-xs flex items-center justify-center gap-2 cursor-pointer">
           <span class="material-symbols-outlined text-[18px]">verified_user</span>
           <span>Register Healthcare Worker Account</span>
         </button>
@@ -641,69 +874,69 @@ tailwind.config={
 
     <!-- Tab Content 2: Quick Staff Switcher -->
     <div id="accountTabContentSwitch" class="p-6 space-y-4 max-h-[75vh] overflow-y-auto hidden">
-      <p class="text-xs text-on-surface-variant">
+      <p class="text-xs text-slate-600">
         Select a seeded healthcare worker account to immediately switch active clinical context and session:
       </p>
 
       <div class="space-y-2.5">
         <!-- Nurse Card -->
-        <div onclick="quickLoginWorker('nurse@babyhealth.local', 'nurse123', 'Sr. Sarah Omondi', 'Facility Nurse / Midwife', 'NURSE')" class="p-3.5 rounded-xl border border-cyan-800/20 bg-surface-container-low hover:bg-cyan-50/70 hover:border-cyan-600 transition-all cursor-pointer flex items-center justify-between">
+        <div onclick="quickLoginWorker('nurse@babyhealth.local', 'nurse123', 'Sr. Sarah Omondi', 'Facility Nurse & Midwife', 'NURSE')" class="p-3.5 rounded-xl border border-slate-200 bg-slate-50 hover:bg-teal-50 hover:border-[#0e7490] transition-all cursor-pointer flex items-center justify-between">
           <div class="flex items-center gap-3">
-            <div class="w-10 h-10 rounded-full bg-cyan-700 text-white flex items-center justify-center font-bold text-sm shadow-sm">
+            <div class="w-10 h-10 rounded-full bg-[#0e7490] text-white flex items-center justify-center font-bold text-sm shadow-xs">
               SO
             </div>
             <div>
-              <div class="font-semibold text-on-surface text-sm">Sr. Sarah Omondi</div>
-              <div class="text-xs text-primary font-medium">Facility Nurse / Midwife</div>
-              <div class="text-[11px] text-outline">nurse@babyhealth.local • Maji Mazuri Clinic</div>
+              <div class="font-semibold text-slate-900 text-sm">Sr. Sarah Omondi</div>
+              <div class="text-xs text-[#0e7490] font-medium">Facility Nurse &amp; Midwife</div>
+              <div class="text-[11px] text-slate-400">nurse@babyhealth.local • Maji Mazuri Clinic</div>
             </div>
           </div>
-          <span class="material-symbols-outlined text-primary text-[20px]">arrow_forward</span>
+          <span class="material-symbols-outlined text-[#0e7490] text-[20px]">arrow_forward</span>
         </div>
 
         <!-- Doctor Card -->
-        <div onclick="quickLoginWorker('doctor@babyhealth.local', 'doctor123', 'Dr. Anthony Karanja', 'Medical Doctor / Obstetrician', 'DOCTOR')" class="p-3.5 rounded-xl border border-cyan-800/20 bg-surface-container-low hover:bg-cyan-50/70 hover:border-cyan-600 transition-all cursor-pointer flex items-center justify-between">
+        <div onclick="quickLoginWorker('doctor@babyhealth.local', 'doctor123', 'Dr. Anthony Karanja', 'Medical Doctor / Obstetrician', 'DOCTOR')" class="p-3.5 rounded-xl border border-slate-200 bg-slate-50 hover:bg-teal-50 hover:border-[#0e7490] transition-all cursor-pointer flex items-center justify-between">
           <div class="flex items-center gap-3">
-            <div class="w-10 h-10 rounded-full bg-emerald-700 text-white flex items-center justify-center font-bold text-sm shadow-sm">
+            <div class="w-10 h-10 rounded-full bg-emerald-700 text-white flex items-center justify-center font-bold text-sm shadow-xs">
               AK
             </div>
             <div>
-              <div class="font-semibold text-on-surface text-sm">Dr. Anthony Karanja</div>
+              <div class="font-semibold text-slate-900 text-sm">Dr. Anthony Karanja</div>
               <div class="text-xs text-emerald-700 font-medium">Medical Doctor / Obstetrician</div>
-              <div class="text-[11px] text-outline">doctor@babyhealth.local • Referral Hospital</div>
+              <div class="text-[11px] text-slate-400">doctor@babyhealth.local • Referral Hospital</div>
             </div>
           </div>
           <span class="material-symbols-outlined text-emerald-700 text-[20px]">arrow_forward</span>
         </div>
 
         <!-- Midwife Card -->
-        <div onclick="quickLoginWorker('midwife@babyhealth.local', 'midwife123', 'Mary Wambui', 'Certified Nurse-Midwife', 'MIDWIFE')" class="p-3.5 rounded-xl border border-cyan-800/20 bg-surface-container-low hover:bg-cyan-50/70 hover:border-cyan-600 transition-all cursor-pointer flex items-center justify-between">
+        <div onclick="quickLoginWorker('midwife@babyhealth.local', 'midwife123', 'Mary Wambui', 'Certified Nurse-Midwife', 'MIDWIFE')" class="p-3.5 rounded-xl border border-slate-200 bg-slate-50 hover:bg-teal-50 hover:border-[#0e7490] transition-all cursor-pointer flex items-center justify-between">
           <div class="flex items-center gap-3">
-            <div class="w-10 h-10 rounded-full bg-teal-700 text-white flex items-center justify-center font-bold text-sm shadow-sm">
+            <div class="w-10 h-10 rounded-full bg-teal-700 text-white flex items-center justify-center font-bold text-sm shadow-xs">
               MW
             </div>
             <div>
-              <div class="font-semibold text-on-surface text-sm">Mary Wambui</div>
+              <div class="font-semibold text-slate-900 text-sm">Mary Wambui</div>
               <div class="text-xs text-teal-700 font-medium">Certified Nurse-Midwife / CHW Lead</div>
-              <div class="text-[11px] text-outline">midwife@babyhealth.local • Outpost Unit</div>
+              <div class="text-[11px] text-slate-400">midwife@babyhealth.local • Outpost Unit</div>
             </div>
           </div>
           <span class="material-symbols-outlined text-teal-700 text-[20px]">arrow_forward</span>
         </div>
 
         <!-- Admin Card -->
-        <div onclick="quickLoginWorker('admin@babyhealth.local', 'admin123', 'Admin Coordinator', 'Health System Administrator', 'ADMIN')" class="p-3.5 rounded-xl border border-cyan-800/20 bg-surface-container-low hover:bg-cyan-50/70 hover:border-cyan-600 transition-all cursor-pointer flex items-center justify-between">
+        <div onclick="quickLoginWorker('admin@babyhealth.local', 'admin123', 'Admin Coordinator', 'Health System Administrator', 'ADMIN')" class="p-3.5 rounded-xl border border-slate-200 bg-slate-50 hover:bg-teal-50 hover:border-[#0e7490] transition-all cursor-pointer flex items-center justify-between">
           <div class="flex items-center gap-3">
-            <div class="w-10 h-10 rounded-full bg-cyan-950 text-white flex items-center justify-center font-bold text-sm shadow-sm">
+            <div class="w-10 h-10 rounded-full bg-[#0b313d] text-white flex items-center justify-center font-bold text-sm shadow-xs">
               AC
             </div>
             <div>
-              <div class="font-semibold text-on-surface text-sm">Admin Coordinator</div>
-              <div class="text-xs text-cyan-900 font-medium">System Administrator</div>
-              <div class="text-[11px] text-outline">admin@babyhealth.local • Directorate</div>
+              <div class="font-semibold text-slate-900 text-sm">Admin Coordinator</div>
+              <div class="text-xs text-slate-600 font-medium">System Administrator</div>
+              <div class="text-[11px] text-slate-400">admin@babyhealth.local • Directorate</div>
             </div>
           </div>
-          <span class="material-symbols-outlined text-cyan-950 text-[20px]">arrow_forward</span>
+          <span class="material-symbols-outlined text-[#0b313d] text-[20px]">arrow_forward</span>
         </div>
       </div>
     </div>
@@ -712,15 +945,15 @@ tailwind.config={
     <div id="accountTabContentLogin" class="p-6 space-y-4 max-h-[75vh] overflow-y-auto hidden">
       <div class="space-y-3">
         <div>
-          <label class="block text-xs font-semibold text-on-surface mb-1">Email</label>
-          <input id="loginEmail" class="w-full h-10 px-3 bg-surface-container-low rounded-lg text-on-surface text-sm border border-outline-variant/30 focus:outline-none focus:border-primary" placeholder="nurse@babyhealth.local" value="nurse@babyhealth.local" type="email">
+          <label class="block text-xs font-semibold text-slate-800 mb-1">Email</label>
+          <input id="loginEmail" class="w-full h-10 px-3 bg-slate-50 rounded-lg text-slate-800 text-sm border border-slate-200 focus:outline-none focus:border-[#0e7490]" placeholder="nurse@babyhealth.local" value="nurse@babyhealth.local" type="email">
         </div>
         <div>
-          <label class="block text-xs font-semibold text-on-surface mb-1">Password</label>
-          <input id="loginPassword" class="w-full h-10 px-3 bg-surface-container-low rounded-lg text-on-surface text-sm border border-outline-variant/30 focus:outline-none focus:border-primary" placeholder="Password" value="nurse123" type="password">
+          <label class="block text-xs font-semibold text-slate-800 mb-1">Password</label>
+          <input id="loginPassword" class="w-full h-10 px-3 bg-slate-50 rounded-lg text-slate-800 text-sm border border-slate-200 focus:outline-none focus:border-[#0e7490]" placeholder="Password" value="nurse123" type="password">
         </div>
-        <p id="loginErrMsg" class="text-xs text-error hidden"></p>
-        <button onclick="handleLoginSubmit()" class="w-full py-2.5 rounded-xl bg-primary hover:bg-cyan-800 text-on-primary font-semibold text-sm transition-all shadow-sm">
+        <p id="loginErrMsg" class="text-xs text-red-600 hidden"></p>
+        <button onclick="handleLoginSubmit()" class="w-full py-2.5 rounded-lg bg-[#0e7490] hover:bg-[#0c627a] text-white font-semibold text-sm transition-all shadow-xs cursor-pointer">
           Sign In
         </button>
       </div>
@@ -731,40 +964,40 @@ tailwind.config={
 <!-- ========================================== -->
 <!-- MODAL: REGISTER EXPECTANT MOTHER -->
 <!-- ========================================== -->
-<div id="registerMotherModal" class="fixed inset-0 bg-cyan-950/70 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-  <div class="bg-surface-container-lowest rounded-2xl shadow-2xl max-w-lg w-full overflow-hidden border border-outline-variant/30">
-    <div class="px-6 py-4 bg-primary-container text-on-primary flex items-center justify-between">
+<div id="registerMotherModal" class="fixed inset-0 bg-[#0b313d]/70 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+  <div class="bg-white rounded-2xl shadow-2xl max-w-lg w-full overflow-hidden border border-slate-200">
+    <div class="px-6 py-4 bg-[#0e7490] text-white flex items-center justify-between">
       <div class="flex items-center gap-2.5">
         <span class="material-symbols-outlined text-[22px]">add_circle</span>
         <h3 class="font-headline-sm text-headline-sm font-semibold">Register Expectant Mother</h3>
       </div>
-      <button onclick="closeRegisterMotherModal()" class="text-white/80 hover:text-white">
+      <button onclick="closeRegisterMotherModal()" class="text-white/80 hover:text-white cursor-pointer">
         <span class="material-symbols-outlined text-[20px]">close</span>
       </button>
     </div>
     <div class="p-6 space-y-3.5">
       <div>
-        <label class="block text-xs font-semibold text-on-surface mb-1">Full Name *</label>
-        <input id="regName" class="w-full h-10 px-3 bg-surface-container-low rounded-lg text-sm border border-outline-variant/30" placeholder="e.g. Zainab Bello" type="text">
+        <label class="block text-xs font-semibold text-slate-800 mb-1">Full Name *</label>
+        <input id="regName" class="w-full h-10 px-3 bg-slate-50 rounded-lg text-sm border border-slate-200" placeholder="e.g. Zainab Bello" type="text">
       </div>
       <div class="grid grid-cols-2 gap-3">
         <div>
-          <label class="block text-xs font-semibold text-on-surface mb-1">Phone Number</label>
-          <input id="regPhone" class="w-full h-10 px-3 bg-surface-container-low rounded-lg text-sm border border-outline-variant/30" placeholder="+254 7..." type="tel">
+          <label class="block text-xs font-semibold text-slate-800 mb-1">Phone Number</label>
+          <input id="regPhone" class="w-full h-10 px-3 bg-slate-50 rounded-lg text-sm border border-slate-200" placeholder="+254 7..." type="tel">
         </div>
         <div>
-          <label class="block text-xs font-semibold text-on-surface mb-1">Date of Birth</label>
-          <input id="regDob" class="w-full h-10 px-3 bg-surface-container-low rounded-lg text-sm border border-outline-variant/30" type="date">
+          <label class="block text-xs font-semibold text-slate-800 mb-1">Date of Birth</label>
+          <input id="regDob" class="w-full h-10 px-3 bg-slate-50 rounded-lg text-sm border border-slate-200" type="date">
         </div>
       </div>
       <div class="grid grid-cols-2 gap-3">
         <div>
-          <label class="block text-xs font-semibold text-on-surface mb-1">Pregnancy Week</label>
-          <input id="regWeek" class="w-full h-10 px-3 bg-surface-container-low rounded-lg text-sm border border-outline-variant/30" placeholder="e.g. 32" type="number" value="28">
+          <label class="block text-xs font-semibold text-slate-800 mb-1">Pregnancy Week</label>
+          <input id="regWeek" class="w-full h-10 px-3 bg-slate-50 rounded-lg text-sm border border-slate-200" placeholder="e.g. 32" type="number" value="28">
         </div>
         <div>
-          <label class="block text-xs font-semibold text-on-surface mb-1">Risk Classification</label>
-          <select id="regRisk" class="w-full h-10 px-3 bg-surface-container-low rounded-lg text-sm border border-outline-variant/30">
+          <label class="block text-xs font-semibold text-slate-800 mb-1">Risk Classification</label>
+          <select id="regRisk" class="w-full h-10 px-3 bg-slate-50 rounded-lg text-sm border border-slate-200">
             <option value="Routine">Routine Care</option>
             <option value="High Risk">High Risk</option>
           </select>
@@ -772,17 +1005,77 @@ tailwind.config={
       </div>
       <div class="grid grid-cols-2 gap-3">
         <div>
-          <label class="block text-xs font-semibold text-on-surface mb-1">Health Facility</label>
-          <input id="regFacility" class="w-full h-10 px-3 bg-surface-container-low rounded-lg text-sm border border-outline-variant/30" value="Maji Mazuri" type="text">
+          <label class="block text-xs font-semibold text-slate-800 mb-1">Health Facility</label>
+          <input id="regFacility" class="w-full h-10 px-3 bg-slate-50 rounded-lg text-sm border border-slate-200" value="Maji Mazuri" type="text">
         </div>
         <div>
-          <label class="block text-xs font-semibold text-on-surface mb-1">Assigned CHW</label>
-          <input id="regWorker" class="w-full h-10 px-3 bg-surface-container-low rounded-lg text-sm border border-outline-variant/30" value="Mary Wambui" type="text">
+          <label class="block text-xs font-semibold text-slate-800 mb-1">Assigned CHW</label>
+          <input id="regWorker" class="w-full h-10 px-3 bg-slate-50 rounded-lg text-sm border border-slate-200" value="Mary Wambui" type="text">
         </div>
       </div>
       <div class="pt-3">
-        <button onclick="handleCreateMotherSubmit()" class="w-full py-2.5 rounded-xl bg-primary-container text-on-primary font-semibold text-sm hover:opacity-95 shadow-sm">
+        <button onclick="handleCreateMotherSubmit()" class="w-full py-2.5 rounded-lg bg-[#0e7490] text-white font-semibold text-sm hover:bg-[#0c627a] shadow-xs cursor-pointer">
           Save Mother Record
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ========================================== -->
+<!-- MODAL: REGISTER NEWBORN BABY -->
+<!-- ========================================== -->
+<div id="registerNewbornModal" class="fixed inset-0 bg-[#0b313d]/70 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+  <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full overflow-hidden border border-slate-200">
+    <div class="px-6 py-4 bg-[#0e7490] text-white flex items-center justify-between">
+      <div class="flex items-center gap-2">
+        <span class="material-symbols-outlined text-[22px]">child_care</span>
+        <h3 class="font-headline-sm text-headline-sm font-semibold">Register New Baby</h3>
+      </div>
+      <button onclick="closeRegisterNewbornModal()" class="text-white/80 hover:text-white cursor-pointer">
+        <span class="material-symbols-outlined text-[20px]">close</span>
+      </button>
+    </div>
+    <div class="p-6 space-y-3.5">
+      <div>
+        <label class="block text-xs font-semibold text-slate-800 mb-1">Baby Name / Identification *</label>
+        <input id="nbName" class="w-full h-10 px-3 bg-slate-50 rounded-lg text-sm border border-slate-200" placeholder="e.g. Baby of Mary Osei" type="text">
+      </div>
+      <div>
+        <label class="block text-xs font-semibold text-slate-800 mb-1">Community / Outpost</label>
+        <input id="nbCommunity" class="w-full h-10 px-3 bg-slate-50 rounded-lg text-sm border border-slate-200" placeholder="e.g. Asamankese" type="text" value="Asamankese">
+      </div>
+      <div class="grid grid-cols-2 gap-3">
+        <div>
+          <label class="block text-xs font-semibold text-slate-800 mb-1">Age in Days</label>
+          <input id="nbAgeDays" class="w-full h-10 px-3 bg-slate-50 rounded-lg text-sm border border-slate-200" placeholder="3" type="number" value="3">
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-slate-800 mb-1">Current Weight (kg)</label>
+          <input id="nbWeight" class="w-full h-10 px-3 bg-slate-50 rounded-lg text-sm border border-slate-200" placeholder="2.45" type="number" step="0.01" value="2.45">
+        </div>
+      </div>
+      <div class="grid grid-cols-2 gap-3">
+        <div>
+          <label class="block text-xs font-semibold text-slate-800 mb-1">Body Temperature (°C)</label>
+          <input id="nbTemp" class="w-full h-10 px-3 bg-slate-50 rounded-lg text-sm border border-slate-200" placeholder="36.5" type="number" step="0.1" value="36.5">
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-slate-800 mb-1">Breathing (per min)</label>
+          <input id="nbBreath" class="w-full h-10 px-3 bg-slate-50 rounded-lg text-sm border border-slate-200" placeholder="48" type="number" value="48">
+        </div>
+      </div>
+      <div>
+        <label class="block text-xs font-semibold text-slate-800 mb-1">Care Urgency Status</label>
+        <select id="nbCareStatus" class="w-full h-10 px-3 bg-slate-50 rounded-lg text-sm border border-slate-200">
+          <option value="Needs Urgent Care">Needs Urgent Care</option>
+          <option value="Needs Attention">Needs Attention</option>
+          <option value="Healthy &amp; Normal">Healthy &amp; Normal</option>
+        </select>
+      </div>
+      <div class="pt-2">
+        <button onclick="handleSaveNewborn()" class="w-full py-2.5 rounded-lg bg-[#0e7490] text-white font-semibold text-sm hover:bg-[#0c627a] shadow-xs cursor-pointer">
+          Save Baby Record
         </button>
       </div>
     </div>
@@ -792,47 +1085,47 @@ tailwind.config={
 <!-- ========================================== -->
 <!-- MODAL: RECORD PREGNANCY CHECKUP / VITALS -->
 <!-- ========================================== -->
-<div id="checkupModal" class="fixed inset-0 bg-cyan-950/70 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-  <div class="bg-surface-container-lowest rounded-2xl shadow-2xl max-w-md w-full overflow-hidden border border-outline-variant/30">
-    <div class="px-6 py-4 bg-primary text-on-primary flex items-center justify-between">
+<div id="checkupModal" class="fixed inset-0 bg-[#0b313d]/70 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+  <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full overflow-hidden border border-slate-200">
+    <div class="px-6 py-4 bg-[#0e7490] text-white flex items-center justify-between">
       <div class="flex items-center gap-2">
         <span class="material-symbols-outlined text-[20px]">favorite</span>
         <h3 class="font-headline-sm text-headline-sm font-semibold">Record Pregnancy Checkup</h3>
       </div>
-      <button onclick="closeRecordCheckupModal()" class="text-white/80 hover:text-white">
+      <button onclick="closeRecordCheckupModal()" class="text-white/80 hover:text-white cursor-pointer">
         <span class="material-symbols-outlined text-[20px]">close</span>
       </button>
     </div>
     <div class="p-6 space-y-3.5">
-      <div class="text-xs text-on-surface-variant font-medium">
-        Patient: <strong id="checkupPatientName" class="text-on-surface">Zainab Bello</strong>
+      <div class="text-xs text-slate-600 font-medium">
+        Patient: <strong id="checkupPatientName" class="text-slate-800">Zainab Bello</strong>
       </div>
       <div class="grid grid-cols-2 gap-3">
         <div>
-          <label class="block text-xs font-semibold text-on-surface mb-1">Systolic BP (mmHg)</label>
-          <input id="chkSys" class="w-full h-10 px-3 bg-surface-container-low rounded-lg text-sm border border-outline-variant/30" placeholder="120" type="number" value="144">
+          <label class="block text-xs font-semibold text-slate-800 mb-1">Systolic BP (mmHg)</label>
+          <input id="chkSys" class="w-full h-10 px-3 bg-slate-50 rounded-lg text-sm border border-slate-200" placeholder="120" type="number" value="144">
         </div>
         <div>
-          <label class="block text-xs font-semibold text-on-surface mb-1">Diastolic BP (mmHg)</label>
-          <input id="chkDia" class="w-full h-10 px-3 bg-surface-container-low rounded-lg text-sm border border-outline-variant/30" placeholder="80" type="number" value="94">
+          <label class="block text-xs font-semibold text-slate-800 mb-1">Diastolic BP (mmHg)</label>
+          <input id="chkDia" class="w-full h-10 px-3 bg-slate-50 rounded-lg text-sm border border-slate-200" placeholder="80" type="number" value="94">
         </div>
       </div>
       <div class="grid grid-cols-2 gap-3">
         <div>
-          <label class="block text-xs font-semibold text-on-surface mb-1">Weight (kg)</label>
-          <input id="chkWeight" class="w-full h-10 px-3 bg-surface-container-low rounded-lg text-sm border border-outline-variant/30" placeholder="65.0" type="number" step="0.1" value="68.5">
+          <label class="block text-xs font-semibold text-slate-800 mb-1">Weight (kg)</label>
+          <input id="chkWeight" class="w-full h-10 px-3 bg-slate-50 rounded-lg text-sm border border-slate-200" placeholder="65.0" type="number" step="0.1" value="68.5">
         </div>
         <div>
-          <label class="block text-xs font-semibold text-on-surface mb-1">Hemoglobin (g/dL)</label>
-          <input id="chkHb" class="w-full h-10 px-3 bg-surface-container-low rounded-lg text-sm border border-outline-variant/30" placeholder="11.5" type="number" step="0.1" value="9.8">
+          <label class="block text-xs font-semibold text-slate-800 mb-1">Hemoglobin (g/dL)</label>
+          <input id="chkHb" class="w-full h-10 px-3 bg-slate-50 rounded-lg text-sm border border-slate-200" placeholder="11.5" type="number" step="0.1" value="9.8">
         </div>
       </div>
       <div>
-        <label class="block text-xs font-semibold text-on-surface mb-1">Clinical Notes &amp; Observations</label>
-        <textarea id="chkNotes" rows="3" class="w-full p-3 bg-surface-container-low rounded-lg text-sm border border-outline-variant/30 focus:outline-none" placeholder="Record maternal clinical impressions...">Blood pressure stable under observation. Prescribed prenatal iron supplement.</textarea>
+        <label class="block text-xs font-semibold text-slate-800 mb-1">Clinical Notes &amp; Observations</label>
+        <textarea id="chkNotes" rows="3" class="w-full p-3 bg-slate-50 rounded-lg text-sm border border-slate-200 focus:outline-none" placeholder="Record maternal clinical impressions...">Blood pressure monitored under clinic protocol. Prescribed prenatal iron supplement.</textarea>
       </div>
       <div class="pt-2">
-        <button onclick="handleSaveCheckup()" class="w-full py-2.5 rounded-xl bg-primary text-on-primary font-semibold text-sm hover:opacity-95 shadow-sm">
+        <button onclick="handleSaveCheckup()" class="w-full py-2.5 rounded-lg bg-[#0e7490] text-white font-semibold text-sm hover:bg-[#0c627a] shadow-xs cursor-pointer">
           Save &amp; Update Clinical Record
         </button>
       </div>
@@ -843,25 +1136,25 @@ tailwind.config={
 <!-- ========================================== -->
 <!-- MODAL: SCHEDULE APPOINTMENT -->
 <!-- ========================================== -->
-<div id="appointmentModal" class="fixed inset-0 bg-cyan-950/70 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-  <div class="bg-surface-container-lowest rounded-2xl shadow-2xl max-w-md w-full overflow-hidden border border-outline-variant/30">
-    <div class="px-6 py-4 bg-primary text-on-primary flex items-center justify-between">
+<div id="appointmentModal" class="fixed inset-0 bg-[#0b313d]/70 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+  <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full overflow-hidden border border-slate-200">
+    <div class="px-6 py-4 bg-[#0e7490] text-white flex items-center justify-between">
       <div class="flex items-center gap-2">
         <span class="material-symbols-outlined text-[20px]">calendar_month</span>
         <h3 class="font-headline-sm text-headline-sm font-semibold">Schedule Appointment &amp; SMS</h3>
       </div>
-      <button onclick="closeScheduleApptModal()" class="text-white/80 hover:text-white">
+      <button onclick="closeScheduleApptModal()" class="text-white/80 hover:text-white cursor-pointer">
         <span class="material-symbols-outlined text-[20px]">close</span>
       </button>
     </div>
     <div class="p-6 space-y-3.5">
       <div>
-        <label class="block text-xs font-semibold text-on-surface mb-1">Patient Name</label>
-        <input id="apptPatientName" class="w-full h-10 px-3 bg-surface-container-low rounded-lg text-sm border border-outline-variant/30" disabled type="text" value="Zainab Bello">
+        <label class="block text-xs font-semibold text-slate-800 mb-1">Patient Name</label>
+        <input id="apptPatientName" class="w-full h-10 px-3 bg-slate-50 rounded-lg text-sm border border-slate-200" disabled type="text" value="Zainab Bello">
       </div>
       <div>
-        <label class="block text-xs font-semibold text-on-surface mb-1">Visit Type</label>
-        <select id="apptType" class="w-full h-10 px-3 bg-surface-container-low rounded-lg text-sm border border-outline-variant/30">
+        <label class="block text-xs font-semibold text-slate-800 mb-1">Visit Type</label>
+        <select id="apptType" class="w-full h-10 px-3 bg-slate-50 rounded-lg text-sm border border-slate-200">
           <option value="ANTENATAL">Antenatal Care (ANC Follow-up)</option>
           <option value="DELIVERY">Delivery Planning &amp; Hospital Admission</option>
           <option value="POSTNATAL">Postnatal Care Checkup (PNC)</option>
@@ -869,15 +1162,15 @@ tailwind.config={
         </select>
       </div>
       <div>
-        <label class="block text-xs font-semibold text-on-surface mb-1">Scheduled Date &amp; Time</label>
-        <input id="apptDateTime" class="w-full h-10 px-3 bg-surface-container-low rounded-lg text-sm border border-outline-variant/30" type="datetime-local">
+        <label class="block text-xs font-semibold text-slate-800 mb-1">Scheduled Date &amp; Time</label>
+        <input id="apptDateTime" class="w-full h-10 px-3 bg-slate-50 rounded-lg text-sm border border-slate-200" type="datetime-local">
       </div>
       <div class="flex items-center gap-2 pt-1">
-        <input id="sendSmsToggle" type="checkbox" checked class="rounded text-primary focus:ring-primary w-4 h-4">
-        <label for="sendSmsToggle" class="text-xs text-on-surface font-medium cursor-pointer">Dispatch automated SMS reminder to mother</label>
+        <input id="sendSmsToggle" type="checkbox" checked class="rounded text-[#0e7490] focus:ring-[#0e7490] w-4 h-4 cursor-pointer">
+        <label for="sendSmsToggle" class="text-xs text-slate-800 font-medium cursor-pointer">Dispatch automated SMS reminder to mother</label>
       </div>
       <div class="pt-3">
-        <button onclick="handleSaveAppointment()" class="w-full py-2.5 rounded-xl bg-primary text-on-primary font-semibold text-sm hover:opacity-95 shadow-sm">
+        <button onclick="handleSaveAppointment()" class="w-full py-2.5 rounded-lg bg-[#0e7490] text-white font-semibold text-sm hover:bg-[#0c627a] shadow-xs cursor-pointer">
           Confirm &amp; Send Reminder
         </button>
       </div>
@@ -888,40 +1181,40 @@ tailwind.config={
 <!-- ========================================== -->
 <!-- MODAL: REFERRAL SLIP PREVIEW -->
 <!-- ========================================== -->
-<div id="referralSlipModal" class="fixed inset-0 bg-cyan-950/70 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-  <div class="bg-surface-container-lowest rounded-2xl shadow-2xl max-w-lg w-full overflow-hidden border border-outline-variant/30">
-    <div class="px-6 py-4 bg-cyan-950 text-white flex items-center justify-between">
+<div id="referralSlipModal" class="fixed inset-0 bg-[#0b313d]/70 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+  <div class="bg-white rounded-2xl shadow-2xl max-w-lg w-full overflow-hidden border border-slate-200">
+    <div class="px-6 py-4 bg-[#0b313d] text-white flex items-center justify-between">
       <div class="flex items-center gap-2">
         <span class="material-symbols-outlined text-[20px]">description</span>
         <h3 class="font-headline-sm text-headline-sm font-semibold">MOH Maternal Referral Form</h3>
       </div>
-      <button onclick="closeReferralSlipModal()" class="text-white/80 hover:text-white">
+      <button onclick="closeReferralSlipModal()" class="text-white/80 hover:text-white cursor-pointer">
         <span class="material-symbols-outlined text-[20px]">close</span>
       </button>
     </div>
     <div class="p-6 space-y-4 text-xs">
-      <div class="border border-outline-variant/40 rounded-xl p-4 bg-surface-container-lowest space-y-3 font-mono">
-        <div class="text-center pb-2 border-b border-outline-variant/30">
-          <div class="font-bold text-sm text-on-surface uppercase">Ministry of Health • Referral Note</div>
-          <div class="text-[11px] text-outline">Emergency Obstetric &amp; Neonatal Care</div>
+      <div class="border border-slate-200 rounded-xl p-4 bg-white space-y-3 font-mono">
+        <div class="text-center pb-2 border-b border-slate-200">
+          <div class="font-bold text-sm text-slate-900 uppercase">Ministry of Health • Referral Note</div>
+          <div class="text-[11px] text-slate-500">Emergency Obstetric &amp; Neonatal Care</div>
         </div>
-        <div class="grid grid-cols-2 gap-2 text-on-surface">
+        <div class="grid grid-cols-2 gap-2 text-slate-800">
           <div>Patient: <strong id="refSlipName">Zainab Bello</strong></div>
           <div>ID: <strong id="refSlipId">M-01</strong></div>
           <div>Gestation: <strong id="refSlipWeek">32 Weeks</strong></div>
           <div>Vitals: <strong id="refSlipVitals">144/94 mmHg</strong></div>
         </div>
-        <div class="border-t border-outline-variant/20 pt-2 text-on-surface">
-          <div>Reason for Transfer: <span class="font-bold text-tertiary">Severe Stage 1 Hypertensive Disorder in Pregnancy</span></div>
+        <div class="border-t border-slate-200 pt-2 text-slate-800">
+          <div>Reason for Transfer: <span class="font-bold text-red-600">Severe Stage 1 Hypertensive Disorder in Pregnancy</span></div>
           <div>Destination: Sub-County Referral Hospital (Obstetric Unit)</div>
-          <div>Referring Worker: <span id="refSlipWorker">Sr. Sarah Omondi (Facility Nurse)</span></div>
+          <div>Referring Worker: <span id="refSlipWorker">Sr. Sarah Omondi (Facility Nurse &amp; Midwife)</span></div>
         </div>
       </div>
       <div class="flex items-center gap-2">
-        <button onclick="window.print()" class="flex-1 py-2 rounded-xl bg-surface-container-high text-on-surface font-semibold flex items-center justify-center gap-1.5 hover:bg-surface-container-highest">
+        <button onclick="window.print()" class="flex-1 py-2 rounded-lg bg-slate-100 text-slate-800 font-semibold flex items-center justify-center gap-1.5 hover:bg-slate-200 cursor-pointer">
           <span class="material-symbols-outlined text-[16px]">print</span> Print Slip
         </button>
-        <button onclick="closeReferralSlipModal(); toast('Referral dispatched to hospital emergency desk');" class="flex-1 py-2 rounded-xl bg-primary text-on-primary font-semibold hover:opacity-95">
+        <button onclick="closeReferralSlipModal(); toast('Referral dispatched to hospital emergency desk');" class="flex-1 py-2 rounded-lg bg-[#0e7490] text-white font-semibold hover:bg-[#0c627a] cursor-pointer">
           Dispatch Referral
         </button>
       </div>
@@ -932,19 +1225,19 @@ tailwind.config={
 <!-- ========================================== -->
 <!-- NOTIFICATIONS DRAWER -->
 <!-- ========================================== -->
-<div id="notificationsPanel" class="fixed top-16 right-4 w-96 bg-surface-container-lowest shadow-2xl rounded-2xl border border-outline-variant/30 z-50 hidden p-4 space-y-3 animate-in fade-in duration-150">
-  <div class="flex items-center justify-between border-b border-outline-variant/20 pb-2">
-    <span class="font-semibold text-sm text-on-surface">Clinical Notifications</span>
-    <button onclick="toggleNotifications()" class="text-outline hover:text-on-surface text-xs">Dismiss</button>
+<div id="notificationsPanel" class="fixed top-16 right-4 w-96 bg-white shadow-2xl rounded-2xl border border-slate-200 z-50 hidden p-4 space-y-3 animate-in fade-in duration-150">
+  <div class="flex items-center justify-between border-b border-slate-100 pb-2">
+    <span class="font-semibold text-sm text-slate-900">Clinical Notifications</span>
+    <button onclick="toggleNotifications()" class="text-slate-400 hover:text-slate-800 text-xs cursor-pointer">Dismiss</button>
   </div>
   <div class="space-y-2 text-xs">
     <div class="p-2.5 rounded-lg bg-red-50 border border-red-200 text-red-900">
       <strong class="block font-semibold">High Risk BP Alert</strong>
       Zainab Bello (M-01) vitals show 144/94 mmHg. Weekly surveillance active.
     </div>
-    <div class="p-2.5 rounded-lg bg-cyan-50 border border-cyan-200 text-cyan-900">
-      <strong class="block font-semibold">CHW Referral Received</strong>
-      Mary Wambui referred Halima Kadogo for ultrasound confirmation.
+    <div class="p-2.5 rounded-lg bg-teal-50 border border-teal-200 text-[#0e7490]">
+      <strong class="block font-semibold">Baby of Mary Osei Alert</strong>
+      Temperature low (35.3°C). Kangaroo Mother Care skin-to-skin surveillance recommended.
     </div>
     <div class="p-2.5 rounded-lg bg-emerald-50 border border-emerald-200 text-emerald-900">
       <strong class="block font-semibold">SMS Delivery Confirmed</strong>
@@ -954,7 +1247,7 @@ tailwind.config={
 </div>
 
 <!-- Toast Feedback -->
-<div id="toast" class="fixed bottom-6 right-6 bg-cyan-950 text-white px-5 py-3 rounded-xl shadow-xl z-50 hidden flex items-center gap-2 text-sm font-medium border border-cyan-800">
+<div id="toast" class="fixed bottom-6 right-6 bg-[#0b313d] text-white px-5 py-3 rounded-xl shadow-xl z-50 hidden flex items-center gap-2 text-sm font-medium border border-[#0f3d4c]">
   <span class="material-symbols-outlined text-[20px] text-cyan-300">check_circle</span>
   <span id="toastMsg">Operation successful</span>
 </div>
@@ -967,8 +1260,13 @@ const API = '';
 let token = localStorage.getItem('token');
 let currentWorker = null;
 
-// Mock / Initial Data Store synchronized with live backend
+// Maternal Roster Pagination variables
+let currentPage = 1;
+const pageSize = 4;
+
+// Rich patient dataset (16 mothers spanning multiple pages)
 let patients = [
+  // Page 1
   {
     id: 'M-01',
     uuid: null,
@@ -1052,11 +1350,457 @@ let patients = [
     assignedWorker: 'Mary Wambui',
     facility: 'Kibera West',
     notes: 'Mild lower back ache. Fetal heart rate regular at 142 bpm. Fundal height corresponds with gestational dates.'
+  },
+  // Page 2
+  {
+    id: 'M-05',
+    uuid: null,
+    name: 'Faith Ndinda',
+    age: '31 yrs',
+    week: '28 Weeks',
+    weekDetail: '28w 3d',
+    trimester: '3rd Trimester',
+    dueDate: 'Due Dec 12, 2024',
+    bp: '150/98 mmHg',
+    bpRaw: '150/98',
+    bpStatus: 'Stage 2 High',
+    hb: 'Hb 9.1 g/dL',
+    hbRaw: '9.1',
+    hbStatus: 'Moderate Anemia',
+    weight: '74.2',
+    risk: 'High Risk',
+    assignedWorker: 'Sr. Sarah Omondi',
+    facility: 'Maji Mazuri',
+    notes: 'Chronic hypertension signs with severe ankle edema. Prescribed labetalol under strict weekly nurse review.'
+  },
+  {
+    id: 'M-06',
+    uuid: null,
+    name: 'Mercy Achieng',
+    age: '24 yrs',
+    week: '22 Weeks',
+    weekDetail: '22w 1d',
+    trimester: '2nd Trimester',
+    dueDate: 'Due Jan 24, 2025',
+    bp: '115/72 mmHg',
+    bpRaw: '115/72',
+    bpStatus: 'Normal BP',
+    hb: 'Hb 11.8 g/dL',
+    hbRaw: '11.8',
+    hbStatus: 'Optimal Hb',
+    weight: '62.0',
+    risk: 'Routine',
+    assignedWorker: 'Dr. Anthony Karanja',
+    facility: 'Highridge Clinic',
+    notes: 'Anomaly scan completed and normal. Maternal weight gain on target (+4.5 kg). Iron and calcium adherence confirmed.'
+  },
+  {
+    id: 'M-07',
+    uuid: null,
+    name: 'Joy Cherop',
+    age: '29 yrs',
+    week: '36 Weeks',
+    weekDetail: '36w 0d',
+    trimester: '3rd Trimester',
+    dueDate: 'Due Oct 28, 2024',
+    bp: '138/88 mmHg',
+    bpRaw: '138/88',
+    bpStatus: 'Pre-hypertensive',
+    hb: 'Hb 10.6 g/dL',
+    hbRaw: '10.6',
+    hbStatus: 'Borderline Hb',
+    weight: '69.8',
+    risk: 'High Risk',
+    assignedWorker: 'David Ochieng',
+    facility: 'Silanga Valley',
+    notes: 'Borderline blood pressure elevation near term. Patient advised on resting and danger sign recognition.'
+  },
+  {
+    id: 'M-08',
+    uuid: null,
+    name: 'Beatrice Kemunto',
+    age: '22 yrs',
+    week: '14 Weeks',
+    weekDetail: '14w 4d',
+    trimester: '2nd Trimester',
+    dueDate: 'Due Apr 15, 2025',
+    bp: '110/68 mmHg',
+    bpRaw: '110/68',
+    bpStatus: 'Normal BP',
+    hb: 'Hb 12.4 g/dL',
+    hbRaw: '12.4',
+    hbStatus: 'Optimal Hb',
+    weight: '57.0',
+    risk: 'Routine',
+    assignedWorker: 'Mary Wambui',
+    facility: 'Kibera West',
+    notes: 'First trimester screening tests non-reactive. Routine prenatal vitamins provided.'
+  },
+  // Page 3
+  {
+    id: 'M-09',
+    uuid: null,
+    name: 'Lucy Muthoni',
+    age: '33 yrs',
+    week: '30 Weeks',
+    weekDetail: '30w 2d',
+    trimester: '3rd Trimester',
+    dueDate: 'Due Nov 30, 2024',
+    bp: '124/82 mmHg',
+    bpRaw: '124/82',
+    bpStatus: 'Normal BP',
+    hb: 'Hb 11.2 g/dL',
+    hbRaw: '11.2',
+    hbStatus: 'Optimal Hb',
+    weight: '66.5',
+    risk: 'Routine',
+    assignedWorker: 'Esther Chebet',
+    facility: 'Lindi Outpost',
+    notes: 'Oral glucose tolerance test (OGTT) passed. Tdap vaccine booster administered.'
+  },
+  {
+    id: 'M-10',
+    uuid: null,
+    name: 'Sharon Awiti',
+    age: '27 yrs',
+    week: '35 Weeks',
+    weekDetail: '35w 1d',
+    trimester: '3rd Trimester',
+    dueDate: 'Due Nov 01, 2024',
+    bp: '142/92 mmHg',
+    bpRaw: '142/92',
+    bpStatus: 'Stage 1 High',
+    hb: 'Hb 9.6 g/dL',
+    hbRaw: '9.6',
+    hbStatus: 'Mild Anemia',
+    weight: '78.0',
+    risk: 'High Risk',
+    assignedWorker: 'Sr. Sarah Omondi',
+    facility: 'Maji Mazuri',
+    notes: 'Twin gestation (DCDA). Scheduled for elective cesarean evaluation with Dr. Karanja.'
+  },
+  {
+    id: 'M-11',
+    uuid: null,
+    name: 'Lilian Wanjiku',
+    age: '25 yrs',
+    week: '20 Weeks',
+    weekDetail: '20w 0d',
+    trimester: '2nd Trimester',
+    dueDate: 'Due Feb 14, 2025',
+    bp: '116/74 mmHg',
+    bpRaw: '116/74',
+    bpStatus: 'Normal BP',
+    hb: 'Hb 12.0 g/dL',
+    hbRaw: '12.0',
+    hbStatus: 'Optimal Hb',
+    weight: '60.5',
+    risk: 'Routine',
+    assignedWorker: 'Dr. Anthony Karanja',
+    facility: 'Highridge Clinic',
+    notes: 'Mid-pregnancy anatomy scan normal. Fetal growth in 55th percentile.'
+  },
+  {
+    id: 'M-12',
+    uuid: null,
+    name: 'Christine Nekesa',
+    age: '28 yrs',
+    week: '38 Weeks',
+    weekDetail: '38w 2d',
+    trimester: '3rd Trimester',
+    dueDate: 'Due Oct 12, 2024',
+    bp: '122/78 mmHg',
+    bpRaw: '122/78',
+    bpStatus: 'Normal BP',
+    hb: 'Hb 11.5 g/dL',
+    hbRaw: '11.5',
+    hbStatus: 'Optimal Hb',
+    weight: '68.0',
+    risk: 'Routine',
+    assignedWorker: 'David Ochieng',
+    facility: 'Silanga Valley',
+    notes: 'Term cephalic presentation. Clean delivery mama kit verified at home visit.'
+  },
+  // Page 4
+  {
+    id: 'M-13',
+    uuid: null,
+    name: 'Everlyne Moraa',
+    age: '23 yrs',
+    week: '16 Weeks',
+    weekDetail: '16w 3d',
+    trimester: '2nd Trimester',
+    dueDate: 'Due Mar 20, 2025',
+    bp: '114/70 mmHg',
+    bpRaw: '114/70',
+    bpStatus: 'Normal BP',
+    hb: 'Hb 11.9 g/dL',
+    hbRaw: '11.9',
+    hbStatus: 'Optimal Hb',
+    weight: '58.0',
+    risk: 'Routine',
+    assignedWorker: 'Mary Wambui',
+    facility: 'Kibera West',
+    notes: 'Intermittent preventive treatment for malaria in pregnancy (IPTp-SP dose 1) given.'
+  },
+  {
+    id: 'M-14',
+    uuid: null,
+    name: 'Vivian Jepkorir',
+    age: '30 yrs',
+    week: '33 Weeks',
+    weekDetail: '33w 4d',
+    trimester: '3rd Trimester',
+    dueDate: 'Due Nov 10, 2024',
+    bp: '146/96 mmHg',
+    bpRaw: '146/96',
+    bpStatus: 'Stage 1 High',
+    hb: 'Hb 8.4 g/dL',
+    hbRaw: '8.4',
+    hbStatus: 'Severe Anemia',
+    weight: '67.0',
+    risk: 'High Risk',
+    assignedWorker: 'Sr. Sarah Omondi',
+    facility: 'Maji Mazuri',
+    notes: 'Severe maternal anemia with tachycardia. Emergency outpatient iron sucrose initiated.'
+  },
+  {
+    id: 'M-15',
+    uuid: null,
+    name: 'Tabitha Wambui',
+    age: '34 yrs',
+    week: '27 Weeks',
+    weekDetail: '27w 5d',
+    trimester: '2nd Trimester',
+    dueDate: 'Due Dec 20, 2024',
+    bp: '120/78 mmHg',
+    bpRaw: '120/78',
+    bpStatus: 'Normal BP',
+    hb: 'Hb 11.7 g/dL',
+    hbRaw: '11.7',
+    hbStatus: 'Optimal Hb',
+    weight: '65.2',
+    risk: 'Routine',
+    assignedWorker: 'Esther Chebet',
+    facility: 'Lindi Outpost',
+    notes: 'Routine 28-week ANC scheduled. Maternal blood glucose levels normal.'
+  },
+  {
+    id: 'M-16',
+    uuid: null,
+    name: 'Prudence Adhiambo',
+    age: '21 yrs',
+    week: '12 Weeks',
+    weekDetail: '12w 1d',
+    trimester: '1st Trimester',
+    dueDate: 'Due May 04, 2025',
+    bp: '108/66 mmHg',
+    bpRaw: '108/66',
+    bpStatus: 'Normal BP',
+    hb: 'Hb 12.6 g/dL',
+    hbRaw: '12.6',
+    hbStatus: 'Optimal Hb',
+    weight: '54.5',
+    risk: 'Routine',
+    assignedWorker: 'Dr. Anthony Karanja',
+    facility: 'Highridge Clinic',
+    notes: 'Early antenatal booking visit completed. Folic acid and dietary counseling provided.'
   }
 ];
 
 let selectedPatientId = 'M-01';
 let sortDescending = true;
+
+// ==========================================
+// BABY CHECKS & NEWBORN CARE DATASET
+// ==========================================
+const babyData = {
+  mary_osei: {
+    key: "mary_osei",
+    name: "Baby of Mary Osei",
+    tag: "Urgent",
+    meta: "B-01 • Age: 3 days • Asamankese",
+    age: "Day 3",
+    weight: "2.45 kg",
+    birthWeight: "Birth: 2.50 kg",
+    temp: "35.3°C",
+    tempStatus: "Too Cold",
+    breath: "52 / min",
+    breathStatus: "Normal",
+    careStatus: "Needs Urgent Care",
+    kmcPct: "54%",
+    kmcWidth: "54%",
+    kmcText: "Mother holding baby skin-to-skin: 9 of 18 hours done today (54%).",
+    dotClass: "bg-[#0e7490]"
+  },
+  fatima_a: {
+    key: "fatima_a",
+    name: "Baby of Fatima Abubakar",
+    tag: "Urgent",
+    meta: "B-02 • Age: 6 days • Beposo",
+    age: "Day 6",
+    weight: "3.10 kg",
+    birthWeight: "Birth: 3.15 kg",
+    temp: "37.8°C",
+    tempStatus: "Mild Fever",
+    breath: "68 / min",
+    breathStatus: "Fast Breathing",
+    careStatus: "Needs Urgent Care",
+    kmcPct: "65%",
+    kmcWidth: "65%",
+    kmcText: "Mother holding baby skin-to-skin: 12 of 18 hours done today (65%).",
+    dotClass: "bg-[#0e7490]"
+  },
+  esther_m: {
+    key: "esther_m",
+    name: "Baby of Esther Mensah",
+    tag: "Attention",
+    meta: "B-03 • Age: 2 days • Kwahu Ridge",
+    age: "Day 2",
+    weight: "2.80 kg",
+    birthWeight: "Birth: 2.85 kg",
+    temp: "36.7°C",
+    tempStatus: "Normal",
+    breath: "48 / min",
+    breathStatus: "Normal",
+    careStatus: "Needs Attention",
+    kmcPct: "80%",
+    kmcWidth: "80%",
+    kmcText: "Mother holding baby skin-to-skin: 14 of 18 hours done today (80%).",
+    dotClass: "bg-slate-300"
+  },
+  grace_k: {
+    key: "grace_k",
+    name: "Baby of Grace Kwarteng",
+    tag: "Attention",
+    meta: "B-04 • Age: 7 days • Donkorkrom",
+    age: "Day 7",
+    weight: "3.40 kg",
+    birthWeight: "Birth: 3.35 kg",
+    temp: "37.9°C",
+    tempStatus: "Fever",
+    breath: "44 / min",
+    breathStatus: "Normal",
+    careStatus: "Needs Attention",
+    kmcPct: "72%",
+    kmcWidth: "72%",
+    kmcText: "Mother holding baby skin-to-skin: 13 of 18 hours done today (72%).",
+    dotClass: "bg-slate-300"
+  },
+  comfort_b: {
+    key: "comfort_b",
+    name: "Baby of Comfort Boateng",
+    tag: "Normal",
+    meta: "B-05 • Age: 14 days • Akosombo",
+    age: "Day 14",
+    weight: "3.65 kg",
+    birthWeight: "Birth: 3.40 kg",
+    temp: "36.6°C",
+    tempStatus: "Normal",
+    breath: "40 / min",
+    breathStatus: "Normal",
+    careStatus: "Healthy & Normal",
+    kmcPct: "95%",
+    kmcWidth: "95%",
+    kmcText: "Mother holding baby skin-to-skin: 17 of 18 hours done today (95%).",
+    dotClass: "bg-emerald-400"
+  },
+  akua_k: {
+    key: "akua_k",
+    name: "Baby of Akua Konadu",
+    tag: "Normal",
+    meta: "B-06 • Age: 5 days • Nkawkaw",
+    age: "Day 5",
+    weight: "2.90 kg",
+    birthWeight: "Birth: 2.85 kg",
+    temp: "36.8°C",
+    tempStatus: "Normal",
+    breath: "46 / min",
+    breathStatus: "Normal",
+    careStatus: "Healthy & Normal",
+    kmcPct: "88%",
+    kmcWidth: "88%",
+    kmcText: "Mother holding baby skin-to-skin: 15 of 18 hours done today (88%).",
+    dotClass: "bg-emerald-400"
+  },
+  yaa_a: {
+    key: "yaa_a",
+    name: "Baby of Yaa Asantewaa",
+    tag: "Urgent",
+    meta: "B-07 • Age: 1 day • Koforidua",
+    age: "Day 1",
+    weight: "2.30 kg",
+    birthWeight: "Birth: 2.30 kg",
+    temp: "35.5°C",
+    tempStatus: "Hypothermia",
+    breath: "58 / min",
+    breathStatus: "Rapid",
+    careStatus: "Needs Urgent Care",
+    kmcPct: "60%",
+    kmcWidth: "60%",
+    kmcText: "Mother holding baby skin-to-skin: 11 of 18 hours done today (60%).",
+    dotClass: "bg-[#0e7490]"
+  },
+  abena_s: {
+    key: "abena_s",
+    name: "Baby of Abena Serwaa",
+    tag: "Normal",
+    meta: "B-08 • Age: 10 days • Suhum",
+    age: "Day 10",
+    weight: "3.50 kg",
+    birthWeight: "Birth: 3.30 kg",
+    temp: "36.5°C",
+    tempStatus: "Normal",
+    breath: "42 / min",
+    breathStatus: "Normal",
+    careStatus: "Healthy & Normal",
+    kmcPct: "92%",
+    kmcWidth: "92%",
+    kmcText: "Mother holding baby skin-to-skin: 16 of 18 hours done today (92%).",
+    dotClass: "bg-emerald-400"
+  }
+};
+
+let selectedBabyKey = 'mary_osei';
+let babyFilterMode = 'ALL';
+let currentBabyPage = 1;
+const babyPageSize = 5;
+
+// Sample Appointments Store
+let appointments = [
+  {
+    id: 'APT-1',
+    patientName: 'Zainab Bello (M-01)',
+    type: 'ANTENATAL',
+    when: 'Tomorrow, 10:00 AM',
+    facility: 'Maji Mazuri Outpost',
+    status: 'Confirmed'
+  },
+  {
+    id: 'APT-2',
+    patientName: 'Halima Kadogo (M-02)',
+    type: 'DELIVERY',
+    when: 'Friday, 02:00 PM',
+    facility: 'Silanga Valley Clinic',
+    status: 'Reminder Sent'
+  },
+  {
+    id: 'APT-3',
+    patientName: 'Faith Ndinda (M-05)',
+    type: 'ANTENATAL',
+    when: 'Monday, 09:30 AM',
+    facility: 'Maji Mazuri Outpost',
+    status: 'High Priority'
+  },
+  {
+    id: 'APT-4',
+    patientName: 'Baby of Mary Osei',
+    type: 'POSTNATAL',
+    when: 'Next Wednesday, 11:00 AM',
+    facility: 'Asamankese Clinic',
+    status: 'Confirmed'
+  }
+];
 
 // Toast Utility
 function toast(msg) {
@@ -1069,20 +1813,19 @@ function toast(msg) {
 // Compute initials
 function computeInitials(name) {
   if (!name) return 'SO';
-  const parts = name.replace(/^(Sr\.|Dr\.|Mr\.|Mrs\.|Ms\.)\s*/i, '').trim().split(/\s+/);
+  const parts = name.replace(/^(Sr\.|Dr\.|Mr\.|Mrs\.|Ms\.|Baby of)\s*/i, '').trim().split(/\s+/);
   if (parts.length >= 2) {
     return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
   }
   return parts[0].substring(0, 2).toUpperCase();
 }
 
-// Select patient micro-interaction
+// Select patient micro-interaction (Mothers)
 function selectPatient(patientId) {
   selectedPatientId = patientId;
   const p = patients.find(item => item.id === patientId);
   if (!p) return;
 
-  // Update Drawer
   const initials = computeInitials(p.name);
   document.getElementById('drawerAvatar').textContent = initials;
   document.getElementById('drawerPatientName').textContent = p.name;
@@ -1090,9 +1833,9 @@ function selectPatient(patientId) {
   const riskBadge = document.getElementById('drawerRiskBadge');
   riskBadge.textContent = p.risk;
   if (p.risk === 'High Risk') {
-    riskBadge.className = 'px-2.5 py-0.5 rounded-full text-label-sm font-label-sm bg-surface-container-high text-on-surface font-semibold border border-outline-variant/30';
+    riskBadge.className = 'px-2.5 py-0.5 rounded-full text-xs bg-slate-100 text-slate-800 font-semibold border border-slate-200';
   } else {
-    riskBadge.className = 'px-2.5 py-0.5 rounded-full text-label-sm font-label-sm bg-surface-container text-on-surface-variant font-medium';
+    riskBadge.className = 'px-2.5 py-0.5 rounded-full text-xs bg-slate-100 text-slate-700 font-medium';
   }
 
   document.getElementById('drawerPatientMeta').textContent = `ID: ${p.id} • ${p.age}`;
@@ -1100,18 +1843,18 @@ function selectPatient(patientId) {
   document.getElementById('drawerStatTrimester').textContent = p.trimester;
   document.getElementById('drawerStatBP').textContent = p.bpRaw || p.bp;
   document.getElementById('drawerStatBPStatus').textContent = p.bpStatus || 'Normal';
-  document.getElementById('drawerStatHb').innerHTML = `${p.hbRaw || '11.5'} <span class="text-[12px] font-normal">g/dL</span>`;
+  document.getElementById('drawerStatHb').innerHTML = `${p.hbRaw || '11.5'} <span class="text-xs font-normal">g/dL</span>`;
   document.getElementById('drawerStatHbStatus').textContent = p.hbStatus || 'Optimal Hb';
   document.getElementById('drawerNotes').textContent = p.notes;
   document.getElementById('drawerAssignedCHW').textContent = p.assignedWorker;
 
-  // Re-render table active row style
   renderPatientsTable();
 }
 
-// Render Master Maternal ANC Table
+// Render Master Maternal ANC Table with Pagination
 function renderPatientsTable() {
   const tbody = document.getElementById('maternalTableBody');
+  if (!tbody) return;
   tbody.innerHTML = '';
 
   const searchVal = (document.getElementById('rosterSearchInput')?.value || '').toLowerCase().trim();
@@ -1122,62 +1865,141 @@ function renderPatientsTable() {
     const matchesSearch = !searchVal || 
       p.name.toLowerCase().includes(searchVal) || 
       p.id.toLowerCase().includes(searchVal) ||
-      (p.assignedWorker && p.assignedWorker.toLowerCase().includes(searchVal));
+      (p.assignedWorker && p.assignedWorker.toLowerCase().includes(searchVal)) ||
+      (p.facility && p.facility.toLowerCase().includes(searchVal));
     const matchesTrimester = trimVal === 'ALL' || (p.trimester && p.trimester.includes(trimVal));
     const matchesRisk = riskVal === 'ALL' || p.risk === riskVal;
     return matchesSearch && matchesTrimester && matchesRisk;
   });
 
-  filtered.forEach(p => {
+  const totalItems = filtered.length;
+  const totalPages = Math.max(1, Math.ceil(totalItems / pageSize));
+  if (currentPage > totalPages) currentPage = totalPages;
+
+  const startIndex = (currentPage - 1) * pageSize;
+  const endIndex = Math.min(startIndex + pageSize, totalItems);
+  const pageItems = filtered.slice(startIndex, endIndex);
+
+  pageItems.forEach(p => {
     const isSelected = p.id === selectedPatientId;
     const tr = document.createElement('tr');
     tr.className = isSelected 
-      ? 'bg-primary-fixed/20 hover:bg-primary-fixed/30 transition-colors cursor-pointer'
-      : 'hover:bg-surface-container-low transition-colors cursor-pointer';
+      ? 'bg-teal-50/50 hover:bg-teal-50/80 transition-colors cursor-pointer'
+      : 'hover:bg-slate-50 transition-colors cursor-pointer';
     
     tr.onclick = () => selectPatient(p.id);
 
     const riskBadgeClass = p.risk === 'High Risk'
-      ? 'inline-flex items-center px-2.5 py-1 rounded-full text-[12px] font-semibold bg-surface-container-high text-on-surface border border-outline-variant/30'
-      : 'inline-flex items-center px-2.5 py-1 rounded-full text-[12px] font-medium bg-surface-container text-on-surface-variant';
+      ? 'inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-slate-100 text-slate-800 border border-slate-200'
+      : 'inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-slate-100 text-slate-600';
 
     const actionBtnClass = isSelected
-      ? 'px-3.5 py-1.5 rounded-lg bg-primary-container text-on-primary font-label-sm text-label-sm font-semibold hover:opacity-95 transition-opacity shadow-sm'
-      : 'px-3.5 py-1.5 rounded-lg bg-surface-container-high text-on-surface-variant hover:bg-primary hover:text-on-primary font-label-sm text-label-sm font-semibold transition-colors';
+      ? 'px-3.5 py-1.5 rounded-lg bg-[#0e7490] text-white text-xs font-semibold hover:bg-[#0c627a] transition-all shadow-xs'
+      : 'px-3.5 py-1.5 rounded-lg bg-slate-100 text-slate-700 hover:bg-[#0e7490] hover:text-white text-xs font-semibold transition-colors';
 
     tr.innerHTML = `
-      <td class="py-5 px-6 align-middle">
-        <div class="font-label-lg text-label-lg ${isSelected ? 'font-bold' : 'font-semibold'} text-on-surface">${p.name}</div>
-        <div class="text-outline text-[11px] font-normal">ID: ${p.id}</div>
+      <td class="py-4 px-6 align-middle">
+        <div class="text-sm ${isSelected ? 'font-bold' : 'font-semibold'} text-slate-900">${p.name}</div>
+        <div class="text-slate-400 text-[11px] font-normal">ID: ${p.id}</div>
       </td>
-      <td class="py-5 px-5 align-middle">
-        <div class="font-semibold text-on-surface text-[14px]">${p.week}</div>
-        <div class="text-on-surface-variant text-[12px]">${p.dueDate}</div>
+      <td class="py-4 px-5 align-middle">
+        <div class="font-semibold text-slate-800 text-[13px]">${p.week}</div>
+        <div class="text-slate-500 text-[11px]">${p.dueDate}</div>
       </td>
-      <td class="py-5 px-5 align-middle">
-        <div class="font-medium text-on-surface text-[14px]">${p.bp}</div>
-        <div class="text-on-surface-variant text-[12px]">${p.hb}</div>
+      <td class="py-4 px-5 align-middle">
+        <div class="font-medium text-slate-800 text-[13px]">${p.bp}</div>
+        <div class="text-slate-500 text-[11px]">${p.hb}</div>
       </td>
-      <td class="py-5 px-5 align-middle">
+      <td class="py-4 px-5 align-middle">
         <span class="${riskBadgeClass}">${p.risk}</span>
       </td>
-      <td class="py-5 px-5 align-middle">
-        <div class="font-medium text-on-surface text-[14px]">${p.assignedWorker}</div>
-        <div class="text-on-surface-variant text-[12px]">${p.facility}</div>
+      <td class="py-4 px-5 align-middle">
+        <div class="font-medium text-slate-800 text-[13px]">${p.assignedWorker}</div>
+        <div class="text-slate-500 text-[11px]">${p.facility}</div>
       </td>
-      <td class="py-5 px-6 text-right align-middle">
+      <td class="py-4 px-6 text-right align-middle">
         <button class="${actionBtnClass}">View</button>
       </td>
     `;
     tbody.appendChild(tr);
   });
 
-  document.getElementById('activeCountBadge').textContent = `${patients.length} active`;
-  document.getElementById('paginationInfo').textContent = `Showing 1-${filtered.length} of ${patients.length} expectant mothers`;
+  if (totalItems === 0) {
+    tbody.innerHTML = `<tr><td colspan="6" class="py-8 text-center text-slate-400">No expectant mothers match the filter criteria.</td></tr>`;
+    document.getElementById('paginationInfo').textContent = 'Showing 0 of 0 expectant mothers';
+  } else {
+    document.getElementById('paginationInfo').textContent = `Showing ${startIndex + 1}-${endIndex} of ${totalItems} expectant mothers`;
+  }
+
+  document.getElementById('activeCountBadge').textContent = `${totalItems} active`;
+  renderPaginationControls(totalPages, currentPage);
 }
 
-// Filter Micro-interactions
+// Render dynamic pagination buttons (Prev, 1, 2, 3, Next)
+function renderPaginationControls(totalPages, current) {
+  const container = document.getElementById('paginationControls');
+  if (!container) return;
+  container.innerHTML = '';
+
+  const prevBtn = document.createElement('button');
+  prevBtn.className = `px-2.5 py-1 rounded-lg text-slate-700 transition-colors ${current === 1 ? 'opacity-40 cursor-not-allowed bg-slate-100' : 'bg-white border border-slate-200 hover:bg-slate-100 cursor-pointer font-semibold'}`;
+  prevBtn.textContent = 'Prev';
+  prevBtn.disabled = current === 1;
+  prevBtn.onclick = (e) => {
+    e.stopPropagation();
+    if (current > 1) goToPage(current - 1);
+  };
+  container.appendChild(prevBtn);
+
+  for (let i = 1; i <= totalPages; i++) {
+    const pageBtn = document.createElement('button');
+    if (i === current) {
+      pageBtn.className = 'px-2.5 py-1 rounded-lg bg-[#0e7490] text-white font-bold shadow-xs cursor-pointer';
+    } else {
+      pageBtn.className = 'px-2.5 py-1 rounded-lg bg-white text-slate-700 border border-slate-200 hover:bg-slate-100 transition-colors cursor-pointer';
+    }
+    pageBtn.textContent = i;
+    const pageNum = i;
+    pageBtn.onclick = (e) => {
+      e.stopPropagation();
+      goToPage(pageNum);
+    };
+    container.appendChild(pageBtn);
+  }
+
+  const nextBtn = document.createElement('button');
+  nextBtn.className = `px-2.5 py-1 rounded-lg text-slate-700 transition-colors ${current === totalPages || totalPages === 0 ? 'opacity-40 cursor-not-allowed bg-slate-100' : 'bg-white border border-slate-200 hover:bg-slate-100 cursor-pointer font-semibold'}`;
+  nextBtn.textContent = 'Next';
+  nextBtn.disabled = current === totalPages || totalPages === 0;
+  nextBtn.onclick = (e) => {
+    e.stopPropagation();
+    if (current < totalPages) goToPage(current + 1);
+  };
+  container.appendChild(nextBtn);
+}
+
+function goToPage(p) {
+  currentPage = p;
+  renderPatientsTable();
+  const searchVal = (document.getElementById('rosterSearchInput')?.value || '').toLowerCase().trim();
+  const trimVal = document.getElementById('trimesterFilter')?.value || 'ALL';
+  const riskVal = document.getElementById('riskFilter')?.value || 'ALL';
+  const filtered = patients.filter(item => {
+    const matchesSearch = !searchVal || item.name.toLowerCase().includes(searchVal) || item.id.toLowerCase().includes(searchVal);
+    const matchesTrimester = trimVal === 'ALL' || (item.trimester && item.trimester.includes(trimVal));
+    const matchesRisk = riskVal === 'ALL' || item.risk === riskVal;
+    return matchesSearch && matchesTrimester && matchesRisk;
+  });
+  const startIndex = (currentPage - 1) * pageSize;
+  const pageItems = filtered.slice(startIndex, startIndex + pageSize);
+  const found = pageItems.find(item => item.id === selectedPatientId);
+  if (!found && pageItems.length > 0) {
+    selectPatient(pageItems[0].id);
+  }
+}
+
 function filterPatients() {
+  currentPage = 1;
   renderPatientsTable();
 }
 
@@ -1185,6 +2007,7 @@ function resetFilters() {
   document.getElementById('rosterSearchInput').value = '';
   document.getElementById('trimesterFilter').value = 'ALL';
   document.getElementById('riskFilter').value = 'ALL';
+  currentPage = 1;
   renderPatientsTable();
   toast('Filters reset');
 }
@@ -1197,34 +2020,199 @@ function toggleSort() {
     return sortDescending ? (wB - wA) : (wA - wB);
   });
   document.getElementById('sortIcon').textContent = sortDescending ? 'arrow_downward' : 'arrow_upward';
+  currentPage = 1;
   renderPatientsTable();
 }
 
-function handleSearch(val) {
+function handleGlobalHeaderSearch(val) {
+  switchNavView('maternal-care');
   document.getElementById('rosterSearchInput').value = val;
   filterPatients();
 }
 
-function focusSearchInput() {
-  switchNavView('maternal-care');
-  const inp = document.getElementById('globalSearchInput');
-  inp.focus();
-  toast('Ready to search registry');
+// ==========================================
+// BABY CHECKS & NEWBORN CARE LOGIC
+// ==========================================
+function selectBaby(key) {
+  selectedBabyKey = key;
+  const data = babyData[key];
+  if (!data) return;
+
+  document.getElementById('panel-baby-name').innerText = data.name;
+  document.getElementById('panel-baby-tag').innerText = data.tag;
+  document.getElementById('panel-baby-meta').innerText = data.meta;
+  document.getElementById('panel-weight').innerText = data.weight;
+  if (document.getElementById('panel-birth-weight')) {
+    document.getElementById('panel-birth-weight').innerText = data.birthWeight || 'Birth: 2.50 kg';
+  }
+  document.getElementById('panel-temp').innerText = data.temp;
+  document.getElementById('panel-temp-status').innerText = data.tempStatus;
+  document.getElementById('panel-breath').innerText = data.breath;
+  document.getElementById('panel-breath-status').innerText = data.breathStatus;
+  if (document.getElementById('panel-kmc-pct')) {
+    document.getElementById('panel-kmc-pct').innerText = data.kmcPct;
+  }
+  if (document.getElementById('panel-kmc-bar')) {
+    document.getElementById('panel-kmc-bar').style.width = data.kmcWidth;
+  }
+  if (document.getElementById('panel-kmc-text')) {
+    document.getElementById('panel-kmc-text').innerText = data.kmcText;
+  }
+
+  // Update Avatar initials
+  if (document.getElementById('panel-baby-avatar')) {
+    const parts = data.name.replace(/^Baby of\s*/i, '').trim().split(/\s+/);
+    const inits = parts.length >= 2 ? (parts[0][0] + parts[1][0]).toUpperCase() : parts[0].substring(0, 2).toUpperCase();
+    document.getElementById('panel-baby-avatar').innerText = inits;
+  }
+
+  renderBabyTable();
+}
+
+function triggerAction(patient, action) {
+  alert(action + ' selected for ' + patient + '. Care record updated.');
+}
+
+function renderBabyTable() {
+  const tbody = document.getElementById('babyTableBody');
+  if (!tbody) return;
+  tbody.innerHTML = '';
+
+  const allBabies = Object.values(babyData);
+  const filtered = allBabies.filter(b => {
+    if (babyFilterMode === 'ATTENTION') return b.careStatus.includes('Urgent') || b.careStatus.includes('Attention');
+    if (babyFilterMode === 'NORMAL') return b.careStatus.includes('Normal') || b.careStatus.includes('Healthy');
+    return true;
+  });
+
+  const totalItems = filtered.length;
+  const totalPages = Math.max(1, Math.ceil(totalItems / babyPageSize));
+  if (currentBabyPage > totalPages) currentBabyPage = totalPages;
+
+  const startIndex = (currentBabyPage - 1) * babyPageSize;
+  const endIndex = Math.min(startIndex + babyPageSize, totalItems);
+  const pageItems = filtered.slice(startIndex, endIndex);
+
+  pageItems.forEach(b => {
+    const isSelected = b.key === selectedBabyKey;
+    const tr = document.createElement('tr');
+    tr.className = isSelected 
+      ? 'bg-teal-50/40 hover:bg-teal-50/70 transition-colors cursor-pointer group' 
+      : 'hover:bg-slate-50 transition-colors cursor-pointer group';
+    tr.onclick = () => selectBaby(b.key);
+
+    let statusBadge = '';
+    if (b.careStatus.includes('Urgent')) {
+      statusBadge = '<span class="bg-teal-100/80 text-[#0e7490] px-3 py-1 rounded-full text-[11px] font-bold uppercase">Needs Urgent Care</span>';
+    } else if (b.careStatus.includes('Attention')) {
+      statusBadge = '<span class="bg-slate-100 text-slate-700 px-3 py-1 rounded-full text-[11px] font-bold uppercase">Needs Attention</span>';
+    } else {
+      statusBadge = '<span class="bg-emerald-50 text-emerald-700 border border-emerald-200 px-3 py-1 rounded-full text-[11px] font-semibold uppercase">Healthy &amp; Normal</span>';
+    }
+
+    const dotClass = b.dotClass || (b.careStatus.includes('Urgent') ? 'bg-[#0e7490]' : (b.careStatus.includes('Attention') ? 'bg-slate-300' : 'bg-emerald-400'));
+
+    tr.innerHTML = `
+      <td class="py-4 px-5">
+        <div class="flex items-center gap-3">
+          <div class="w-2.5 h-2.5 rounded-full ${dotClass} shrink-0"></div>
+          <div>
+            <div class="text-[14px] font-bold text-slate-900 group-hover:text-[#0e7490] transition-colors">${b.name}</div>
+            <div class="text-slate-400 font-medium text-[11px]">${b.meta}</div>
+          </div>
+        </div>
+      </td>
+      <td class="py-4 px-4">
+        <div class="font-bold text-slate-800">${b.age}</div>
+        <div class="text-slate-500">${b.weight}</div>
+      </td>
+      <td class="py-4 px-4">
+        <div>Temp: <span class="${b.tempStatus.includes('Cold') || b.tempStatus.includes('Fever') ? 'font-bold text-slate-800' : 'text-slate-800'}">${b.temp}</span></div>
+        <div class="text-slate-500">Breath: ${b.breath}</div>
+      </td>
+      <td class="py-4 px-5 text-right">
+        ${statusBadge}
+      </td>
+    `;
+    tbody.appendChild(tr);
+  });
+
+  const infoEl = document.getElementById('babyPaginationInfo');
+  if (infoEl) {
+    infoEl.innerHTML = `Showing <strong class="text-slate-900">${filtered.length > 0 ? (startIndex + 1) + '-' + endIndex : '0'} of 312</strong> registered babies • <span class="text-[#0e7490] font-semibold">5 babies need quick attention</span>`;
+  }
+
+  renderBabyPaginationControls(totalPages, currentBabyPage);
+}
+
+function renderBabyPaginationControls(totalPages, current) {
+  const container = document.getElementById('babyPaginationControls');
+  if (!container) return;
+  container.innerHTML = '';
+
+  const prevBtn = document.createElement('button');
+  prevBtn.className = `px-2.5 py-1 rounded text-slate-700 border border-slate-200 font-semibold ${current === 1 ? 'opacity-40 cursor-not-allowed bg-slate-100' : 'bg-white hover:bg-slate-100 cursor-pointer'}`;
+  prevBtn.textContent = 'Prev';
+  prevBtn.disabled = current === 1;
+  prevBtn.onclick = () => { if (current > 1) { currentBabyPage = current - 1; renderBabyTable(); } };
+  container.appendChild(prevBtn);
+
+  for (let i = 1; i <= Math.min(3, totalPages); i++) {
+    const pageBtn = document.createElement('button');
+    pageBtn.textContent = i;
+    if (i === current) {
+      pageBtn.className = 'px-2.5 py-1 rounded bg-[#0e7490] text-white font-bold cursor-pointer';
+    } else {
+      pageBtn.className = 'px-2.5 py-1 rounded bg-white text-slate-700 border border-slate-200 hover:bg-slate-100 cursor-pointer';
+    }
+    const pNum = i;
+    pageBtn.onclick = () => { currentBabyPage = pNum; renderBabyTable(); };
+    container.appendChild(pageBtn);
+  }
+
+  if (totalPages > 3) {
+    const dots = document.createElement('span');
+    dots.className = 'px-1 text-slate-400';
+    dots.textContent = '...';
+    container.appendChild(dots);
+  }
+
+  const nextBtn = document.createElement('button');
+  nextBtn.className = `px-2.5 py-1 rounded text-slate-700 border border-slate-200 font-semibold ${current === totalPages || totalPages === 0 ? 'opacity-40 cursor-not-allowed bg-slate-100' : 'bg-white hover:bg-slate-100 cursor-pointer'}`;
+  nextBtn.textContent = 'Next';
+  nextBtn.disabled = current === totalPages || totalPages === 0;
+  nextBtn.onclick = () => { if (current < totalPages) { currentBabyPage = current + 1; renderBabyTable(); } };
+  container.appendChild(nextBtn);
+}
+
+function filterBabyTable(mode) {
+  babyFilterMode = mode;
+  currentBabyPage = 1;
+
+  const btnAll = document.getElementById('babyFilterAll');
+  const btnAttn = document.getElementById('babyFilterAttention');
+  const btnWell = document.getElementById('babyFilterDoingWell');
+
+  if (btnAll) btnAll.className = mode === 'ALL' ? 'px-3 py-1 bg-white text-[#0e7490] rounded shadow-xs cursor-pointer' : 'px-3 py-1 text-slate-600 hover:text-slate-900 cursor-pointer';
+  if (btnAttn) btnAttn.className = mode === 'ATTENTION' ? 'px-3 py-1 bg-white text-[#0e7490] rounded shadow-xs cursor-pointer' : 'px-3 py-1 text-slate-600 hover:text-slate-900 cursor-pointer';
+  if (btnWell) btnWell.className = mode === 'NORMAL' ? 'px-3 py-1 bg-white text-[#0e7490] rounded shadow-xs cursor-pointer' : 'px-3 py-1 text-slate-600 hover:text-slate-900 cursor-pointer';
+
+  renderBabyTable();
 }
 
 // Sidebar Navigation switching
 function switchNavView(viewName) {
   document.querySelectorAll('.nav-btn').forEach(btn => {
     if (btn.dataset.view === viewName) {
-      btn.className = 'nav-btn flex items-center gap-space-sm px-space-md py-2.5 rounded-lg bg-cyan-700 text-white font-semibold transition-all shadow-sm cursor-pointer';
-      btn.querySelector('.material-symbols-outlined').className = 'material-symbols-outlined text-[20px] text-cyan-200';
+      btn.className = 'nav-btn flex items-center gap-3 px-3.5 py-2.5 rounded-lg bg-[#0e7490] text-white font-semibold shadow-sm transition-all cursor-pointer';
+      btn.querySelector('.material-symbols-outlined').className = 'material-symbols-outlined text-[20px] text-white';
     } else {
-      btn.className = 'nav-btn flex items-center gap-space-sm px-space-md py-2.5 rounded-lg text-cyan-100/80 hover:bg-white/10 hover:text-white transition-all cursor-pointer';
-      btn.querySelector('.material-symbols-outlined').className = 'material-symbols-outlined text-[20px] text-cyan-300/70';
+      btn.className = 'nav-btn flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-slate-200 hover:bg-white/10 hover:text-white transition-colors duration-150 cursor-pointer';
+      btn.querySelector('.material-symbols-outlined').className = 'material-symbols-outlined text-[20px] text-cyan-300';
     }
   });
 
-  const views = ['maternal-care', 'newborn-care', 'appointments', 'referrals'];
+  const views = ['maternal-care', 'newborn-care', 'appointments', 'referrals', 'patient-search'];
   views.forEach(v => {
     const el = document.getElementById('view-' + v);
     if (el) {
@@ -1232,14 +2220,103 @@ function switchNavView(viewName) {
       else el.classList.add('hidden');
     }
   });
+
+  if (viewName === 'patient-search') {
+    executeDedicatedSearch('');
+  } else if (viewName === 'appointments') {
+    renderAppointmentsList('ALL');
+  } else if (viewName === 'newborn-care') {
+    renderBabyTable();
+    selectBaby(selectedBabyKey);
+  }
+
   window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// Dedicated Patient Search page functions
+function executeDedicatedSearch(query = '') {
+  const container = document.getElementById('searchResultsList');
+  if (!container) return;
+  container.innerHTML = '';
+
+  const q = (query || '').toLowerCase().trim();
+  const matched = patients.filter(p => {
+    return !q || 
+      p.name.toLowerCase().includes(q) || 
+      p.id.toLowerCase().includes(q) || 
+      p.assignedWorker.toLowerCase().includes(q) ||
+      p.facility.toLowerCase().includes(q) ||
+      p.risk.toLowerCase().includes(q);
+  });
+
+  document.getElementById('searchResultCount').textContent = `Found ${matched.length} record(s)`;
+
+  matched.forEach(p => {
+    const div = document.createElement('div');
+    div.className = 'p-4 flex items-center justify-between hover:bg-slate-50 transition-colors cursor-pointer';
+    div.onclick = () => {
+      switchNavView('maternal-care');
+      selectPatient(p.id);
+      const idx = patients.findIndex(item => item.id === p.id);
+      if (idx !== -1) {
+        goToPage(Math.floor(idx / pageSize) + 1);
+      }
+    };
+
+    const riskBadgeClass = p.risk === 'High Risk'
+      ? 'bg-red-100 text-red-800'
+      : 'bg-slate-100 text-slate-700';
+
+    div.innerHTML = `
+      <div class="flex items-center gap-3.5">
+        <div class="w-10 h-10 rounded-full bg-[#0e7490] text-white flex items-center justify-center font-bold text-sm">
+          ${computeInitials(p.name)}
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="font-semibold text-sm text-slate-900">${p.name}</span>
+            <span class="px-2 py-0.5 rounded-full text-[11px] font-medium ${riskBadgeClass}">${p.risk}</span>
+          </div>
+          <div class="text-xs text-slate-400 mt-0.5">ID: ${p.id} • ${p.week} • Facility: ${p.facility} • Assigned: ${p.assignedWorker}</div>
+        </div>
+      </div>
+      <div class="flex items-center gap-3">
+        <span class="text-xs text-slate-700 font-medium">${p.bp}</span>
+        <button class="px-3 py-1 rounded-lg bg-[#0e7490] text-white text-xs font-semibold hover:bg-[#0c627a]">Open Record</button>
+      </div>
+    `;
+    container.appendChild(div);
+  });
+
+  if (matched.length === 0) {
+    container.innerHTML = `<div class="p-8 text-center text-slate-400 text-sm">No matching records found for "${query}"</div>`;
+  }
+}
+
+function filterDedicatedBy(tag) {
+  document.querySelectorAll('.search-tag').forEach(b => {
+    b.className = 'search-tag px-3 py-1 rounded-full bg-slate-100 text-slate-700 hover:bg-slate-200 cursor-pointer';
+  });
+  if (event && event.target) {
+    event.target.className = 'search-tag px-3 py-1 rounded-full bg-[#0e7490] text-white font-semibold cursor-pointer';
+  }
+
+  if (tag === 'ALL') {
+    executeDedicatedSearch('');
+  } else if (tag === 'High Risk') {
+    executeDedicatedSearch('High Risk');
+  } else if (tag === 'Routine') {
+    executeDedicatedSearch('Routine');
+  } else if (tag === '3rd') {
+    executeDedicatedSearch('3rd');
+  }
 }
 
 // Healthcare Worker Profile Setup
 function updateWorkerProfileUI(worker) {
   currentWorker = worker;
   const name = worker.fullName || worker.email.split('@')[0];
-  const role = worker.title || (worker.role === 'NURSE' ? 'Facility Nurse / Midwife' : (worker.role === 'DOCTOR' ? 'Medical Doctor / Obstetrician' : 'Registered Midwife'));
+  const role = worker.title || (worker.role === 'NURSE' ? 'Facility Nurse & Midwife' : (worker.role === 'DOCTOR' ? 'Medical Doctor / Obstetrician' : 'Certified Nurse-Midwife'));
   const initials = computeInitials(name);
 
   document.getElementById('headerWorkerName').textContent = name;
@@ -1275,10 +2352,10 @@ function switchAccountTab(tab) {
     const btn = document.getElementById('tabBtn' + t);
     const content = document.getElementById('accountTabContent' + t);
     if (t.toLowerCase() === tab) {
-      btn.className = 'py-3 px-4 font-semibold text-xs border-b-2 border-primary text-primary flex items-center gap-1.5';
+      btn.className = 'py-3 px-4 font-semibold text-xs border-b-2 border-[#0e7490] text-[#0e7490] flex items-center gap-1.5 cursor-pointer';
       content.classList.remove('hidden');
     } else {
-      btn.className = 'py-3 px-4 font-semibold text-xs border-b-2 border-transparent text-on-surface-variant hover:text-on-surface flex items-center gap-1.5';
+      btn.className = 'py-3 px-4 font-semibold text-xs border-b-2 border-transparent text-slate-500 hover:text-slate-800 flex items-center gap-1.5 cursor-pointer';
       content.classList.add('hidden');
     }
   });
@@ -1287,16 +2364,15 @@ function switchAccountTab(tab) {
 function selectWorkerRole(role) {
   document.getElementById('hwRole').value = role;
   document.querySelectorAll('.role-select-btn').forEach(btn => {
-    btn.className = 'role-select-btn py-2.5 px-2 rounded-xl border border-outline-variant/40 bg-surface-container-low text-on-surface font-medium text-xs flex flex-col items-center gap-1 transition-all';
+    btn.className = 'role-select-btn py-2.5 px-2 rounded-xl border border-slate-200 bg-slate-50 text-slate-700 font-medium text-xs flex flex-col items-center gap-1 transition-all cursor-pointer';
   });
   const activeBtn = document.getElementById('roleBtn-' + role);
   if (activeBtn) {
-    activeBtn.className = 'role-select-btn py-2.5 px-2 rounded-xl border border-primary bg-primary/10 text-primary font-semibold text-xs flex flex-col items-center gap-1 transition-all';
+    activeBtn.className = 'role-select-btn py-2.5 px-2 rounded-xl border border-[#0e7490] bg-teal-50 text-[#0e7490] font-semibold text-xs flex flex-col items-center gap-1 transition-all cursor-pointer';
   }
 
-  // Suggest title based on role
   const titleInput = document.getElementById('hwTitle');
-  if (role === 'NURSE') titleInput.value = 'Facility Nurse / Midwife';
+  if (role === 'NURSE') titleInput.value = 'Facility Nurse & Midwife';
   else if (role === 'MIDWIFE') titleInput.value = 'Certified Nurse-Midwife';
   else if (role === 'DOCTOR') titleInput.value = 'Medical Doctor / Obstetrician';
 }
@@ -1332,7 +2408,6 @@ async function handleRegisterWorkerAccount() {
       closeWorkerAccountModal();
       toast(`Account created! Welcome, ${fullName}`);
     } else {
-      // Fallback in case of duplicate email or local simulation
       updateWorkerProfileUI({ fullName, title, role, email, facilityId });
       closeWorkerAccountModal();
       toast(`Healthcare account active: ${fullName}`);
@@ -1365,7 +2440,6 @@ async function quickLoginWorker(email, password, fullName, title, role) {
   } catch (e) {
     console.warn('Backend login attempt:', e);
   }
-  // Seamless fallback for instant UI demonstration
   updateWorkerProfileUI({ fullName, title, role, email });
   closeWorkerAccountModal();
   toast(`Switched staff: ${fullName}`);
@@ -1457,7 +2531,6 @@ async function handleCreateMotherSubmit() {
     notes: 'Newly registered expectant mother. Initial prenatal intake completed. Iron and folic acid issued.'
   };
 
-  // Attempt backend save
   try {
     if (token) {
       await fetch(API + '/api/mothers', {
@@ -1478,8 +2551,59 @@ async function handleCreateMotherSubmit() {
 
   patients.unshift(newMother);
   closeRegisterMotherModal();
+  currentPage = 1;
   selectPatient(newId);
   toast(`Mother registered: ${name}`);
+}
+
+// Newborn Registration Modal
+function openRegisterNewbornModal() {
+  document.getElementById('registerNewbornModal').classList.remove('hidden');
+}
+function closeRegisterNewbornModal() {
+  document.getElementById('registerNewbornModal').classList.add('hidden');
+}
+
+function handleSaveNewborn() {
+  const babyName = document.getElementById('nbName').value.trim();
+  const community = document.getElementById('nbCommunity').value.trim() || 'Asamankese';
+  const age = document.getElementById('nbAgeDays').value || '3';
+  const weight = document.getElementById('nbWeight').value || '2.50';
+  const temp = document.getElementById('nbTemp').value || '36.5';
+  const breath = document.getElementById('nbBreath').value || '48';
+  const careStatus = document.getElementById('nbCareStatus').value;
+
+  if (!babyName) {
+    toast('Please enter the baby\'s identification');
+    return;
+  }
+
+  const key = 'baby_' + Date.now();
+  const newNum = Object.keys(babyData).length + 1;
+  const tag = careStatus.includes('Urgent') ? 'Urgent' : (careStatus.includes('Attention') ? 'Attention' : 'Normal');
+
+  babyData[key] = {
+    key: key,
+    name: babyName,
+    tag: tag,
+    meta: `#B-0${newNum} • Age: ${age} days • ${community}`,
+    age: `Day ${age}`,
+    weight: `${parseFloat(weight).toFixed(2)} kg`,
+    birthWeight: `Birth: ${parseFloat(weight).toFixed(2)} kg`,
+    temp: `${parseFloat(temp).toFixed(1)}°C`,
+    tempStatus: parseFloat(temp) < 36.0 ? 'Too Cold' : (parseFloat(temp) > 37.5 ? 'Fever' : 'Normal'),
+    breath: `${breath} / min`,
+    breathStatus: parseInt(breath) > 60 ? 'Fast Breathing' : 'Normal',
+    careStatus: careStatus,
+    kmcPct: "75%",
+    kmcWidth: "75%",
+    kmcText: "Mother holding baby skin-to-skin: 13 of 18 hours done today (75%).",
+    dotClass: tag === 'Urgent' ? 'bg-[#0e7490]' : (tag === 'Attention' ? 'bg-slate-300' : 'bg-emerald-400')
+  };
+
+  closeRegisterNewbornModal();
+  selectBaby(key);
+  toast(`New baby registered: ${babyName}`);
 }
 
 // Record Checkup Modal
@@ -1522,7 +2646,6 @@ async function handleSaveCheckup() {
     p.risk = 'High Risk';
   }
 
-  // Attempt backend save
   try {
     if (token && p.uuid) {
       await fetch(API + '/api/vitals', {
@@ -1545,7 +2668,6 @@ function openScheduleApptModal() {
   const p = patients.find(i => i.id === selectedPatientId);
   if (p) document.getElementById('apptPatientName').value = p.name;
   
-  // Set default datetime to next week at 09:00 AM
   const nextWeek = new Date(Date.now() + 7 * 86400000);
   nextWeek.setHours(9, 0, 0, 0);
   document.getElementById('apptDateTime').value = nextWeek.toISOString().slice(0, 16);
@@ -1560,23 +2682,16 @@ async function handleSaveAppointment() {
   const type = document.getElementById('apptType').value;
   const when = document.getElementById('apptDateTime').value;
 
-  // Add to appointments UI list
-  const list = document.getElementById('appointmentsList');
-  const div = document.createElement('div');
-  div.className = 'p-3.5 bg-surface-container-low rounded-xl flex items-center justify-between border border-outline-variant/20';
-  div.innerHTML = `
-    <div class="flex items-center gap-3">
-      <div class="w-9 h-9 rounded-lg bg-cyan-700 text-white flex items-center justify-center font-bold text-xs">
-        <span class="material-symbols-outlined text-[18px]">event</span>
-      </div>
-      <div>
-        <div class="font-semibold text-sm text-on-surface">${p ? p.name : 'Patient'} — ${type}</div>
-        <div class="text-xs text-outline">${new Date(when).toLocaleString()} • SMS Scheduled</div>
-      </div>
-    </div>
-    <span class="px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-100 text-emerald-800">Confirmed</span>
-  `;
-  list.prepend(div);
+  const newApt = {
+    id: 'APT-' + (appointments.length + 1),
+    patientName: `${p ? p.name : 'Patient'} (${p ? p.id : 'M-01'})`,
+    type,
+    when: new Date(when).toLocaleString(),
+    facility: p ? p.facility : 'Maji Mazuri Clinic',
+    status: 'Confirmed'
+  };
+  appointments.unshift(newApt);
+  renderAppointmentsList('ALL');
 
   try {
     if (token && p && p.uuid) {
@@ -1592,6 +2707,47 @@ async function handleSaveAppointment() {
 
   closeScheduleApptModal();
   toast(`Appointment confirmed! SMS dispatched to ${p ? p.name : 'mother'}`);
+}
+
+function renderAppointmentsList(filterType = 'ALL') {
+  const list = document.getElementById('appointmentsList');
+  if (!list) return;
+  list.innerHTML = '';
+
+  const filtered = appointments.filter(a => filterType === 'ALL' || a.type === filterType);
+
+  filtered.forEach(a => {
+    const div = document.createElement('div');
+    div.className = 'p-3.5 bg-slate-50 rounded-xl flex items-center justify-between border border-slate-200';
+    div.innerHTML = `
+      <div class="flex items-center gap-3">
+        <div class="w-9 h-9 rounded-lg bg-[#0e7490] text-white flex items-center justify-center font-bold text-xs shadow-xs">
+          <span class="material-symbols-outlined text-[18px]">event</span>
+        </div>
+        <div>
+          <div class="font-semibold text-sm text-slate-900">${a.patientName} — ${a.type}</div>
+          <div class="text-xs text-slate-400">${a.when} • ${a.facility} • SMS Reminder Scheduled</div>
+        </div>
+      </div>
+      <span class="px-2.5 py-1 rounded-full text-xs font-semibold ${a.status.includes('High') ? 'bg-red-100 text-red-800' : 'bg-emerald-100 text-emerald-800'}">${a.status}</span>
+    `;
+    list.appendChild(div);
+  });
+
+  if (filtered.length === 0) {
+    list.innerHTML = '<div class="text-center py-6 text-slate-400 text-xs">No scheduled appointments for this filter.</div>';
+  }
+}
+
+function filterAppointments(type) {
+  ['All', 'ANC', 'PNC', 'Delivery'].forEach(t => {
+    const el = document.getElementById('apptTab' + t);
+    if (el) el.className = 'px-4 py-1.5 rounded-lg bg-slate-100 text-slate-700 text-xs font-medium hover:bg-slate-200 cursor-pointer';
+  });
+  if (event && event.target) {
+    event.target.className = 'px-4 py-1.5 rounded-lg bg-[#0e7490] text-white text-xs font-semibold cursor-pointer';
+  }
+  renderAppointmentsList(type);
 }
 
 // Referral Slip Modal
@@ -1614,9 +2770,8 @@ function closeReferralSlipModal() {
 
 // Initialize Dashboard on load
 async function initDashboard() {
-  // If no token exists, automatically login as Sr. Sarah Omondi (Nurse) for instant, seamless preview
   if (!token) {
-    await quickLoginWorker('nurse@babyhealth.local', 'nurse123', 'Sr. Sarah Omondi', 'Facility Nurse / Midwife', 'NURSE');
+    await quickLoginWorker('nurse@babyhealth.local', 'nurse123', 'Sr. Sarah Omondi', 'Facility Nurse & Midwife', 'NURSE');
   } else {
     await fetchCurrentWorker();
   }
@@ -1630,13 +2785,12 @@ async function initDashboard() {
       if (res.ok) {
         const backendMothers = await res.json();
         if (backendMothers && backendMothers.length > 0) {
-          // Merge with clinical metadata
-          backendMothers.forEach((bm, idx) => {
+          backendMothers.forEach((bm) => {
             const found = patients.find(p => p.name.toLowerCase() === bm.fullName.toLowerCase());
             if (found) {
               found.uuid = bm.id;
             } else {
-              patients.push({
+              patients.unshift({
                 id: 'M-0' + (patients.length + 1),
                 uuid: bm.id,
                 name: bm.fullName,
@@ -1666,39 +2820,25 @@ async function initDashboard() {
     console.warn('Backend load mothers notice:', e);
   }
 
-  // Render Roster & Select default patient (Zainab Bello)
+  // Expose baby entries on patients object for compatibility with standalone scripts
+  if (typeof patients === 'object' && typeof babyData === 'object') {
+    Object.assign(patients, babyData);
+  }
+
+  // Render Roster with Pagination & Select initial patient
+  renderPatientsTable();
   selectPatient('M-01');
 
-  // Populate sample appointments
-  const apptList = document.getElementById('appointmentsList');
-  if (apptList && apptList.children.length === 0) {
-    apptList.innerHTML = `
-      <div class="p-3.5 bg-surface-container-low rounded-xl flex items-center justify-between border border-outline-variant/20">
-        <div class="flex items-center gap-3">
-          <div class="w-9 h-9 rounded-lg bg-cyan-700 text-white flex items-center justify-center font-bold text-xs">
-            <span class="material-symbols-outlined text-[18px]">event</span>
-          </div>
-          <div>
-            <div class="font-semibold text-sm text-on-surface">Zainab Bello (M-01) — High-Risk ANC Check</div>
-            <div class="text-xs text-outline">Tomorrow, 10:00 AM • Maji Mazuri Outpost</div>
-          </div>
-        </div>
-        <span class="px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-100 text-emerald-800">Confirmed</span>
-      </div>
-      <div class="p-3.5 bg-surface-container-low rounded-xl flex items-center justify-between border border-outline-variant/20">
-        <div class="flex items-center gap-3">
-          <div class="w-9 h-9 rounded-lg bg-cyan-700 text-white flex items-center justify-center font-bold text-xs">
-            <span class="material-symbols-outlined text-[18px]">event</span>
-          </div>
-          <div>
-            <div class="font-semibold text-sm text-on-surface">Halima Kadogo (M-02) — Delivery Planning Consult</div>
-            <div class="text-xs text-outline">Friday, 02:00 PM • Silanga Valley Clinic</div>
-          </div>
-        </div>
-        <span class="px-2.5 py-1 rounded-full text-xs font-semibold bg-cyan-100 text-cyan-800">Reminder Sent</span>
-      </div>
-    `;
-  }
+  // Render initial baby checks table
+  renderBabyTable();
+  selectBaby('mary_osei');
+
+  // Render initial appointments
+  renderAppointmentsList('ALL');
+
+  // Activate newborn-care (Baby Checks) view by default or by hash
+  const initialView = (window.location.hash ? window.location.hash.replace('#', '') : '') || 'newborn-care';
+  switchNavView(initialView);
 }
 
 // Run on page load
