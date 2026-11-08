@@ -469,51 +469,49 @@ class _MotherRegistrationScreenState extends State<MotherRegistrationScreen> {
                       ),
                       const SizedBox(height: 14),
 
-                      // Stage / Pregnancy Month
-                      _buildInputLabel('Stage / Pregnancy Month'),
-                      const SizedBox(height: 6),
-                      Row(
-                        children: [
-                          _buildPillButton(
-                            text: '1 - 3 Mo',
-                            isSelected: _pregnancyStage == '1 - 3 Mo',
-                            onTap: () => setState(() => _pregnancyStage = '1 - 3 Mo'),
-                          ),
-                          const SizedBox(width: 8),
-                          _buildPillButton(
-                            text: '4 - 6 Mo',
-                            isSelected: _pregnancyStage == '4 - 6 Mo',
-                            onTap: () => setState(() => _pregnancyStage = '4 - 6 Mo'),
-                          ),
-                          const SizedBox(width: 8),
-                          _buildPillButton(
-                            text: '7 - 9 Mo',
-                            isSelected: _pregnancyStage == '7 - 9 Mo',
-                            onTap: () => setState(() => _pregnancyStage = '7 - 9 Mo'),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 14),
+                      // Stage / Pregnancy Month (only visible when Expecting)
+                      if (_maternalStatus == 'expecting') ...[
+                        _buildInputLabel('Stage / Pregnancy Month'),
+                        const SizedBox(height: 6),
+                        Row(
+                          children: [
+                            _buildPillButton(
+                              text: '1 - 3 Mo',
+                              isSelected: _pregnancyStage == '1 - 3 Mo',
+                              onTap: () => setState(() => _pregnancyStage = '1 - 3 Mo'),
+                            ),
+                            const SizedBox(width: 8),
+                            _buildPillButton(
+                              text: '4 - 6 Mo',
+                              isSelected: _pregnancyStage == '4 - 6 Mo',
+                              onTap: () => setState(() => _pregnancyStage = '4 - 6 Mo'),
+                            ),
+                            const SizedBox(width: 8),
+                            _buildPillButton(
+                              text: '7 - 9 Mo',
+                              isSelected: _pregnancyStage == '7 - 9 Mo',
+                              onTap: () => setState(() => _pregnancyStage = '7 - 9 Mo'),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 14),
+                      ],
 
                       // Number of Births (Parity)
                       _buildInputLabel('Number of Births (Parity)'),
                       const SizedBox(height: 6),
                       Row(
                         children: [
-                          Expanded(
-                            child: _buildPillButton(
-                              text: 'First Baby (1st)',
-                              isSelected: _parity == 'First Baby (1st)',
-                              onTap: () => setState(() => _parity = 'First Baby (1st)'),
-                            ),
+                          _buildPillButton(
+                            text: 'First Baby (1st)',
+                            isSelected: _parity == 'First Baby (1st)',
+                            onTap: () => setState(() => _parity = 'First Baby (1st)'),
                           ),
                           const SizedBox(width: 10),
-                          Expanded(
-                            child: _buildPillButton(
-                              text: '2nd or More',
-                              isSelected: _parity == '2nd or More',
-                              onTap: () => setState(() => _parity = '2nd or More'),
-                            ),
+                          _buildPillButton(
+                            text: '2nd or More',
+                            isSelected: _parity == '2nd or More',
+                            onTap: () => setState(() => _parity = '2nd or More'),
                           ),
                         ],
                       ),
