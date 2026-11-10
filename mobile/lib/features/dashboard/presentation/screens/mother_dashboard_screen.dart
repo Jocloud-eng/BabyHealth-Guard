@@ -362,6 +362,8 @@ class _MotherDashboardScreenState extends State<MotherDashboardScreen> {
               _buildMyHealthHeader()
             else if (_currentTab == 2)
               _buildDangerSignsHeader()
+            else if (_currentTab == 3)
+              _buildVisitsHeader()
             else
               _buildHomeHeader(),
 
@@ -470,6 +472,127 @@ class _MotherDashboardScreenState extends State<MotherDashboardScreen> {
               child: const Icon(Icons.notifications_none_rounded,
                   size: 20, color: colorOnSurface),
             ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// Header for the Visits tab (Tab 3)
+  Widget _buildVisitsHeader() {
+    final namePart = widget.motherName.split(' ').first;
+    final stageLabel = widget.maternalStatus == 'baby'
+        ? 'Newborn'
+        : (widget.pregnancyStage.isNotEmpty
+            ? widget.pregnancyStage
+            : '28 Wks');
+
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+      decoration: BoxDecoration(
+        color: colorBackground.withValues(alpha: 0.95),
+        border: Border(
+          bottom: BorderSide(color: Colors.grey.shade200, width: 0.8),
+        ),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          // Left: pulsing dot + subtext + title
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Row(
+                  children: [
+                    TweenAnimationBuilder<double>(
+                      tween: Tween(begin: 0.4, end: 1.0),
+                      duration: const Duration(milliseconds: 900),
+                      curve: Curves.easeInOut,
+                      builder: (context, value, child) => Opacity(
+                        opacity: value,
+                        child: child,
+                      ),
+                      child: Container(
+                        width: 8,
+                        height: 8,
+                        decoration: const BoxDecoration(
+                          color: colorPrimary,
+                          shape: BoxShape.circle,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 6),
+                    Text(
+                      '$namePart • $stageLabel',
+                      style: const TextStyle(
+                        fontFamily: 'Inter',
+                        fontSize: 11,
+                        fontWeight: FontWeight.w600,
+                        letterSpacing: 0.44,
+                        color: Color(0xFF00687A),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 2),
+                const Text(
+                  'My Visits',
+                  style: TextStyle(
+                    fontFamily: 'Inter',
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                    color: colorOnSurface,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          // Right: Emergency button + person icon
+          Row(
+            children: [
+              InkWell(
+                onTap: () {},
+                borderRadius: BorderRadius.circular(12),
+                child: Container(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                  decoration: BoxDecoration(
+                    color: colorPrimaryContainer,
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: const Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(Icons.call_rounded,
+                          size: 16, color: Colors.white),
+                      SizedBox(width: 4),
+                      Text(
+                        'Emergency',
+                        style: TextStyle(
+                          fontFamily: 'Inter',
+                          fontSize: 12,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(width: 8),
+              Container(
+                width: 32,
+                height: 32,
+                decoration: const BoxDecoration(
+                  color: colorPrimary,
+                  shape: BoxShape.circle,
+                ),
+                child: const Icon(Icons.person_rounded,
+                    size: 18, color: Colors.white),
+              ),
+            ],
           ),
         ],
       ),
@@ -1279,89 +1402,374 @@ class _MotherDashboardScreenState extends State<MotherDashboardScreen> {
   Widget _buildVisitsContent() {
     return SingleChildScrollView(
       physics: const BouncingScrollPhysics(),
-      padding: const EdgeInsets.fromLTRB(20, 16, 20, 100),
+      padding: const EdgeInsets.fromLTRB(16, 16, 16, 100),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          const Text(
-            'Scheduled Clinic Visits',
-            style: TextStyle(
-              fontFamily: 'Inter',
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
-              color: colorOnSurface,
-            ),
-          ),
-          const SizedBox(height: 6),
-          const Text(
-            'Keep up with your recommended prenatal checkups',
-            style: TextStyle(
-              fontFamily: 'Inter',
-              fontSize: 13,
-              color: colorOnSurfaceVariant,
+          // Title Section
+          const Padding(
+            padding: EdgeInsets.fromLTRB(4, 4, 4, 0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Clinic Visits & Reminders',
+                  style: TextStyle(
+                    fontFamily: 'Inter',
+                    fontSize: 24,
+                    fontWeight: FontWeight.w700,
+                    letterSpacing: -0.24,
+                    color: colorOnSurface,
+                  ),
+                ),
+                SizedBox(height: 4),
+                Text(
+                  'Regular checks protect both you and your baby\'s safe arrival.',
+                  style: TextStyle(
+                    fontFamily: 'Inter',
+                    fontSize: 12,
+                    fontWeight: FontWeight.w400,
+                    color: colorOnSurfaceVariant,
+                  ),
+                ),
+              ],
             ),
           ),
           const SizedBox(height: 16),
-          _buildAncVisitCard(),
-          const SizedBox(height: 12),
-          _buildPastVisitCard('ANC Visit 1 of 4', 'Week 12 • Completed ✓',
-              'Initial profile, blood tests & folate guidance'),
-          const SizedBox(height: 10),
-          _buildPastVisitCard('ANC Visit 2 of 4', 'Week 20 • Completed ✓',
-              'Midwife examination & nutritional review'),
-        ],
-      ),
-    );
-  }
 
-  Widget _buildPastVisitCard(String title, String badge, String notes) {
-    return Container(
-      padding: const EdgeInsets.all(14),
-      decoration: BoxDecoration(
-        color: colorSurfaceContainerLowest,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: Colors.grey.shade200),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                title,
-                style: const TextStyle(
-                  fontFamily: 'Inter',
-                  fontSize: 14,
-                  fontWeight: FontWeight.bold,
-                  color: colorOnSurface,
-                ),
+          // Next ANC Visit Card
+          Container(
+            decoration: BoxDecoration(
+              color: colorSurfaceContainerLowest,
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(
+                color: const Color(0xFFBEC8CD).withValues(alpha: 0.3),
               ),
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-                decoration: BoxDecoration(
-                  color: const Color(0xFFECFDF5),
-                  borderRadius: BorderRadius.circular(100),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: 0.08),
+                  blurRadius: 12,
+                  offset: const Offset(0, 2),
                 ),
-                child: Text(
-                  badge,
-                  style: const TextStyle(
-                    fontFamily: 'Inter',
-                    fontSize: 11,
-                    fontWeight: FontWeight.w600,
-                    color: Color(0xFF10B981),
+              ],
+            ),
+            clipBehavior: Clip.antiAlias,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                // Colored top bar
+                Container(height: 6, color: colorPrimary),
+                Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // Badges row
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 10, vertical: 5),
+                            decoration: BoxDecoration(
+                              color: colorPrimary.withValues(alpha: 0.1),
+                              borderRadius: BorderRadius.circular(100),
+                            ),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Container(
+                                  width: 8,
+                                  height: 8,
+                                  decoration: const BoxDecoration(
+                                    color: colorPrimary,
+                                    shape: BoxShape.circle,
+                                  ),
+                                ),
+                                const SizedBox(width: 6),
+                                const Text(
+                                  'Next ANC Visit (3 of 4)',
+                                  style: TextStyle(
+                                    fontFamily: 'Inter',
+                                    fontSize: 11,
+                                    fontWeight: FontWeight.w700,
+                                    letterSpacing: 0.44,
+                                    color: colorPrimary,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 8, vertical: 2),
+                            decoration: BoxDecoration(
+                              color: const Color(0xFFE2E7FF),
+                              borderRadius: BorderRadius.circular(100),
+                            ),
+                            child: const Text(
+                              'Confirmed',
+                              style: TextStyle(
+                                fontFamily: 'Inter',
+                                fontSize: 11,
+                                fontWeight: FontWeight.w700,
+                                letterSpacing: 0.44,
+                                color: Color(0xFF00687A),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 12),
+
+                      // Date & Time
+                      const Text(
+                        'Thursday, 24 Oct',
+                        style: TextStyle(
+                          fontFamily: 'Inter',
+                          fontSize: 24,
+                          fontWeight: FontWeight.w600,
+                          letterSpacing: -0.24,
+                          color: colorOnSurface,
+                        ),
+                      ),
+                      const SizedBox(height: 2),
+                      const Text(
+                        '9:00 AM • Morning slot',
+                        style: TextStyle(
+                          fontFamily: 'Inter',
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500,
+                          color: colorPrimary,
+                        ),
+                      ),
+                      const SizedBox(height: 12),
+
+                      // Clinic info row
+                      Container(
+                        padding: const EdgeInsets.all(10),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFFF2F3FF),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Row(
+                          children: [
+                            Container(
+                              width: 40,
+                              height: 40,
+                              decoration: BoxDecoration(
+                                color: colorPrimary.withValues(alpha: 0.1),
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              child: const Icon(
+                                Icons.local_hospital_rounded,
+                                color: colorPrimary,
+                                size: 22,
+                              ),
+                            ),
+                            const SizedBox(width: 10),
+                            const Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'Bwera Health Centre III',
+                                    style: TextStyle(
+                                      fontFamily: 'Inter',
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w600,
+                                      color: colorOnSurface,
+                                    ),
+                                  ),
+                                  Text(
+                                    'Midwife Sr. Sarah • Room 4B',
+                                    style: TextStyle(
+                                      fontFamily: 'Inter',
+                                      fontSize: 12,
+                                      color: colorOnSurfaceVariant,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(height: 14),
+
+                      // Call button
+                      SizedBox(
+                        width: double.infinity,
+                        height: 46,
+                        child: ElevatedButton.icon(
+                          onPressed: () {},
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: colorPrimaryContainer,
+                            foregroundColor: Colors.white,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            elevation: 1,
+                          ),
+                          icon: const Icon(Icons.call_rounded, size: 20),
+                          label: const Text(
+                            'Call Clinic / Midwife',
+                            style: TextStyle(
+                              fontFamily: 'Inter',
+                              fontSize: 14,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
-          const SizedBox(height: 4),
-          Text(
-            notes,
-            style: const TextStyle(
-              fontFamily: 'Inter',
-              fontSize: 12,
-              color: colorOnSurfaceVariant,
+          const SizedBox(height: 16),
+
+          // Remember Note Card
+          Container(
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: colorSurfaceContainerLowest,
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(
+                color: const Color(0xFFBEC8CD).withValues(alpha: 0.3),
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: 0.04),
+                  blurRadius: 6,
+                  offset: const Offset(0, 1),
+                ),
+              ],
+            ),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Icon(
+                  Icons.check_circle_rounded,
+                  color: colorPrimary,
+                  size: 20,
+                ),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: RichText(
+                    text: const TextSpan(
+                      style: TextStyle(
+                        fontFamily: 'Inter',
+                        fontSize: 14,
+                        color: colorOnSurface,
+                      ),
+                      children: [
+                        TextSpan(
+                          text: 'Remember: ',
+                          style: TextStyle(
+                            fontWeight: FontWeight.w700,
+                            color: colorPrimary,
+                          ),
+                        ),
+                        TextSpan(
+                          text:
+                              'Bring your Mother-Child Yellow Book and clean drinking water.',
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 16),
+
+          // Past Visit Progress Card
+          Container(
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: colorSurfaceContainerLowest,
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(
+                color: const Color(0xFFBEC8CD).withValues(alpha: 0.3),
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: 0.04),
+                  blurRadius: 6,
+                  offset: const Offset(0, 1),
+                ),
+              ],
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Row(
+                      children: [
+                        Icon(
+                          Icons.history_edu_rounded,
+                          color: colorPrimary,
+                          size: 20,
+                        ),
+                        SizedBox(width: 6),
+                        Text(
+                          'Past Visit Progress',
+                          style: TextStyle(
+                            fontFamily: 'Inter',
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                            color: colorOnSurface,
+                          ),
+                        ),
+                      ],
+                    ),
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 8, vertical: 2),
+                      decoration: BoxDecoration(
+                        color: colorPrimary.withValues(alpha: 0.1),
+                        borderRadius: BorderRadius.circular(100),
+                      ),
+                      child: const Text(
+                        '2 of 4 Done',
+                        style: TextStyle(
+                          fontFamily: 'Inter',
+                          fontSize: 11,
+                          fontWeight: FontWeight.w700,
+                          letterSpacing: 0.44,
+                          color: colorPrimary,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 10),
+
+                // Progress bar
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(100),
+                  child: const LinearProgressIndicator(
+                    value: 0.5,
+                    minHeight: 8,
+                    backgroundColor: Color(0xFFE2E7FF),
+                    valueColor:
+                        AlwaysStoppedAnimation<Color>(colorPrimary),
+                  ),
+                ),
+                const SizedBox(height: 6),
+                const Text(
+                  '2 of 4 visits completed • Next check-up is Visit 3',
+                  style: TextStyle(
+                    fontFamily: 'Inter',
+                    fontSize: 12,
+                    color: colorOnSurfaceVariant,
+                  ),
+                ),
+              ],
             ),
           ),
         ],

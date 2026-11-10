@@ -392,7 +392,7 @@
     const btnVisit = document.getElementById('btn-visit-details');
     if (btnVisit) {
       btnVisit.addEventListener('click', () => {
-        alert("ANC Visit 3 of 4 Details:\nDate: Thursday, 24 Oct at 9:00 AM\nFacility: Bwera Health Centre III\nMidwife: Sr. Sarah Omondi\nServices: Routine ultrasound, tetanus booster & blood pressure check.");
+        window.location.href = 'visits_preview.html';
       });
     }
 
@@ -425,7 +425,7 @@
         } else if (tabType === 'warnings') {
           window.location.href = 'danger_signs_preview.html';
         } else if (tabType === 'visits') {
-          alert("Scheduled Visits:\n- Visit 1: Completed (Week 12)\n- Visit 2: Completed (Week 20)\n- Visit 3: Scheduled (24 Oct, 9:00 AM)\n- Visit 4: Anticipated (Week 36)");
+          window.location.href = 'visits_preview.html';
         }
       });
     });

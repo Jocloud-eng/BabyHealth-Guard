@@ -65,5 +65,19 @@ void main() {
     expect(find.text('Baby Not Moving'), findsOneWidget);
     expect(find.text('High Fever'), findsOneWidget);
     expect(find.text('Call Midwife Now (Free)'), findsOneWidget);
+
+    // Switch to "Visits" tab
+    await tester.tap(find.text('Visits'));
+    await tester.pumpAndSettle();
+
+    // Verify Visits view elements
+    expect(find.text('Clinic Visits & Reminders'), findsOneWidget);
+    expect(find.text('Thursday, 24 Oct'), findsOneWidget);
+    expect(find.text('9:00 AM • Morning slot'), findsOneWidget);
+    expect(find.text('Bwera Health Centre III'), findsWidgets);
+    expect(find.text('Midwife Sr. Sarah • Room 4B'), findsOneWidget);
+    expect(find.text('Call Clinic / Midwife'), findsOneWidget);
+    expect(find.text('Past Visit Progress'), findsOneWidget);
+    expect(find.text('2 of 4 Done'), findsOneWidget);
   });
 }
