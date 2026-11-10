@@ -1,4 +1,8 @@
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
+import '../../../dashboard/presentation/screens/mother_dashboard_screen.dart';
 
 /// Maternal Profile Registration Screen
 /// Matches the official Tailwind / Material Design spec for BabyHealth Guard.
@@ -6,7 +10,8 @@ class MotherRegistrationScreen extends StatefulWidget {
   const MotherRegistrationScreen({super.key});
 
   @override
-  State<MotherRegistrationScreen> createState() => _MotherRegistrationScreenState();
+  State<MotherRegistrationScreen> createState() =>
+      _MotherRegistrationScreenState();
 }
 
 class _MotherRegistrationScreenState extends State<MotherRegistrationScreen> {
@@ -17,7 +22,8 @@ class _MotherRegistrationScreenState extends State<MotherRegistrationScreen> {
   final _phoneController = TextEditingController();
 
   // State variables matching interactive form controls
-  bool _hasPhoto = false;
+  final ImagePicker _imagePicker = ImagePicker();
+  Uint8List? _profilePhotoBytes;
   String _selectedLanguage = 'Luganda';
   String _maternalStatus = 'expecting'; // 'expecting' or 'baby'
   String _pregnancyStage = '4 - 6 Mo'; // '1 - 3 Mo', '4 - 6 Mo', '7 - 9 Mo'
@@ -65,29 +71,155 @@ class _MotherRegistrationScreenState extends State<MotherRegistrationScreen> {
     });
   }
 
+  Future<void> _showPhotoSourcePicker() async {
+    final ImageSource? source = await showModalBottomSheet<ImageSource>(
+      context: context,
+      showDragHandle: true,
+      backgroundColor: colorSurfaceLowest,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+      ),
+      builder: (context) => SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(16, 0, 16, 20),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text(
+                'Add your photo',
+                style: TextStyle(
+                  fontFamily: 'Inter',
+                  fontSize: 18,
+                  fontWeight: FontWeight.w600,
+                  color: colorOnSurface,
+                ),
+              ),
+              const SizedBox(height: 6),
+              const Text(
+                'Choose how you would like to add your profile photo.',
+                style: TextStyle(
+                  fontFamily: 'Inter',
+                  fontSize: 13,
+                  color: colorOnSurfaceVariant,
+                ),
+              ),
+              const SizedBox(height: 12),
+              ListTile(
+                contentPadding: EdgeInsets.zero,
+                leading: _buildPhotoSourceIcon(Icons.camera_alt_outlined),
+                title: const Text('Take a photo'),
+                subtitle: const Text('Open your camera'),
+                onTap: () => Navigator.pop(context, ImageSource.camera),
+              ),
+              ListTile(
+                contentPadding: EdgeInsets.zero,
+                leading: _buildPhotoSourceIcon(Icons.photo_library_outlined),
+                title: const Text('Choose from device'),
+                subtitle: const Text('Pick an existing photo'),
+                onTap: () => Navigator.pop(context, ImageSource.gallery),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+
+    if (source != null) {
+      await _pickProfilePhoto(source);
+    }
+  }
+
+  Future<void> _pickProfilePhoto(ImageSource source) async {
+    try {
+      final XFile? photo = await _imagePicker.pickImage(
+        source: source,
+        maxWidth: 1440,
+        imageQuality: 85,
+      );
+      if (photo == null) return;
+
+      final Uint8List photoBytes = await photo.readAsBytes();
+      if (!mounted) return;
+      setState(() => _profilePhotoBytes = photoBytes);
+    } catch (_) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('We could not access that photo. Please try again.'),
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
+    }
+  }
+
   void _saveProfile() {
     if (_formKey.currentState?.validate() ?? false) {
       setState(() => _isLoading = true);
-      Future.delayed(const Duration(milliseconds: 600), () {
+      Future.delayed(const Duration(milliseconds: 500), () {
         if (!mounted) return;
         setState(() => _isLoading = false);
+        
+        final name = _nameController.text.trim().isEmpty
+            ? 'Amina Brenda'
+            : _nameController.text.trim();
+        final village = _villageController.text.trim().isEmpty
+            ? 'Kagando'
+            : _villageController.text.trim();
+        final phone = _phoneController.text.trim().isEmpty
+            ? '+256 772 000 000'
+            : '+256 ${_phoneController.text.trim()}';
+
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             backgroundColor: colorPrimaryContainer,
             behavior: SnackBarBehavior.floating,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
             content: Row(
               children: [
-                const Icon(Icons.check_circle_rounded, color: Colors.white, size: 22),
+                const Icon(Icons.check_circle_rounded,
+                    color: Colors.white, size: 22),
                 const SizedBox(width: 12),
                 Expanded(
                   child: Text(
-                    'Profile saved for ${_nameController.text.trim().isEmpty ? 'Mother' : _nameController.text.trim()}! Offline & ready to sync.',
-                    style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 13),
+                    'Profile saved for $name! Offline & ready to sync.',
+                    style: const TextStyle(
+                        fontWeight: FontWeight.w600, fontSize: 13),
                   ),
                 ),
               ],
             ),
+          ),
+        );
+
+        // Navigate directly to the Mother's Dashboard Screen
+        Navigator.of(context).pushReplacement(
+          PageRouteBuilder(
+            transitionDuration: const Duration(milliseconds: 350),
+            pageBuilder: (context, anim, secondaryAnim) => MotherDashboardScreen(
+              motherName: name,
+              village: village,
+              phone: phone,
+              profilePhotoBytes: _profilePhotoBytes,
+              maternalStatus: _maternalStatus,
+              pregnancyStage: _pregnancyStage,
+            ),
+            transitionsBuilder: (context, anim, secondaryAnim, child) {
+              return FadeTransition(
+                opacity: anim,
+                child: SlideTransition(
+                  position: Tween<Offset>(
+                    begin: const Offset(0.05, 0),
+                    end: Offset.zero,
+                  ).animate(CurvedAnimation(
+                    parent: anim,
+                    curve: Curves.easeOutCubic,
+                  )),
+                  child: child,
+                ),
+              );
+            },
           ),
         );
       });
@@ -221,34 +353,8 @@ class _MotherRegistrationScreenState extends State<MotherRegistrationScreen> {
                   child: Row(
                     children: [
                       GestureDetector(
-                        onTap: () {
-                          setState(() => _hasPhoto = !_hasPhoto);
-                        },
-                        child: Container(
-                          width: 64,
-                          height: 64,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: colorSurfaceLow,
-                            border: Border.all(
-                              color: colorPrimary.withValues(alpha: 0.3),
-                              width: 1.5,
-                            ),
-                            boxShadow: const [
-                              BoxShadow(
-                                color: Color(0x0D000000),
-                                blurRadius: 4,
-                                offset: Offset(0, 1),
-                              ),
-                            ],
-                          ),
-                          alignment: Alignment.center,
-                          child: Icon(
-                            _hasPhoto ? Icons.check_circle_rounded : Icons.add_a_photo,
-                            size: 28,
-                            color: colorPrimary,
-                          ),
-                        ),
+                        onTap: _showPhotoSourcePicker,
+                        child: _buildPhotoAvatar(),
                       ),
                       const SizedBox(width: 16),
                       Expanded(
@@ -256,14 +362,14 @@ class _MotherRegistrationScreenState extends State<MotherRegistrationScreen> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             InkWell(
-                              onTap: () {
-                                setState(() => _hasPhoto = !_hasPhoto);
-                              },
+                              onTap: _showPhotoSourcePicker,
                               child: Row(
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
                                   Text(
-                                    _hasPhoto ? 'Photo Added' : 'Add Your Photo (Required)',
+                                    _profilePhotoBytes == null
+                                        ? 'Add Your Photo (Required)'
+                                        : 'Change Your Photo',
                                     style: const TextStyle(
                                       fontFamily: 'Inter',
                                       fontSize: 12,
@@ -272,8 +378,10 @@ class _MotherRegistrationScreenState extends State<MotherRegistrationScreen> {
                                     ),
                                   ),
                                   const SizedBox(width: 4),
-                                  const Icon(
-                                    Icons.photo_camera,
+                                  Icon(
+                                    _profilePhotoBytes == null
+                                        ? Icons.photo_camera
+                                        : Icons.edit_outlined,
                                     size: 16,
                                     color: colorPrimary,
                                   ),
@@ -373,7 +481,8 @@ class _MotherRegistrationScreenState extends State<MotherRegistrationScreen> {
                         padding: const EdgeInsets.symmetric(horizontal: 14),
                         child: Row(
                           children: [
-                            const Icon(Icons.call, size: 18, color: colorPrimary),
+                            const Icon(Icons.call,
+                                size: 18, color: colorPrimary),
                             const SizedBox(width: 6),
                             const Text(
                               '+256',
@@ -388,7 +497,8 @@ class _MotherRegistrationScreenState extends State<MotherRegistrationScreen> {
                               height: 20,
                               width: 1,
                               color: colorOutline.withValues(alpha: 0.25),
-                              margin: const EdgeInsets.symmetric(horizontal: 10),
+                              margin:
+                                  const EdgeInsets.symmetric(horizontal: 10),
                             ),
                             Expanded(
                               child: TextField(
@@ -453,7 +563,8 @@ class _MotherRegistrationScreenState extends State<MotherRegistrationScreen> {
                               title: 'Expecting',
                               icon: Icons.pregnant_woman,
                               isSelected: _maternalStatus == 'expecting',
-                              onTap: () => setState(() => _maternalStatus = 'expecting'),
+                              onTap: () =>
+                                  setState(() => _maternalStatus = 'expecting'),
                             ),
                           ),
                           const SizedBox(width: 10),
@@ -462,7 +573,8 @@ class _MotherRegistrationScreenState extends State<MotherRegistrationScreen> {
                               title: 'Newborn Baby',
                               icon: Icons.child_care,
                               isSelected: _maternalStatus == 'baby',
-                              onTap: () => setState(() => _maternalStatus = 'baby'),
+                              onTap: () =>
+                                  setState(() => _maternalStatus = 'baby'),
                             ),
                           ),
                         ],
@@ -478,19 +590,22 @@ class _MotherRegistrationScreenState extends State<MotherRegistrationScreen> {
                             _buildPillButton(
                               text: '1 - 3 Mo',
                               isSelected: _pregnancyStage == '1 - 3 Mo',
-                              onTap: () => setState(() => _pregnancyStage = '1 - 3 Mo'),
+                              onTap: () =>
+                                  setState(() => _pregnancyStage = '1 - 3 Mo'),
                             ),
                             const SizedBox(width: 8),
                             _buildPillButton(
                               text: '4 - 6 Mo',
                               isSelected: _pregnancyStage == '4 - 6 Mo',
-                              onTap: () => setState(() => _pregnancyStage = '4 - 6 Mo'),
+                              onTap: () =>
+                                  setState(() => _pregnancyStage = '4 - 6 Mo'),
                             ),
                             const SizedBox(width: 8),
                             _buildPillButton(
                               text: '7 - 9 Mo',
                               isSelected: _pregnancyStage == '7 - 9 Mo',
-                              onTap: () => setState(() => _pregnancyStage = '7 - 9 Mo'),
+                              onTap: () =>
+                                  setState(() => _pregnancyStage = '7 - 9 Mo'),
                             ),
                           ],
                         ),
@@ -505,13 +620,15 @@ class _MotherRegistrationScreenState extends State<MotherRegistrationScreen> {
                           _buildPillButton(
                             text: 'First Baby (1st)',
                             isSelected: _parity == 'First Baby (1st)',
-                            onTap: () => setState(() => _parity = 'First Baby (1st)'),
+                            onTap: () =>
+                                setState(() => _parity = 'First Baby (1st)'),
                           ),
                           const SizedBox(width: 10),
                           _buildPillButton(
                             text: '2nd or More',
                             isSelected: _parity == '2nd or More',
-                            onTap: () => setState(() => _parity = '2nd or More'),
+                            onTap: () =>
+                                setState(() => _parity = '2nd or More'),
                           ),
                         ],
                       ),
@@ -525,9 +642,12 @@ class _MotherRegistrationScreenState extends State<MotherRegistrationScreen> {
                         runSpacing: 8,
                         children: [
                           _buildConditionChip('None', Icons.check),
-                          _buildConditionChip('High BP', Icons.monitor_heart_outlined),
-                          _buildConditionChip('Anemia', Icons.bloodtype_outlined),
-                          _buildConditionChip('Other', Icons.medication_outlined),
+                          _buildConditionChip(
+                              'High BP', Icons.monitor_heart_outlined),
+                          _buildConditionChip(
+                              'Anemia', Icons.bloodtype_outlined),
+                          _buildConditionChip(
+                              'Other', Icons.medication_outlined),
                         ],
                       ),
                     ],
@@ -546,7 +666,8 @@ class _MotherRegistrationScreenState extends State<MotherRegistrationScreen> {
                       backgroundColor: colorPrimaryContainer,
                       foregroundColor: colorOnPrimary,
                       elevation: 2,
-                      shadowColor: colorPrimaryContainer.withValues(alpha: 0.35),
+                      shadowColor:
+                          colorPrimaryContainer.withValues(alpha: 0.35),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(28),
                       ),
@@ -635,6 +756,64 @@ class _MotherRegistrationScreenState extends State<MotherRegistrationScreen> {
         ],
       ),
       child: child,
+    );
+  }
+
+  Widget _buildPhotoAvatar() {
+    return Container(
+      width: 64,
+      height: 64,
+      clipBehavior: Clip.antiAlias,
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        color: colorSurfaceLow,
+        border: Border.all(
+          color: colorPrimary.withValues(alpha: 0.3),
+          width: 1.5,
+        ),
+        boxShadow: const [
+          BoxShadow(
+            color: Color(0x0D000000),
+            blurRadius: 4,
+            offset: Offset(0, 1),
+          ),
+        ],
+      ),
+      child: _profilePhotoBytes == null
+          ? const Icon(Icons.add_a_photo, size: 28, color: colorPrimary)
+          : Stack(
+              fit: StackFit.expand,
+              children: [
+                Image.memory(_profilePhotoBytes!, fit: BoxFit.cover),
+                Align(
+                  alignment: Alignment.bottomRight,
+                  child: Container(
+                    width: 24,
+                    height: 24,
+                    decoration: const BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: colorPrimary,
+                    ),
+                    alignment: Alignment.center,
+                    child:
+                        const Icon(Icons.edit, size: 14, color: colorOnPrimary),
+                  ),
+                ),
+              ],
+            ),
+    );
+  }
+
+  Widget _buildPhotoSourceIcon(IconData icon) {
+    return Container(
+      width: 44,
+      height: 44,
+      decoration: const BoxDecoration(
+        shape: BoxShape.circle,
+        color: colorSurfaceLow,
+      ),
+      alignment: Alignment.center,
+      child: Icon(icon, color: colorPrimary),
     );
   }
 
@@ -738,7 +917,9 @@ class _MotherRegistrationScreenState extends State<MotherRegistrationScreen> {
             color: isSelected ? colorSurfaceHigh : colorSurfaceLow,
             borderRadius: BorderRadius.circular(12),
             border: Border.all(
-              color: isSelected ? colorPrimary.withValues(alpha: 0.25) : Colors.transparent,
+              color: isSelected
+                  ? colorPrimary.withValues(alpha: 0.25)
+                  : Colors.transparent,
               width: 1,
             ),
             boxShadow: const [
@@ -790,7 +971,9 @@ class _MotherRegistrationScreenState extends State<MotherRegistrationScreen> {
           color: isSelected ? colorSurfaceHigh : colorSurfaceLow,
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
-            color: isSelected ? colorPrimary.withValues(alpha: 0.3) : Colors.transparent,
+            color: isSelected
+                ? colorPrimary.withValues(alpha: 0.3)
+                : Colors.transparent,
             width: 1.2,
           ),
           boxShadow: const [
@@ -840,7 +1023,9 @@ class _MotherRegistrationScreenState extends State<MotherRegistrationScreen> {
             color: isSelected ? colorSurfaceHigh : colorSurfaceLow,
             borderRadius: BorderRadius.circular(12),
             border: Border.all(
-              color: isSelected ? colorPrimary.withValues(alpha: 0.25) : Colors.transparent,
+              color: isSelected
+                  ? colorPrimary.withValues(alpha: 0.25)
+                  : Colors.transparent,
               width: 1,
             ),
           ),
@@ -871,7 +1056,9 @@ class _MotherRegistrationScreenState extends State<MotherRegistrationScreen> {
           color: isSelected ? colorSurfaceHigh : colorSurfaceLow,
           borderRadius: BorderRadius.circular(18),
           border: Border.all(
-            color: isSelected ? colorPrimary.withValues(alpha: 0.25) : Colors.transparent,
+            color: isSelected
+                ? colorPrimary.withValues(alpha: 0.25)
+                : Colors.transparent,
             width: 1,
           ),
         ),

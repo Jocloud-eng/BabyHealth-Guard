@@ -52,7 +52,36 @@ mobile/
             └── presentation/
                 └── screens/
                     └── mother_registration_screen.dart # Registration & profile setup
+        └── dashboard/
+            └── presentation/
+                └── screens/
+                    └── mother_dashboard_screen.dart    # Mother's care dashboard (Screen 3)
 ```
+
+---
+
+## 📱 Mother's Flow & Screens
+
+1. **Welcome Screen** ([`welcome_screen.dart`](file:///home/joanitah/BabyHealth%20Guard/BabyHealth-Guard/mobile/lib/features/onboarding/presentation/screens/welcome_screen.dart) / [`welcome_preview.html`](file:///home/joanitah/BabyHealth%20Guard/BabyHealth-Guard/mobile/welcome_preview.html)):
+   - Pastel ambient backdrop, hero card, interactive "Get Started" slider, rural offline/USSD indicators.
+2. **Registration Screen** ([`mother_registration_screen.dart`](file:///home/joanitah/BabyHealth%20Guard/BabyHealth-Guard/mobile/lib/features/auth/presentation/screens/mother_registration_screen.dart) / [`registration_preview.html`](file:///home/joanitah/BabyHealth%20Guard/BabyHealth-Guard/mobile/registration_preview.html)):
+   - Photo picker, name, age, village, phone, language preference, trimester/stage, conditions.
+3. **Mother Dashboard Screen** ([`mother_dashboard_screen.dart`](file:///home/joanitah/BabyHealth%20Guard/BabyHealth-Guard/mobile/lib/features/dashboard/presentation/screens/mother_dashboard_screen.dart) / [`dashboard_preview.html`](file:///home/joanitah/BabyHealth%20Guard/BabyHealth-Guard/mobile/dashboard_preview.html)):
+   - **Hero Countdown Card**: Trimester badge, countdown due window, mother & baby photo.
+   - **Assigned Care Midwife**: Direct call (`0800100200`) and SMS shortcuts to Sr. Sarah Omondi.
+   - **Daily Health Checks**: Interactive Kick Counter (+ Log Kick), Blood Pressure monitor, and Iron & Folic daily toggle.
+   - **Next ANC Visit**: Calendar countdown, facility details, and SMS confirmation status.
+   - **Danger Signs & Emergency Dispatch**: Interactive danger signs checklist & toll-free `112` speed dial.
+   - **Floating Bottom Navigation**: Quick switching between Home, Health, Warnings, and Visits.
+
+4. **My Health Screen** ([`my_health_preview.html`](file:///home/joanitah/BabyHealth%20Guard/BabyHealth-Guard/mobile/my_health_preview.html)):
+   - Today's vitals (Blood pressure `118/76`, interactive baby kick logger).
+   - Care & Medication (Iron & Folic Acid toggle, Next clinic visit tracker).
+   - Interactive `+ Record Today's Vitals` modal sheet.
+5. **Danger Signs / Warnings Screen** ([`danger_signs_preview.html`](file:///home/joanitah/BabyHealth%20Guard/BabyHealth-Guard/mobile/danger_signs_preview.html)):
+   - 24/7 Priority emergency header with pulsing indicator.
+   - 4 large visual danger sign cards: Bleeding, Severe Headache, Baby Not Moving, and High Fever.
+   - One-tap "Call Midwife Now (Free)" (`0800100200`) and fallback USSD (`*920#`) shortcut.
 
 ---
 
@@ -65,5 +94,10 @@ flutter pub get
 flutter run
 ```
 
-### 2. Immediate Web Preview
-You can also open `mobile/welcome_preview.html` directly in any web browser to view and test the interactive design layout immediately.
+### 2. Immediate Web Previews (Interactive Flow)
+Open any of the preview files in your browser:
+- `mobile/welcome_preview.html` ➔ Click **Get Started** ➔
+- `mobile/registration_preview.html` ➔ Complete profile & Click **Save & Continue** ➔
+- `mobile/dashboard_preview.html` ➔ Switch between **Home**, **My Health**, and **Warning Signs** tabs!
+- `mobile/my_health_preview.html` (Dedicated My Health view)
+- `mobile/danger_signs_preview.html` (Dedicated Warning Signs view)

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'core/theme/app_theme.dart';
 import 'features/auth/presentation/screens/mother_registration_screen.dart';
+import 'features/dashboard/presentation/screens/mother_dashboard_screen.dart';
 import 'features/onboarding/presentation/screens/welcome_screen.dart';
 
 void main() {
@@ -33,6 +34,7 @@ class BabyHealthGuardApp extends StatelessWidget {
       routes: {
         '/welcome': (context) => const WelcomeScreen(),
         '/register': (context) => const MotherRegistrationScreen(),
+        '/dashboard': (context) => const MotherDashboardScreen(),
       },
     );
   }

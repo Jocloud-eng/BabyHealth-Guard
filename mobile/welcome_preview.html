@@ -153,10 +153,11 @@
       const getStartedBtn = document.getElementById('btn-get-started');
       if (getStartedBtn) {
         getStartedBtn.addEventListener('click', () => {
-          // Subtle tap response for mobile web
+          // Tap response & navigate to registration preview
           getStartedBtn.classList.add('scale-95');
           setTimeout(() => {
             getStartedBtn.classList.remove('scale-95');
+            window.location.href = 'registration_preview.html';
           }, 150);
         });
       }

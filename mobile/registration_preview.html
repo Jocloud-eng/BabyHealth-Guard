@@ -1,13 +1,339 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport"><meta content="mobile_stack" name="shell-type"><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&amp;display=swap" rel="stylesheet"><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet">
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"><style>@layer base{html,body{width:100vw;margin:0;padding:0;}body{overscroll-behavior:none;}.pb-safe{padding-bottom:env(safe-area-inset-bottom,0px);}.pt-safe{padding-top:env(safe-area-inset-top,0px);}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { "colors": { "inverse-surface": "#283044", "on-secondary-container": "#006172", "surface-container-high": "#e2e7ff", "on-surface": "#131b2e", "surface-variant": "#dae2fd", "on-primary": "#ffffff", "secondary-container": "#57dffe", "on-surface-variant": "#3f484c", "surface-container": "#eaedff", "error": "#ba1a1a", "primary-fixed-dim": "#81d1f0", "on-tertiary": "#ffffff", "tertiary-fixed": "#ffdadb", "surface-container-low": "#f2f3ff", "tertiary-container": "#ce2046", "on-secondary-fixed": "#001f26", "outline": "#6f787d", "primary-fixed": "#b9eaff", "on-error": "#ffffff", "on-tertiary-fixed-variant": "#92002a", "background": "#faf8ff", "error-container": "#ffdad6", "on-error-container": "#93000a", "surface-container-highest": "#dae2fd", "tertiary": "#a80032", "on-secondary-fixed-variant": "#004e5c", "secondary": "#00687a", "primary-container": "#0e7490", "surface": "#faf8ff", "on-background": "#131b2e", "on-tertiary-fixed": "#40000d", "secondary-fixed": "#acedff", "on-primary-container": "#d3f1ff", "on-primary-fixed": "#001f29", "primary": "#005a71", "surface-tint": "#006781", "on-tertiary-container": "#ffe7e7", "on-primary-fixed-variant": "#004d62", "on-secondary": "#ffffff", "outline-variant": "bec8cd", "surface-dim": "#d2d9f4", "tertiary-fixed-dim": "#ffb2b7", "secondary-fixed-dim": "#4cd7f6", "surface-bright": "#faf8ff", "inverse-on-surface": "#eef0ff", "inverse-primary": "#81d1f0", "surface-container-lowest": "#ffffff" }, "borderRadius": { "DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem" }, "spacing": { "margin": "1rem", "space-xl": "2rem", "space-xs": "0.25rem", "gutter": "1rem", "margin-desktop": "2rem", "space-lg": "1.5rem", "gutter-desktop": "1.5rem", "space-sm": "0.5rem", "space-md": "1rem" }, "fontFamily": { "headline-sm": ["Inter"], "body-sm": ["Inter"], "body-md": ["Inter"], "label-md": ["Inter"], "headline-lg": ["Inter"], "headline-xl-mobile": ["Inter"], "label-sm": ["Inter"], "label-lg": ["Inter"], "headline-lg-mobile": ["Inter"], "data-metric": ["Inter"], "headline-md": ["Inter"], "headline-xl": ["Inter"], "body-lg": ["Inter"] }, "fontSize": { "headline-sm": ["16px", { "lineHeight": "24px", "fontWeight": "600" }], "body-sm": ["12px", { "lineHeight": "16px", "fontWeight": "400" }], "body-md": ["14px", { "lineHeight": "20px", "fontWeight": "400" }], "label-md": ["12px", { "lineHeight": "16px", "letterSpacing": "0.02em", "fontWeight": "600" }], "headline-lg": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600" }], "headline-xl-mobile": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "700" }], "label-sm": ["11px", { "lineHeight": "14px", "letterSpacing": "0.04em", "fontWeight": "600" }], "label-lg": ["14px", { "lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "600" }], "headline-lg-mobile": ["20px", { "lineHeight": "28px", "letterSpacing": "-0.005em", "fontWeight": "600" }], "data-metric": ["28px", { "lineHeight": "32px", "letterSpacing": "-0.02em", "fontWeight": "700" }], "headline-md": ["20px", { "lineHeight": "28px", "fontWeight": "600" }], "headline-xl": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700" }], "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "400" }] } } } };</script></head><body class="bg-surface text-on-surface font-body-md text-body-md min-h-screen flex flex-col"><header class="fixed top-0 w-full z-50 bg-surface/80 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)] pt-safe"><div class="h-16 px-gutter flex items-center justify-between"><div class="flex items-center gap-space-sm"><button aria-label="Go back" class="w-11 h-11 flex items-center justify-center rounded-lg text-on-surface hover:bg-surface-container active:bg-surface-container-high transition-colors" onclick="history.back()"><span class="material-symbols-outlined text-[20px]">arrow_back</span></button><div class="flex flex-col"><span class="text-label-sm font-label-sm text-primary tracking-wider uppercase">BabyHealth Guard</span><h1 class="text-headline-sm font-headline-sm text-on-surface leading-tight">Maternal Profile Details</h1></div></div><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center shrink-0"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div></div></header><main class="flex-1 flex flex-col relative w-full pt-16 bg-surface px-margin pb-safe"><div class="flex flex-col w-full pb-2"><div class="pt-4 pb-2"><h2 class="text-headline-lg font-headline-lg text-on-surface">Create Profile</h2><p class="text-body-sm font-body-sm text-on-surface-variant mt-1">Free for all mothers</p></div><form class="flex flex-col gap-space-md w-full mt-2" onsubmit="event.preventDefault();"><div class="flex flex-col gap-space-md w-full"><section class="bg-surface-container-lowest rounded-2xl p-space-md shadow-sm flex flex-col gap-space-md border border-outline/20"><div class="flex items-center gap-space-md"><div class="relative w-16 h-16 rounded-full bg-surface-container-low border border-primary/30 flex items-center justify-center text-primary shrink-0 shadow-sm"><span class="material-symbols-outlined text-[28px]">add_a_photo</span></div><div class="flex flex-col flex-1"><button type="button" class="text-label-md font-label-md text-primary font-semibold flex items-center gap-1 text-left"><span class="">Add Your Photo (Required)</span><span class="material-symbols-outlined text-[16px]">photo_camera</span></button><span class="text-body-sm font-body-sm text-on-surface-variant mt-0.5">Helps midwives recognize you at the clinic</span></div></div></section><section class="bg-surface-container-lowest rounded-2xl p-space-md shadow-sm flex flex-col gap-space-md border border-outline/20"><div class="flex items-center justify-between pb-1 border-b border-outline/20"><span class="text-label-sm font-label-sm uppercase tracking-wider text-primary font-semibold">Personal Details</span></div><div class="flex flex-col gap-1.5"><label class="text-label-md font-label-md text-on-surface" for="mother-name">Full Name</label><div class="flex items-center bg-surface-container-low rounded-xl px-space-md h-12 shadow-sm focus-within:bg-surface-container-high transition-colors"><span class="material-symbols-outlined text-primary text-[20px] mr-space-sm shrink-0">person</span><input class="w-full bg-transparent text-body-lg font-body-lg text-on-surface placeholder:text-outline focus:outline-none" id="mother-name" placeholder="e.g. Amina Brenda" type="text"></div></div><div class="grid grid-cols-2 gap-space-sm"><div class="flex flex-col gap-1.5"><label class="text-label-md font-label-md text-on-surface" for="mother-age">Mother's Age</label><div class="flex items-center bg-surface-container-low rounded-xl px-space-md h-12 shadow-sm focus-within:bg-surface-container-high transition-colors"><span class="material-symbols-outlined text-primary text-[20px] mr-space-sm shrink-0">cake</span><input class="w-full bg-transparent text-body-lg font-body-lg text-on-surface placeholder:text-outline focus:outline-none" id="mother-age" placeholder="24 yrs" type="number"></div></div><div class="flex flex-col gap-1.5"><label class="text-label-md font-label-md text-on-surface" for="mother-village">Village / Location</label><div class="flex items-center bg-surface-container-low rounded-xl px-space-md h-12 shadow-sm focus-within:bg-surface-container-high transition-colors"><span class="material-symbols-outlined text-primary text-[20px] mr-space-sm shrink-0">location_on</span><input class="w-full bg-transparent text-body-lg font-body-lg text-on-surface placeholder:text-outline focus:outline-none" id="mother-village" placeholder="Village name" type="text"></div></div></div><div class="flex flex-col gap-1.5"><label class="text-label-md font-label-md text-on-surface" for="mother-phone">Mobile Phone Number</label><div class="flex items-center bg-surface-container-low rounded-xl px-space-md h-12 shadow-sm focus-within:bg-surface-container-high transition-colors"><div class="flex items-center gap-1.5 pr-2.5 mr-2.5 border-r border-outline/20 shrink-0"><span class="material-symbols-outlined text-primary text-[18px]">call</span><span class="text-label-md font-label-md text-on-surface font-semibold">+256</span></div><input class="w-full bg-transparent text-body-lg font-body-lg text-on-surface placeholder:text-outline focus:outline-none" id="mother-phone" placeholder="772 000 000" type="tel"></div></div><div class="flex flex-col gap-1.5"><label class="text-label-md font-label-md text-on-surface">Preferred Language for SMS Alerts</label><div class="grid grid-cols-3 gap-2"><button type="button" class="h-11 rounded-xl bg-surface-container-high text-primary font-label-md flex items-center justify-center gap-1 shadow-sm border border-primary/20"><span class="material-symbols-outlined text-[16px]">sms</span><span class="">Luganda</span></button><button type="button" class="h-11 rounded-xl bg-surface-container-low text-on-surface-variant font-label-md flex items-center justify-center gap-1 shadow-sm hover:bg-surface-container"><span class="material-symbols-outlined text-[16px]">sms</span><span class="">English</span></button><button type="button" class="h-11 rounded-xl bg-surface-container-low text-on-surface-variant font-label-md flex items-center justify-center gap-1 shadow-sm hover:bg-surface-container"><span class="material-symbols-outlined text-[16px]">sms</span><span class="">Swahili</span></button></div></div></section><section class="bg-surface-container-lowest rounded-2xl p-space-md shadow-sm flex flex-col gap-space-md border border-outline/20"><div class="flex items-center justify-between pb-1 border-b border-outline/20"><span class="text-label-sm font-label-sm uppercase tracking-wider text-primary font-semibold">Pregnancy &amp; Health</span></div><div class="flex flex-col gap-2"><label class="text-label-md font-label-md text-on-surface">Current Maternal Status</label><div aria-label="Current Status" class="grid grid-cols-2 gap-space-sm" role="radiogroup"><button aria-checked="true" class="h-14 px-3 rounded-xl flex items-center justify-center gap-2 bg-surface-container-high text-primary font-label-md shadow-sm border border-primary/30 transition-all" id="option-expecting" role="radio" type="button"><span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">pregnant_woman</span><span class="">Expecting</span></button><button aria-checked="false" class="h-14 px-3 rounded-xl flex items-center justify-center gap-2 bg-surface-container-low text-on-surface-variant font-label-md shadow-sm transition-all" id="option-baby" role="radio" type="button"><span class="material-symbols-outlined text-[20px]">child_care</span><span class="">Newborn Baby</span></button></div></div><div id="pregnancy-stage-section" class="flex flex-col gap-1.5"><label class="text-label-md font-label-md text-on-surface">Stage / Pregnancy Month</label><div class="grid grid-cols-3 gap-2"><button type="button" class="h-11 rounded-xl bg-surface-container-low text-on-surface-variant font-label-md flex items-center justify-center">1 - 3 Mo</button><button type="button" class="h-11 rounded-xl bg-surface-container-high text-primary font-label-md border border-primary/20 flex items-center justify-center font-semibold">4 - 6 Mo</button><button type="button" class="h-11 rounded-xl bg-surface-container-low text-on-surface-variant font-label-md flex items-center justify-center">7 - 9 Mo</button></div></div><div class="flex flex-col gap-1.5"><label class="text-label-md font-label-md text-on-surface">Number of Births (Parity)</label><div class="grid grid-cols-2 gap-space-sm"><button type="button" class="h-11 rounded-xl bg-surface-container-high text-primary font-label-md border border-primary/20 flex items-center justify-center gap-1.5 font-semibold"><span class="">First Baby (1st)</span></button><button type="button" class="h-11 rounded-xl bg-surface-container-low text-on-surface-variant font-label-md flex items-center justify-center gap-1.5"><span class="">2nd or More</span></button></div></div><div class="flex flex-col gap-1.5"><label class="text-label-md font-label-md text-on-surface">Any Known Health Conditions?</label><div class="flex flex-wrap gap-2"><button type="button" class="px-3 h-9 rounded-full bg-surface-container-high text-primary border border-primary/20 text-label-sm font-label-sm flex items-center gap-1"><span class="material-symbols-outlined text-[14px]">check</span><span class="">None</span></button><button type="button" class="px-3 h-9 rounded-full bg-surface-container-low text-on-surface-variant text-label-sm font-label-sm flex items-center gap-1 hover:bg-surface-container"><span class="material-symbols-outlined text-[14px]">monitor_heart</span><span class="">High BP</span></button><button type="button" class="px-3 h-9 rounded-full bg-surface-container-low text-on-surface-variant text-label-sm font-label-sm flex items-center gap-1 hover:bg-surface-container"><span class="material-symbols-outlined text-[14px]">bloodtype</span><span class="">Anemia</span></button><button type="button" class="px-3 h-9 rounded-full bg-surface-container-low text-on-surface-variant text-label-sm font-label-sm flex items-center gap-1 hover:bg-surface-container"><span class="material-symbols-outlined text-[14px]">medication</span><span class="">Other</span></button></div></div></section><div class="flex flex-col gap-3 mt-2"><button class="w-full h-14 rounded-full bg-primary-container text-on-primary font-label-lg text-label-lg flex items-center justify-center gap-2 shadow-md hover:opacity-95 active:scale-[0.99] transition-all" type="submit"><span class="">Save &amp; Continue</span><span class="material-symbols-outlined text-[20px]">arrow_forward</span></button><p class="text-center text-label-sm font-label-sm text-on-surface-variant flex items-center justify-center gap-1.5"><span class="w-2 h-2 rounded-full bg-primary shrink-0"></span><span class="">Works offline • Free *920# access</span></p></div></div></form></div>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport">
+<meta content="mobile_stack" name="shell-type">
+<title>BabyHealth Guard - Mother Registration</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<style>
+@layer base{
+  html,body{width:100vw;margin:0;padding:0;}
+  body{overscroll-behavior:none;}
+  .pb-safe{padding-bottom:env(safe-area-inset-bottom,0px);}
+  .pt-safe{padding-top:env(safe-area-inset-top,0px);}
+  main>:first-child{margin-top:0!important;}
+  main>:last-child{margin-bottom:0!important;}
+}
+::-webkit-scrollbar{display:none;}
+</style>
+<script src="https://cdn.tailwindcss.com"></script>
+<script id="tailwind-config">
+tailwind.config = {
+  darkMode: "class",
+  theme: {
+    extend: {
+      "colors": {
+        "inverse-surface": "#283044",
+        "on-secondary-container": "#006172",
+        "surface-container-high": "#e2e7ff",
+        "on-surface": "#131b2e",
+        "surface-variant": "#dae2fd",
+        "on-primary": "#ffffff",
+        "secondary-container": "#57dffe",
+        "on-surface-variant": "#3f484c",
+        "surface-container": "#eaedff",
+        "error": "#ba1a1a",
+        "primary-fixed-dim": "#81d1f0",
+        "on-tertiary": "#ffffff",
+        "tertiary-fixed": "#ffdadb",
+        "surface-container-low": "#f2f3ff",
+        "tertiary-container": "#ce2046",
+        "on-secondary-fixed": "#001f26",
+        "outline": "#6f787d",
+        "primary-fixed": "#b9eaff",
+        "on-error": "#ffffff",
+        "on-tertiary-fixed-variant": "#92002a",
+        "background": "#faf8ff",
+        "error-container": "#ffdad6",
+        "on-error-container": "#93000a",
+        "surface-container-highest": "#dae2fd",
+        "tertiary": "#a80032",
+        "on-secondary-fixed-variant": "#004e5c",
+        "secondary": "#00687a",
+        "primary-container": "#0e7490",
+        "surface": "#faf8ff",
+        "on-background": "#131b2e",
+        "on-tertiary-fixed": "#40000d",
+        "secondary-fixed": "#acedff",
+        "on-primary-container": "#d3f1ff",
+        "on-primary-fixed": "#001f29",
+        "primary": "#005a71",
+        "surface-tint": "#006781",
+        "on-tertiary-container": "#ffe7e7",
+        "on-primary-fixed-variant": "#004d62",
+        "on-secondary": "#ffffff",
+        "outline-variant": "bec8cd",
+        "surface-dim": "#d2d9f4",
+        "tertiary-fixed-dim": "#ffb2b7",
+        "secondary-fixed-dim": "#4cd7f6",
+        "surface-bright": "#faf8ff",
+        "inverse-on-surface": "#eef0ff",
+        "inverse-primary": "#81d1f0",
+        "surface-container-lowest": "#ffffff"
+      },
+      "borderRadius": {
+        "DEFAULT": "0.125rem",
+        "lg": "0.25rem",
+        "xl": "0.5rem",
+        "full": "0.75rem"
+      },
+      "spacing": {
+        "margin": "1rem",
+        "space-xl": "2rem",
+        "space-xs": "0.25rem",
+        "gutter": "1rem",
+        "margin-desktop": "2rem",
+        "space-lg": "1.5rem",
+        "gutter-desktop": "1.5rem",
+        "space-sm": "0.5rem",
+        "space-md": "1rem"
+      },
+      "fontFamily": {
+        "headline-sm": ["Inter"],
+        "body-sm": ["Inter"],
+        "body-md": ["Inter"],
+        "label-md": ["Inter"],
+        "headline-lg": ["Inter"],
+        "headline-xl-mobile": ["Inter"],
+        "label-sm": ["Inter"],
+        "label-lg": ["Inter"],
+        "headline-lg-mobile": ["Inter"],
+        "data-metric": ["Inter"],
+        "headline-md": ["Inter"],
+        "headline-xl": ["Inter"],
+        "body-lg": ["Inter"]
+      },
+      "fontSize": {
+        "headline-sm": ["16px", { "lineHeight": "24px", "fontWeight": "600" }],
+        "body-sm": ["12px", { "lineHeight": "16px", "fontWeight": "400" }],
+        "body-md": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+        "label-md": ["12px", { "lineHeight": "16px", "letterSpacing": "0.02em", "fontWeight": "600" }],
+        "headline-lg": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+        "headline-xl-mobile": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "700" }],
+        "label-sm": ["11px", { "lineHeight": "14px", "letterSpacing": "0.04em", "fontWeight": "600" }],
+        "label-lg": ["14px", { "lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "600" }],
+        "headline-lg-mobile": ["20px", { "lineHeight": "28px", "letterSpacing": "-0.005em", "fontWeight": "600" }],
+        "data-metric": ["28px", { "lineHeight": "32px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+        "headline-md": ["20px", { "lineHeight": "28px", "fontWeight": "600" }],
+        "headline-xl": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+        "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "400" }]
+      }
+    }
+  }
+};
+</script>
+</head>
+<body class="bg-surface text-on-surface font-body-md text-body-md min-h-screen flex flex-col">
+
+<header class="fixed top-0 w-full z-50 bg-surface/80 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)] pt-safe">
+  <div class="h-16 px-gutter flex items-center justify-between max-w-md mx-auto">
+    <div class="flex items-center gap-space-sm">
+      <a aria-label="Go back" class="w-11 h-11 flex items-center justify-center rounded-lg text-on-surface hover:bg-surface-container active:bg-surface-container-high transition-colors" href="welcome_preview.html">
+        <span class="material-symbols-outlined text-[20px]">arrow_back</span>
+      </a>
+      <div class="flex flex-col">
+        <span class="text-label-sm font-label-sm text-primary tracking-wider uppercase">BabyHealth Guard</span>
+        <h1 class="text-headline-sm font-headline-sm text-on-surface leading-tight">Maternal Profile Details</h1>
+      </div>
+    </div>
+    <div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center shrink-0">
+      <span class="material-symbols-outlined text-on-primary text-[18px]">person</span>
+    </div>
+  </div>
+</header>
+
+<main class="flex-1 flex flex-col relative w-full pt-16 bg-surface px-margin pb-safe max-w-md mx-auto">
+  <div class="flex flex-col w-full pb-2">
+    <div class="pt-4 pb-2">
+      <h2 class="text-headline-lg font-headline-lg text-on-surface">Create Profile</h2>
+      <p class="text-body-sm font-body-sm text-on-surface-variant mt-1">Free for all mothers</p>
+    </div>
+
+    <form id="registration-form" class="flex flex-col gap-space-md w-full mt-2">
+      <div class="flex flex-col gap-space-md w-full">
+
+        <!-- Photo Section -->
+        <section class="bg-surface-container-lowest rounded-2xl p-space-md shadow-sm flex flex-col gap-space-md border border-outline/20">
+          <div class="flex items-center gap-space-md">
+            <input type="file" id="photo-file-input" accept="image/*" class="hidden">
+            <div id="photo-preview-container" class="relative w-16 h-16 rounded-full bg-surface-container-low border border-primary/30 flex items-center justify-center text-primary shrink-0 shadow-sm cursor-pointer overflow-hidden" onclick="document.getElementById('photo-file-input').click()">
+              <img id="photo-preview-img" class="w-full h-full object-cover hidden" alt="Uploaded Profile Photo">
+              <span id="photo-placeholder-icon" class="material-symbols-outlined text-[28px]">add_a_photo</span>
+            </div>
+            <div class="flex flex-col flex-1">
+              <button type="button" onclick="document.getElementById('photo-file-input').click()" class="text-label-md font-label-md text-primary font-semibold flex items-center gap-1 text-left">
+                <span id="photo-btn-text">Add Your Photo (Optional)</span>
+                <span class="material-symbols-outlined text-[16px]">photo_camera</span>
+              </button>
+              <span class="text-body-sm font-body-sm text-on-surface-variant mt-0.5">Helps midwives recognize you at the clinic</span>
+            </div>
+          </div>
+        </section>
+
+        <!-- Personal Details Section -->
+        <section class="bg-surface-container-lowest rounded-2xl p-space-md shadow-sm flex flex-col gap-space-md border border-outline/20">
+          <div class="flex items-center justify-between pb-1 border-b border-outline/20">
+            <span class="text-label-sm font-label-sm uppercase tracking-wider text-primary font-semibold">Personal Details</span>
+          </div>
+
+          <div class="flex flex-col gap-1.5">
+            <label class="text-label-md font-label-md text-on-surface" for="mother-name">Full Name</label>
+            <div class="flex items-center bg-surface-container-low rounded-xl px-space-md h-12 shadow-sm focus-within:bg-surface-container-high transition-colors">
+              <span class="material-symbols-outlined text-primary text-[20px] mr-space-sm shrink-0">person</span>
+              <input class="w-full bg-transparent text-body-lg font-body-lg text-on-surface placeholder:text-outline focus:outline-none" id="mother-name" placeholder="e.g. Amina Brenda" type="text" value="Amina Brenda" required>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-2 gap-space-sm">
+            <div class="flex flex-col gap-1.5">
+              <label class="text-label-md font-label-md text-on-surface" for="mother-age">Mother's Age</label>
+              <div class="flex items-center bg-surface-container-low rounded-xl px-space-md h-12 shadow-sm focus-within:bg-surface-container-high transition-colors">
+                <span class="material-symbols-outlined text-primary text-[20px] mr-space-sm shrink-0">cake</span>
+                <input class="w-full bg-transparent text-body-lg font-body-lg text-on-surface placeholder:text-outline focus:outline-none" id="mother-age" placeholder="24" type="number" value="24" required>
+              </div>
+            </div>
+
+            <div class="flex flex-col gap-1.5">
+              <label class="text-label-md font-label-md text-on-surface" for="mother-village">Village / Location</label>
+              <div class="flex items-center bg-surface-container-low rounded-xl px-space-md h-12 shadow-sm focus-within:bg-surface-container-high transition-colors">
+                <span class="material-symbols-outlined text-primary text-[20px] mr-space-sm shrink-0">location_on</span>
+                <input class="w-full bg-transparent text-body-lg font-body-lg text-on-surface placeholder:text-outline focus:outline-none" id="mother-village" placeholder="Village name" type="text" value="Kagando" required>
+              </div>
+            </div>
+          </div>
+
+          <div class="flex flex-col gap-1.5">
+            <label class="text-label-md font-label-md text-on-surface" for="mother-phone">Mobile Phone Number</label>
+            <div class="flex items-center bg-surface-container-low rounded-xl px-space-md h-12 shadow-sm focus-within:bg-surface-container-high transition-colors">
+              <div class="flex items-center gap-1.5 pr-2.5 mr-2.5 border-r border-outline/20 shrink-0">
+                <span class="material-symbols-outlined text-primary text-[18px]">call</span>
+                <span class="text-label-md font-label-md text-on-surface font-semibold">+256</span>
+              </div>
+              <input class="w-full bg-transparent text-body-lg font-body-lg text-on-surface placeholder:text-outline focus:outline-none" id="mother-phone" placeholder="772 000 000" type="tel" value="772 345 678" required>
+            </div>
+          </div>
+
+          <div class="flex flex-col gap-1.5">
+            <label class="text-label-md font-label-md text-on-surface">Preferred Language for SMS Alerts</label>
+            <div id="language-group" class="grid grid-cols-3 gap-2">
+              <button type="button" data-lang="Luganda" class="lang-btn h-11 rounded-xl bg-surface-container-high text-primary font-label-md flex items-center justify-center gap-1 shadow-sm border border-primary/20">
+                <span class="material-symbols-outlined text-[16px]">sms</span>
+                <span>Luganda</span>
+              </button>
+              <button type="button" data-lang="English" class="lang-btn h-11 rounded-xl bg-surface-container-low text-on-surface-variant font-label-md flex items-center justify-center gap-1 shadow-sm hover:bg-surface-container">
+                <span class="material-symbols-outlined text-[16px]">sms</span>
+                <span>English</span>
+              </button>
+              <button type="button" data-lang="Swahili" class="lang-btn h-11 rounded-xl bg-surface-container-low text-on-surface-variant font-label-md flex items-center justify-center gap-1 shadow-sm hover:bg-surface-container">
+                <span class="material-symbols-outlined text-[16px]">sms</span>
+                <span>Swahili</span>
+              </button>
+            </div>
+          </div>
+        </section>
+
+        <!-- Pregnancy & Health Section -->
+        <section class="bg-surface-container-lowest rounded-2xl p-space-md shadow-sm flex flex-col gap-space-md border border-outline/20">
+          <div class="flex items-center justify-between pb-1 border-b border-outline/20">
+            <span class="text-label-sm font-label-sm uppercase tracking-wider text-primary font-semibold">Pregnancy &amp; Health</span>
+          </div>
+
+          <div class="flex flex-col gap-2">
+            <label class="text-label-md font-label-md text-on-surface">Current Maternal Status</label>
+            <div aria-label="Current Status" class="grid grid-cols-2 gap-space-sm" role="radiogroup">
+              <button aria-checked="true" class="h-14 px-3 rounded-xl flex items-center justify-center gap-2 bg-surface-container-high text-primary font-label-md shadow-sm border border-primary/30 transition-all" id="option-expecting" role="radio" type="button">
+                <span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">pregnant_woman</span>
+                <span>Expecting</span>
+              </button>
+              <button aria-checked="false" class="h-14 px-3 rounded-xl flex items-center justify-center gap-2 bg-surface-container-low text-on-surface-variant font-label-md shadow-sm transition-all" id="option-baby" role="radio" type="button">
+                <span class="material-symbols-outlined text-[20px]">child_care</span>
+                <span>Newborn Baby</span>
+              </button>
+            </div>
+          </div>
+
+          <div id="pregnancy-stage-section" class="flex flex-col gap-1.5">
+            <label class="text-label-md font-label-md text-on-surface">Stage / Pregnancy Month</label>
+            <div id="stage-group" class="grid grid-cols-3 gap-2">
+              <button type="button" data-stage="1 - 3 Mo" class="stage-btn h-11 rounded-xl bg-surface-container-low text-on-surface-variant font-label-md flex items-center justify-center">1 - 3 Mo</button>
+              <button type="button" data-stage="4 - 6 Mo" class="stage-btn h-11 rounded-xl bg-surface-container-high text-primary font-label-md border border-primary/20 flex items-center justify-center font-semibold">4 - 6 Mo</button>
+              <button type="button" data-stage="7 - 9 Mo" class="stage-btn h-11 rounded-xl bg-surface-container-low text-on-surface-variant font-label-md flex items-center justify-center">7 - 9 Mo</button>
+            </div>
+          </div>
+
+          <div class="flex flex-col gap-1.5">
+            <label class="text-label-md font-label-md text-on-surface">Number of Births (Parity)</label>
+            <div id="parity-group" class="grid grid-cols-2 gap-space-sm">
+              <button type="button" data-parity="First Baby (1st)" class="parity-btn h-11 rounded-xl bg-surface-container-high text-primary font-label-md border border-primary/20 flex items-center justify-center gap-1.5 font-semibold">
+                <span>First Baby (1st)</span>
+              </button>
+              <button type="button" data-parity="2nd or More" class="parity-btn h-11 rounded-xl bg-surface-container-low text-on-surface-variant font-label-md flex items-center justify-center gap-1.5">
+                <span>2nd or More</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="flex flex-col gap-1.5">
+            <label class="text-label-md font-label-md text-on-surface">Any Known Health Conditions?</label>
+            <div id="condition-group" class="flex flex-wrap gap-2">
+              <button type="button" data-condition="None" class="cond-btn px-3 h-9 rounded-full bg-surface-container-high text-primary border border-primary/20 text-label-sm font-label-sm flex items-center gap-1">
+                <span class="material-symbols-outlined text-[14px]">check</span>
+                <span>None</span>
+              </button>
+              <button type="button" data-condition="High BP" class="cond-btn px-3 h-9 rounded-full bg-surface-container-low text-on-surface-variant text-label-sm font-label-sm flex items-center gap-1 hover:bg-surface-container">
+                <span class="material-symbols-outlined text-[14px]">monitor_heart</span>
+                <span>High BP</span>
+              </button>
+              <button type="button" data-condition="Anemia" class="cond-btn px-3 h-9 rounded-full bg-surface-container-low text-on-surface-variant text-label-sm font-label-sm flex items-center gap-1 hover:bg-surface-container">
+                <span class="material-symbols-outlined text-[14px]">bloodtype</span>
+                <span>Anemia</span>
+              </button>
+              <button type="button" data-condition="Other" class="cond-btn px-3 h-9 rounded-full bg-surface-container-low text-on-surface-variant text-label-sm font-label-sm flex items-center gap-1 hover:bg-surface-container">
+                <span class="material-symbols-outlined text-[14px]">medication</span>
+                <span>Other</span>
+              </button>
+            </div>
+          </div>
+        </section>
+
+        <!-- Save Button -->
+        <div class="flex flex-col gap-3 mt-2">
+          <button id="btn-submit-registration" class="w-full h-14 rounded-full bg-primary-container text-on-primary font-label-lg text-label-lg flex items-center justify-center gap-2 shadow-md hover:opacity-95 active:scale-[0.99] transition-all" type="submit">
+            <span>Save &amp; Continue</span>
+            <span class="material-symbols-outlined text-[20px]">arrow_forward</span>
+          </button>
+          <p class="text-center text-label-sm font-label-sm text-on-surface-variant flex items-center justify-center gap-1.5">
+            <span class="w-2 h-2 rounded-full bg-primary shrink-0"></span>
+            <span>Works offline • Free *920# access</span>
+          </p>
+        </div>
+
+      </div>
+    </form>
+  </div>
+</main>
+
 <script>
   document.addEventListener('DOMContentLoaded', () => {
+    // State
+    let selectedStatus = 'expecting';
+    let selectedLanguage = 'Luganda';
+    let selectedStage = '4 - 6 Mo';
+    let selectedParity = 'First Baby (1st)';
+    let selectedConditions = ['None'];
+    let photoDataUrl = '';
+
+    // Status toggle
     const optExpecting = document.getElementById('option-expecting');
     const optBaby = document.getElementById('option-baby');
     const stageSection = document.getElementById('pregnancy-stage-section');
 
     if (optExpecting && optBaby && stageSection) {
       optExpecting.addEventListener('click', () => {
+        selectedStatus = 'expecting';
         optExpecting.className = 'h-14 px-3 rounded-xl flex items-center justify-center gap-2 bg-surface-container-high text-primary font-label-md shadow-sm border border-primary/30 transition-all';
         optBaby.className = 'h-14 px-3 rounded-xl flex items-center justify-center gap-2 bg-surface-container-low text-on-surface-variant font-label-md shadow-sm transition-all';
         optExpecting.setAttribute('aria-checked', 'true');
@@ -16,6 +342,7 @@
       });
 
       optBaby.addEventListener('click', () => {
+        selectedStatus = 'baby';
         optBaby.className = 'h-14 px-3 rounded-xl flex items-center justify-center gap-2 bg-surface-container-high text-primary font-label-md shadow-sm border border-primary/30 transition-all';
         optExpecting.className = 'h-14 px-3 rounded-xl flex items-center justify-center gap-2 bg-surface-container-low text-on-surface-variant font-label-md shadow-sm transition-all';
         optBaby.setAttribute('aria-checked', 'true');
@@ -23,6 +350,141 @@
         stageSection.style.display = 'none';
       });
     }
+
+    // Photo input
+    const photoFileInput = document.getElementById('photo-file-input');
+    const photoPreviewImg = document.getElementById('photo-preview-img');
+    const photoPlaceholderIcon = document.getElementById('photo-placeholder-icon');
+    const photoBtnText = document.getElementById('photo-btn-text');
+
+    if (photoFileInput) {
+      photoFileInput.addEventListener('change', (e) => {
+        const file = e.target.files && e.target.files[0];
+        if (file) {
+          const reader = new FileReader();
+          reader.onload = (uploadEvent) => {
+            photoDataUrl = uploadEvent.target.result;
+            photoPreviewImg.src = photoDataUrl;
+            photoPreviewImg.classList.remove('hidden');
+            photoPlaceholderIcon.classList.add('hidden');
+            photoBtnText.textContent = 'Change Photo';
+          };
+          reader.readAsDataURL(file);
+        }
+      });
+    }
+
+    // Language buttons
+    const langBtns = document.querySelectorAll('.lang-btn');
+    langBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        langBtns.forEach(b => {
+          b.className = 'lang-btn h-11 rounded-xl bg-surface-container-low text-on-surface-variant font-label-md flex items-center justify-center gap-1 shadow-sm hover:bg-surface-container';
+        });
+        btn.className = 'lang-btn h-11 rounded-xl bg-surface-container-high text-primary font-label-md flex items-center justify-center gap-1 shadow-sm border border-primary/20';
+        selectedLanguage = btn.getAttribute('data-lang');
+      });
+    });
+
+    // Stage buttons
+    const stageBtns = document.querySelectorAll('.stage-btn');
+    stageBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        stageBtns.forEach(b => {
+          b.className = 'stage-btn h-11 rounded-xl bg-surface-container-low text-on-surface-variant font-label-md flex items-center justify-center';
+        });
+        btn.className = 'stage-btn h-11 rounded-xl bg-surface-container-high text-primary font-label-md border border-primary/20 flex items-center justify-center font-semibold';
+        selectedStage = btn.getAttribute('data-stage');
+      });
+    });
+
+    // Parity buttons
+    const parityBtns = document.querySelectorAll('.parity-btn');
+    parityBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        parityBtns.forEach(b => {
+          b.className = 'parity-btn h-11 rounded-xl bg-surface-container-low text-on-surface-variant font-label-md flex items-center justify-center gap-1.5';
+        });
+        btn.className = 'parity-btn h-11 rounded-xl bg-surface-container-high text-primary font-label-md border border-primary/20 flex items-center justify-center gap-1.5 font-semibold';
+        selectedParity = btn.getAttribute('data-parity');
+      });
+    });
+
+    // Condition buttons
+    const condBtns = document.querySelectorAll('.cond-btn');
+    condBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const cond = btn.getAttribute('data-condition');
+        if (cond === 'None') {
+          selectedConditions = ['None'];
+          condBtns.forEach(b => {
+            b.className = 'cond-btn px-3 h-9 rounded-full bg-surface-container-low text-on-surface-variant text-label-sm font-label-sm flex items-center gap-1 hover:bg-surface-container';
+          });
+          btn.className = 'cond-btn px-3 h-9 rounded-full bg-surface-container-high text-primary border border-primary/20 text-label-sm font-label-sm flex items-center gap-1';
+        } else {
+          selectedConditions = selectedConditions.filter(c => c !== 'None');
+          const noneBtn = Array.from(condBtns).find(b => b.getAttribute('data-condition') === 'None');
+          if (noneBtn) {
+            noneBtn.className = 'cond-btn px-3 h-9 rounded-full bg-surface-container-low text-on-surface-variant text-label-sm font-label-sm flex items-center gap-1 hover:bg-surface-container';
+          }
+          if (selectedConditions.includes(cond)) {
+            selectedConditions = selectedConditions.filter(c => c !== cond);
+            btn.className = 'cond-btn px-3 h-9 rounded-full bg-surface-container-low text-on-surface-variant text-label-sm font-label-sm flex items-center gap-1 hover:bg-surface-container';
+            if (selectedConditions.length === 0) {
+              selectedConditions = ['None'];
+              if (noneBtn) {
+                noneBtn.className = 'cond-btn px-3 h-9 rounded-full bg-surface-container-high text-primary border border-primary/20 text-label-sm font-label-sm flex items-center gap-1';
+              }
+            }
+          } else {
+            selectedConditions.push(cond);
+            btn.className = 'cond-btn px-3 h-9 rounded-full bg-surface-container-high text-primary border border-primary/20 text-label-sm font-label-sm flex items-center gap-1';
+          }
+        }
+      });
+    });
+
+    // Form Submission & Redirect to Dashboard
+    const regForm = document.getElementById('registration-form');
+    if (regForm) {
+      regForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+
+        const fullName = (document.getElementById('mother-name').value || '').trim() || 'Amina Brenda';
+        const age = (document.getElementById('mother-age').value || '').trim() || '24';
+        const village = (document.getElementById('mother-village').value || '').trim() || 'Kagando';
+        const phone = (document.getElementById('mother-phone').value || '').trim() || '772 000 000';
+
+        const motherProfile = {
+          fullName,
+          age,
+          village,
+          phone: '+256 ' + phone,
+          language: selectedLanguage,
+          status: selectedStatus,
+          stage: selectedStage,
+          parity: selectedParity,
+          conditions: selectedConditions,
+          photoDataUrl: photoDataUrl || ''
+        };
+
+        // Save profile to localStorage
+        localStorage.setItem('babyhealth_mother_profile', JSON.stringify(motherProfile));
+        sessionStorage.setItem('bhg_just_registered', 'true');
+
+        // Button loading state
+        const submitBtn = document.getElementById('btn-submit-registration');
+        submitBtn.innerHTML = '<span>Saving Profile...</span>';
+        submitBtn.disabled = true;
+
+        // Redirect to Mother Dashboard
+        setTimeout(() => {
+          window.location.href = 'dashboard_preview.html';
+        }, 350);
+      });
+    }
   });
 </script>
-</body></html>
+
+</body>
+</html>
