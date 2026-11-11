@@ -749,14 +749,18 @@ class _MotherDashboardScreenState extends State<MotherDashboardScreen> {
                       ),
                     ),
                     const SizedBox(width: 6),
-                    Text(
-                      '$namePart • $stageLabel',
-                      style: const TextStyle(
-                        fontFamily: 'Inter',
-                        fontSize: 11,
-                        fontWeight: FontWeight.w600,
-                        letterSpacing: 0.44,
-                        color: Color(0xFF00687A),
+                    Flexible(
+                      child: Text(
+                        '$namePart • $stageLabel',
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(
+                          fontFamily: 'Inter',
+                          fontSize: 11,
+                          fontWeight: FontWeight.w600,
+                          letterSpacing: 0.44,
+                          color: Color(0xFF00687A),
+                        ),
                       ),
                     ),
                   ],
@@ -844,44 +848,51 @@ class _MotherDashboardScreenState extends State<MotherDashboardScreen> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           _buildMenuButton(),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const Text(
-                'My Health',
-                style: TextStyle(
-                  fontFamily: 'Inter',
-                  fontSize: 17,
-                  fontWeight: FontWeight.bold,
-                  color: colorOnSurface,
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Text(
+                  'My Health',
+                  style: TextStyle(
+                    fontFamily: 'Inter',
+                    fontSize: 17,
+                    fontWeight: FontWeight.bold,
+                    color: colorOnSurface,
+                  ),
                 ),
-              ),
-              const SizedBox(height: 2),
-              Row(
-                children: [
-                  Container(
-                    width: 7,
-                    height: 7,
-                    decoration: const BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: Color(0xFF10B981),
+                const SizedBox(height: 2),
+                Row(
+                  children: [
+                    Container(
+                      width: 7,
+                      height: 7,
+                      decoration: const BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: Color(0xFF10B981),
+                      ),
                     ),
-                  ),
-                  const SizedBox(width: 6),
-                  Text(
-                    '$firstName • $stageText',
-                    style: const TextStyle(
-                      fontFamily: 'Inter',
-                      fontSize: 11.5,
-                      fontWeight: FontWeight.w600,
-                      color: colorSecondary,
+                    const SizedBox(width: 6),
+                    Flexible(
+                      child: Text(
+                        '$firstName • $stageText',
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(
+                          fontFamily: 'Inter',
+                          fontSize: 11.5,
+                          fontWeight: FontWeight.w600,
+                          color: colorSecondary,
+                        ),
+                      ),
                     ),
-                  ),
-                ],
-              ),
-            ],
+                  ],
+                ),
+              ],
+            ),
           ),
+          const SizedBox(width: 8),
           InkWell(
             onTap: () => _makeCall('112'),
             borderRadius: BorderRadius.circular(12),
@@ -900,6 +911,7 @@ class _MotherDashboardScreenState extends State<MotherDashboardScreen> {
                 ],
               ),
               child: const Row(
+                mainAxisSize: MainAxisSize.min,
                 children: [
                   Icon(Icons.call, size: 16, color: colorOnPrimary),
                   SizedBox(width: 6),
@@ -1027,40 +1039,46 @@ class _MotherDashboardScreenState extends State<MotherDashboardScreen> {
                     children: [
                       // Badges row
                       Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Container(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 10, vertical: 5),
-                            decoration: BoxDecoration(
-                              color: colorPrimary.withValues(alpha: 0.1),
-                              borderRadius: BorderRadius.circular(100),
-                            ),
-                            child: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Container(
-                                  width: 8,
-                                  height: 8,
-                                  decoration: const BoxDecoration(
-                                    color: colorPrimary,
-                                    shape: BoxShape.circle,
+                          Expanded(
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 10, vertical: 5),
+                              decoration: BoxDecoration(
+                                color: colorPrimary.withValues(alpha: 0.1),
+                                borderRadius: BorderRadius.circular(100),
+                              ),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Container(
+                                    width: 8,
+                                    height: 8,
+                                    decoration: const BoxDecoration(
+                                      color: colorPrimary,
+                                      shape: BoxShape.circle,
+                                    ),
                                   ),
-                                ),
-                                const SizedBox(width: 6),
-                                Text(
-                                  'Next ANC Visit ($visitNumber of ${_appointments.length})',
-                                  style: const TextStyle(
-                                    fontFamily: 'Inter',
-                                    fontSize: 11,
-                                    fontWeight: FontWeight.w700,
-                                    letterSpacing: 0.44,
-                                    color: colorPrimary,
+                                  const SizedBox(width: 6),
+                                  Flexible(
+                                    child: Text(
+                                      'Next ANC Visit ($visitNumber of ${_appointments.length})',
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: const TextStyle(
+                                        fontFamily: 'Inter',
+                                        fontSize: 11,
+                                        fontWeight: FontWeight.w700,
+                                        letterSpacing: 0.44,
+                                        color: colorPrimary,
+                                      ),
+                                    ),
                                   ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
                           ),
+                          const SizedBox(width: 8),
                           Container(
                             padding: const EdgeInsets.symmetric(
                                 horizontal: 8, vertical: 2),
@@ -1070,6 +1088,8 @@ class _MotherDashboardScreenState extends State<MotherDashboardScreen> {
                             ),
                             child: Text(
                               appointment.status,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
                               style: const TextStyle(
                                 fontFamily: 'Inter',
                                 fontSize: 11,
@@ -1272,27 +1292,33 @@ class _MotherDashboardScreenState extends State<MotherDashboardScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const Row(
-                      children: [
-                        Icon(
-                          Icons.history_edu_rounded,
-                          color: colorPrimary,
-                          size: 20,
-                        ),
-                        SizedBox(width: 6),
-                        Text(
-                          'Past Visit Progress',
-                          style: TextStyle(
-                            fontFamily: 'Inter',
-                            fontSize: 16,
-                            fontWeight: FontWeight.w600,
-                            color: colorOnSurface,
+                    const Expanded(
+                      child: Row(
+                        children: [
+                          Icon(
+                            Icons.history_edu_rounded,
+                            color: colorPrimary,
+                            size: 20,
                           ),
-                        ),
-                      ],
+                          SizedBox(width: 6),
+                          Expanded(
+                            child: Text(
+                              'Past Visit Progress',
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                fontFamily: 'Inter',
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600,
+                                color: colorOnSurface,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
+                    const SizedBox(width: 8),
                     Container(
                       padding: const EdgeInsets.symmetric(
                           horizontal: 8, vertical: 2),
@@ -1302,6 +1328,8 @@ class _MotherDashboardScreenState extends State<MotherDashboardScreen> {
                       ),
                       child: Text(
                         '$_completedAppointments of ${_appointments.length} Done',
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
                         style: const TextStyle(
                           fontFamily: 'Inter',
                           fontSize: 11,
@@ -1360,85 +1388,85 @@ class _MotherDashboardScreenState extends State<MotherDashboardScreen> {
           _buildMenuButton(),
           const SizedBox(width: 4),
           Container(
-                width: 44,
-                height: 44,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: Colors.white,
-                  border: Border.all(color: Colors.grey.shade200, width: 1.5),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withValues(alpha: 0.04),
-                      blurRadius: 4,
-                      offset: const Offset(0, 2),
-                    ),
-                  ],
+            width: 44,
+            height: 44,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: Colors.white,
+              border: Border.all(color: Colors.grey.shade200, width: 1.5),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: 0.04),
+                  blurRadius: 4,
+                  offset: const Offset(0, 2),
                 ),
-                child: const ClipOval(
-                  child: Icon(Icons.person, color: colorPrimary),
-                ),
-              ),
+              ],
+            ),
+            child: const ClipOval(
+              child: Icon(Icons.person, color: colorPrimary),
+            ),
+          ),
           const SizedBox(width: 10),
           Expanded(
             child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Row(
-                    children: [
-                      Flexible(
-                        child: Text(
-                          widget.profile.fullName,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: const TextStyle(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Row(
+                  children: [
+                    Flexible(
+                      child: Text(
+                        widget.profile.fullName,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(
                           fontFamily: 'Inter',
                           fontSize: 15,
                           fontWeight: FontWeight.bold,
                           color: colorOnSurface,
                         ),
                       ),
-                      ),
-                      const SizedBox(width: 6),
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 8, vertical: 2),
-                        decoration: BoxDecoration(
-                          color: const Color(0xFFE6F4F1),
-                          borderRadius: BorderRadius.circular(100),
-                          border: Border.all(
-                            color: const Color(0xFFCCE9E3),
-                            width: 0.8,
-                          ),
-                        ),
-                        child: Text(
-                          widget.profile.village,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: const TextStyle(
-                            fontFamily: 'Inter',
-                            fontSize: 11,
-                            fontWeight: FontWeight.w600,
-                            color: Color(0xFF0F766E),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 2),
-                  Text(
-                    widget.profile.email,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(
-                      fontFamily: 'Inter',
-                      fontSize: 11,
-                      fontWeight: FontWeight.w500,
-                      color: colorOnSurfaceVariant,
                     ),
+                    const SizedBox(width: 6),
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 8, vertical: 2),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFFE6F4F1),
+                        borderRadius: BorderRadius.circular(100),
+                        border: Border.all(
+                          color: const Color(0xFFCCE9E3),
+                          width: 0.8,
+                        ),
+                      ),
+                      child: Text(
+                        widget.profile.village,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(
+                          fontFamily: 'Inter',
+                          fontSize: 11,
+                          fontWeight: FontWeight.w600,
+                          color: Color(0xFF0F766E),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 2),
+                Text(
+                  widget.profile.email,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(
+                    fontFamily: 'Inter',
+                    fontSize: 11,
+                    fontWeight: FontWeight.w500,
+                    color: colorOnSurfaceVariant,
                   ),
-                ],
-              ),
+                ),
+              ],
+            ),
           ),
         ],
       ),
@@ -1909,17 +1937,15 @@ class _MotherDashboardScreenState extends State<MotherDashboardScreen> {
                   ],
                 ),
                 Text(
-                  Text(
-                    _vitals.systolic == null ? 'Not recorded' : 'Recorded today',
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    textAlign: TextAlign.center,
+                  _vitals.systolic == null ? 'Not recorded' : 'Recorded today',
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  textAlign: TextAlign.center,
                   style: const TextStyle(
                     fontFamily: 'Inter',
                     fontSize: 10.5,
                     fontWeight: FontWeight.w600,
                     color: Color(0xFF10B981),
-                  ),
                   ),
                 ),
               ],
@@ -2007,13 +2033,13 @@ class _MotherDashboardScreenState extends State<MotherDashboardScreen> {
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                           textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontFamily: 'Inter',
-                          fontSize: 10.5,
-                          fontWeight: FontWeight.w600,
-                          color: _isIronFolicTaken
-                              ? const Color(0xFF10B981)
-                              : Colors.amber.shade700,
+                          style: TextStyle(
+                            fontFamily: 'Inter',
+                            fontSize: 10.5,
+                            fontWeight: FontWeight.w600,
+                            color: _isIronFolicTaken
+                                ? const Color(0xFF10B981)
+                                : Colors.amber.shade700,
                           ),
                         ),
                       ),
@@ -2085,24 +2111,32 @@ class _MotherDashboardScreenState extends State<MotherDashboardScreen> {
               children: [
                 Row(
                   children: [
-                    Text(
-                      'ANC VISIT $visitNumber OF ${_appointments.length}',
-                      style: const TextStyle(
-                        fontFamily: 'Inter',
-                        fontSize: 11,
-                        fontWeight: FontWeight.bold,
-                        letterSpacing: 0.5,
-                        color: Color(0xFF0F766E),
+                    Flexible(
+                      child: Text(
+                        'ANC VISIT $visitNumber OF ${_appointments.length}',
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(
+                          fontFamily: 'Inter',
+                          fontSize: 11,
+                          fontWeight: FontWeight.bold,
+                          letterSpacing: 0.5,
+                          color: Color(0xFF0F766E),
+                        ),
                       ),
                     ),
                     const SizedBox(width: 6),
-                    Text(
-                      appointment.status,
-                      style: const TextStyle(
-                        fontFamily: 'Inter',
-                        fontSize: 10,
-                        fontWeight: FontWeight.w500,
-                        color: colorOnSurfaceVariant,
+                    Flexible(
+                      child: Text(
+                        appointment.status,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(
+                          fontFamily: 'Inter',
+                          fontSize: 10,
+                          fontWeight: FontWeight.w500,
+                          color: colorOnSurfaceVariant,
+                        ),
                       ),
                     ),
                   ],
@@ -2250,5 +2284,4 @@ class _MotherDashboardScreenState extends State<MotherDashboardScreen> {
       ],
     );
   }
-
 }

@@ -9,7 +9,7 @@ import 'package:flutter_test/flutter_test.dart';
 void main() {
   testWidgets('Mother dashboard renders live profile and care records',
       (WidgetTester tester) async {
-    tester.view.physicalSize = const Size(1080, 2400);
+    tester.view.physicalSize = const Size(390, 844);
     tester.view.devicePixelRatio = 1.0;
     addTearDown(tester.view.resetPhysicalSize);
 
@@ -83,7 +83,9 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.text('11 kicks'), findsOneWidget);
 
-    await tester.tap(find.text('My Health'));
+    await tester.tap(find.byTooltip('Open navigation menu'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('My Health').last);
     await tester.pumpAndSettle();
     expect(find.text("Today's Vitals"), findsOneWidget);
     expect(find.text('Blood Pressure'), findsOneWidget);
@@ -92,7 +94,9 @@ void main() {
     expect(find.text('Recent Health Activity'), findsOneWidget);
     expect(find.text("+ Record Today's Vitals"), findsOneWidget);
 
-    await tester.tap(find.text('Warning Signs'));
+    await tester.tap(find.byTooltip('Open navigation menu'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Warning Signs').last);
     await tester.pumpAndSettle();
     expect(find.text('Danger Signs'), findsOneWidget);
     expect(find.text('Bleeding'), findsOneWidget);
@@ -100,7 +104,9 @@ void main() {
     expect(find.text('Baby Not Moving'), findsOneWidget);
     expect(find.text('High Fever'), findsOneWidget);
 
-    await tester.tap(find.text('Visits'));
+    await tester.tap(find.byTooltip('Open navigation menu'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Visits').last);
     await tester.pumpAndSettle();
     expect(find.text('Clinic Visits & Reminders'), findsOneWidget);
     expect(find.text('Kagando Health Centre'), findsOneWidget);

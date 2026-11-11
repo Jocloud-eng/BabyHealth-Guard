@@ -269,369 +269,371 @@ class _MotherRegistrationScreenState extends State<MotherRegistrationScreen> {
                 key: _formKey,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Page Header Title
-                const SizedBox(height: 6),
-                const Text(
-                  'Create Profile',
-                  style: TextStyle(
-                    fontFamily: 'Inter',
-                    fontSize: 24,
-                    fontWeight: FontWeight.w600,
-                    letterSpacing: -0.2,
-                    color: colorOnSurface,
-                  ),
-                ),
-                const SizedBox(height: 4),
-                const Text(
-                  'Free for all mothers',
-                  style: TextStyle(
-                    fontFamily: 'Inter',
-                    fontSize: 12,
-                    fontWeight: FontWeight.w400,
-                    color: colorOnSurfaceVariant,
-                  ),
-                ),
-                const SizedBox(height: 16),
-
-                const SizedBox(height: 16),
-
-                // Card 2: Personal Details Card
-                _buildCard(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      _buildSectionHeader('PERSONAL DETAILS'),
-                      const SizedBox(height: 14),
-
-                      // Full Name
-                      _buildInputLabel('Full Name'),
-                      const SizedBox(height: 6),
-                      _buildTextInput(
-                        controller: _nameController,
-                        hint: 'e.g. Amina Brenda',
-                        icon: Icons.person,
-                      ),
-                      const SizedBox(height: 14),
-
-                      // Mother's Age & Village Grid
-                      Row(
-                        children: [
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                _buildInputLabel("Mother's Age"),
-                                const SizedBox(height: 6),
-                                _buildTextInput(
-                                  controller: _ageController,
-                                  hint: '24 yrs',
-                                  icon: Icons.cake,
-                                  keyboardType: TextInputType.number,
-                                ),
-                              ],
-                            ),
-                          ),
-                          const SizedBox(width: 10),
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                _buildInputLabel('Village / Location'),
-                                const SizedBox(height: 6),
-                                _buildTextInput(
-                                  controller: _villageController,
-                                  hint: 'Village name',
-                                  icon: Icons.location_on,
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 14),
-
-                      // Mobile Phone Number with +256 badge
-                      _buildInputLabel('Mobile Phone Number'),
-                      const SizedBox(height: 6),
-                      Container(
-                        height: 48,
-                        decoration: BoxDecoration(
-                          color: colorSurfaceLow,
-                          borderRadius: BorderRadius.circular(12),
-                          boxShadow: const [
-                            BoxShadow(
-                              color: Color(0x08000000),
-                              blurRadius: 3,
-                              offset: Offset(0, 1),
-                            ),
-                          ],
-                        ),
-                        padding: const EdgeInsets.symmetric(horizontal: 14),
-                        child: Row(
-                          children: [
-                            const Icon(Icons.call,
-                                size: 18, color: colorPrimary),
-                            const SizedBox(width: 6),
-                            const Text(
-                              '+256',
-                              style: TextStyle(
-                                fontFamily: 'Inter',
-                                fontSize: 13,
-                                fontWeight: FontWeight.w600,
-                                color: colorOnSurface,
-                              ),
-                            ),
-                            Container(
-                              height: 20,
-                              width: 1,
-                              color: colorOutline.withValues(alpha: 0.25),
-                              margin:
-                                  const EdgeInsets.symmetric(horizontal: 10),
-                            ),
-                            Expanded(
-                              child: TextField(
-                                controller: _phoneController,
-                                keyboardType: TextInputType.phone,
-                                style: const TextStyle(
-                                  fontFamily: 'Inter',
-                                  fontSize: 15,
-                                  color: colorOnSurface,
-                                ),
-                                decoration: InputDecoration(
-                                  hintText: '772 000 000',
-                                  hintStyle: TextStyle(
-                                    fontFamily: 'Inter',
-                                    fontSize: 14,
-                                    color: colorOutline.withValues(alpha: 0.6),
-                                  ),
-                                  border: InputBorder.none,
-                                  isDense: true,
-                                  contentPadding: EdgeInsets.zero,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      const SizedBox(height: 14),
-
-                      _buildInputLabel('Email'),
-                      const SizedBox(height: 6),
-                      _buildTextInput(
-                        controller: _emailController,
-                        hint: 'you@example.com',
-                        icon: Icons.email_outlined,
-                        keyboardType: TextInputType.emailAddress,
-                      ),
-                      const SizedBox(height: 14),
-
-                      _buildInputLabel('Password'),
-                      const SizedBox(height: 6),
-                      _buildTextInput(
-                        controller: _passwordController,
-                        hint: 'At least 6 characters',
-                        icon: Icons.lock_outline,
-                        obscureText: true,
-                      ),
-                      const SizedBox(height: 14),
-
-                      // Preferred Language for SMS Alerts
-                      _buildInputLabel('Preferred Language for SMS Alerts'),
-                      const SizedBox(height: 6),
-                      Row(
-                        children: [
-                          _buildLanguageButton('Luganda'),
-                          const SizedBox(width: 8),
-                          _buildLanguageButton('English'),
-                          const SizedBox(width: 8),
-                          _buildLanguageButton('Swahili'),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-
-                const SizedBox(height: 16),
-
-                // Card 3: Pregnancy & Health Card
-                _buildCard(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      _buildSectionHeader('PREGNANCY & HEALTH'),
-                      const SizedBox(height: 14),
-
-                      // Current Maternal Status Toggle
-                      _buildInputLabel('Current Maternal Status'),
-                      const SizedBox(height: 8),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: _buildStatusToggle(
-                              title: 'Expecting',
-                              icon: Icons.pregnant_woman,
-                              isSelected: _maternalStatus == 'expecting',
-                              onTap: () =>
-                                  setState(() => _maternalStatus = 'expecting'),
-                            ),
-                          ),
-                          const SizedBox(width: 10),
-                          Expanded(
-                            child: _buildStatusToggle(
-                              title: 'Newborn Baby',
-                              icon: Icons.child_care,
-                              isSelected: _maternalStatus == 'baby',
-                              onTap: () =>
-                                  setState(() => _maternalStatus = 'baby'),
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 14),
-
-                      // Stage / Pregnancy Month (only visible when Expecting)
-                      if (_maternalStatus == 'expecting') ...[
-                        _buildInputLabel('Stage / Pregnancy Month'),
-                        const SizedBox(height: 6),
-                        Row(
-                          children: [
-                            _buildPillButton(
-                              text: '1 - 3 Mo',
-                              isSelected: _pregnancyStage == '1 - 3 Mo',
-                              onTap: () =>
-                                  setState(() => _pregnancyStage = '1 - 3 Mo'),
-                            ),
-                            const SizedBox(width: 8),
-                            _buildPillButton(
-                              text: '4 - 6 Mo',
-                              isSelected: _pregnancyStage == '4 - 6 Mo',
-                              onTap: () =>
-                                  setState(() => _pregnancyStage = '4 - 6 Mo'),
-                            ),
-                            const SizedBox(width: 8),
-                            _buildPillButton(
-                              text: '7 - 9 Mo',
-                              isSelected: _pregnancyStage == '7 - 9 Mo',
-                              onTap: () =>
-                                  setState(() => _pregnancyStage = '7 - 9 Mo'),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 14),
-                      ],
-
-                      // Number of Births (Parity)
-                      _buildInputLabel('Number of Births (Parity)'),
-                      const SizedBox(height: 6),
-                      Row(
-                        children: [
-                          _buildPillButton(
-                            text: 'First Baby (1st)',
-                            isSelected: _parity == 'First Baby (1st)',
-                            onTap: () =>
-                                setState(() => _parity = 'First Baby (1st)'),
-                          ),
-                          const SizedBox(width: 10),
-                          _buildPillButton(
-                            text: '2nd or More',
-                            isSelected: _parity == '2nd or More',
-                            onTap: () =>
-                                setState(() => _parity = '2nd or More'),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 14),
-
-                      // Any Known Health Conditions?
-                      _buildInputLabel('Any Known Health Conditions?'),
-                      const SizedBox(height: 8),
-                      Wrap(
-                        spacing: 8,
-                        runSpacing: 8,
-                        children: [
-                          _buildConditionChip('None', Icons.check),
-                          _buildConditionChip(
-                              'High BP', Icons.monitor_heart_outlined),
-                          _buildConditionChip(
-                              'Anemia', Icons.bloodtype_outlined),
-                          _buildConditionChip(
-                              'Other', Icons.medication_outlined),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-
-                const SizedBox(height: 20),
-
-                if (_errorMessage != null) ...[
-                  Text(
-                    _errorMessage!,
-                    textAlign: TextAlign.center,
-                    style: const TextStyle(color: Colors.red),
-                  ),
-                  const SizedBox(height: 12),
-                ],
-
-                // Bottom Action: Save & Continue
-                SizedBox(
-                  width: double.infinity,
-                  height: 56,
-                  child: ElevatedButton(
-                    onPressed: _isLoading ? null : _saveProfile,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: colorPrimaryContainer,
-                      foregroundColor: colorOnPrimary,
-                      elevation: 2,
-                      shadowColor:
-                          colorPrimaryContainer.withValues(alpha: 0.35),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(28),
+                  children: [
+                    // Page Header Title
+                    const SizedBox(height: 6),
+                    const Text(
+                      'Create Profile',
+                      style: TextStyle(
+                        fontFamily: 'Inter',
+                        fontSize: 24,
+                        fontWeight: FontWeight.w600,
+                        letterSpacing: -0.2,
+                        color: colorOnSurface,
                       ),
                     ),
-                    child: _isLoading
-                        ? const SizedBox(
-                            width: 22,
-                            height: 22,
-                            child: CircularProgressIndicator(
-                              color: Colors.white,
-                              strokeWidth: 2.5,
-                            ),
-                          )
-                        : const Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
+                    const SizedBox(height: 4),
+                    const Text(
+                      'Free for all mothers',
+                      style: TextStyle(
+                        fontFamily: 'Inter',
+                        fontSize: 12,
+                        fontWeight: FontWeight.w400,
+                        color: colorOnSurfaceVariant,
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+
+                    const SizedBox(height: 16),
+
+                    // Card 2: Personal Details Card
+                    _buildCard(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          _buildSectionHeader('PERSONAL DETAILS'),
+                          const SizedBox(height: 14),
+
+                          // Full Name
+                          _buildInputLabel('Full Name'),
+                          const SizedBox(height: 6),
+                          _buildTextInput(
+                            controller: _nameController,
+                            hint: 'e.g. Amina Brenda',
+                            icon: Icons.person,
+                          ),
+                          const SizedBox(height: 14),
+
+                          // Mother's Age & Village Grid
+                          Row(
                             children: [
-                              Text(
-                                'Save & Continue',
-                                style: TextStyle(
-                                  fontFamily: 'Inter',
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.w600,
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    _buildInputLabel("Mother's Age"),
+                                    const SizedBox(height: 6),
+                                    _buildTextInput(
+                                      controller: _ageController,
+                                      hint: '24 yrs',
+                                      icon: Icons.cake,
+                                      keyboardType: TextInputType.number,
+                                    ),
+                                  ],
                                 ),
                               ),
-                              SizedBox(width: 8),
-                              Icon(Icons.arrow_forward, size: 20),
+                              const SizedBox(width: 10),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    _buildInputLabel('Village / Location'),
+                                    const SizedBox(height: 6),
+                                    _buildTextInput(
+                                      controller: _villageController,
+                                      hint: 'Village name',
+                                      icon: Icons.location_on,
+                                    ),
+                                  ],
+                                ),
+                              ),
                             ],
                           ),
-                  ),
-                ),
+                          const SizedBox(height: 14),
 
-                const SizedBox(height: 12),
+                          // Mobile Phone Number with +256 badge
+                          _buildInputLabel('Mobile Phone Number'),
+                          const SizedBox(height: 6),
+                          Container(
+                            height: 48,
+                            decoration: BoxDecoration(
+                              color: colorSurfaceLow,
+                              borderRadius: BorderRadius.circular(12),
+                              boxShadow: const [
+                                BoxShadow(
+                                  color: Color(0x08000000),
+                                  blurRadius: 3,
+                                  offset: Offset(0, 1),
+                                ),
+                              ],
+                            ),
+                            padding: const EdgeInsets.symmetric(horizontal: 14),
+                            child: Row(
+                              children: [
+                                const Icon(Icons.call,
+                                    size: 18, color: colorPrimary),
+                                const SizedBox(width: 6),
+                                const Text(
+                                  '+256',
+                                  style: TextStyle(
+                                    fontFamily: 'Inter',
+                                    fontSize: 13,
+                                    fontWeight: FontWeight.w600,
+                                    color: colorOnSurface,
+                                  ),
+                                ),
+                                Container(
+                                  height: 20,
+                                  width: 1,
+                                  color: colorOutline.withValues(alpha: 0.25),
+                                  margin: const EdgeInsets.symmetric(
+                                      horizontal: 10),
+                                ),
+                                Expanded(
+                                  child: TextField(
+                                    controller: _phoneController,
+                                    keyboardType: TextInputType.phone,
+                                    style: const TextStyle(
+                                      fontFamily: 'Inter',
+                                      fontSize: 15,
+                                      color: colorOnSurface,
+                                    ),
+                                    decoration: InputDecoration(
+                                      hintText: '772 000 000',
+                                      hintStyle: TextStyle(
+                                        fontFamily: 'Inter',
+                                        fontSize: 14,
+                                        color:
+                                            colorOutline.withValues(alpha: 0.6),
+                                      ),
+                                      border: InputBorder.none,
+                                      isDense: true,
+                                      contentPadding: EdgeInsets.zero,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          const SizedBox(height: 14),
 
-                TextButton(
-                  onPressed: () => Navigator.of(context).pushNamed('/login'),
-                  child: const Text('Already have an account? Sign in'),
+                          _buildInputLabel('Email'),
+                          const SizedBox(height: 6),
+                          _buildTextInput(
+                            controller: _emailController,
+                            hint: 'you@example.com',
+                            icon: Icons.email_outlined,
+                            keyboardType: TextInputType.emailAddress,
+                          ),
+                          const SizedBox(height: 14),
+
+                          _buildInputLabel('Password'),
+                          const SizedBox(height: 6),
+                          _buildTextInput(
+                            controller: _passwordController,
+                            hint: 'At least 6 characters',
+                            icon: Icons.lock_outline,
+                            obscureText: true,
+                          ),
+                          const SizedBox(height: 14),
+
+                          // Preferred Language for SMS Alerts
+                          _buildInputLabel('Preferred Language for SMS Alerts'),
+                          const SizedBox(height: 6),
+                          Row(
+                            children: [
+                              _buildLanguageButton('Luganda'),
+                              const SizedBox(width: 8),
+                              _buildLanguageButton('English'),
+                              const SizedBox(width: 8),
+                              _buildLanguageButton('Swahili'),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+
+                    const SizedBox(height: 16),
+
+                    // Card 3: Pregnancy & Health Card
+                    _buildCard(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          _buildSectionHeader('PREGNANCY & HEALTH'),
+                          const SizedBox(height: 14),
+
+                          // Current Maternal Status Toggle
+                          _buildInputLabel('Current Maternal Status'),
+                          const SizedBox(height: 8),
+                          Row(
+                            children: [
+                              Expanded(
+                                child: _buildStatusToggle(
+                                  title: 'Expecting',
+                                  icon: Icons.pregnant_woman,
+                                  isSelected: _maternalStatus == 'expecting',
+                                  onTap: () => setState(
+                                      () => _maternalStatus = 'expecting'),
+                                ),
+                              ),
+                              const SizedBox(width: 10),
+                              Expanded(
+                                child: _buildStatusToggle(
+                                  title: 'Newborn Baby',
+                                  icon: Icons.child_care,
+                                  isSelected: _maternalStatus == 'baby',
+                                  onTap: () =>
+                                      setState(() => _maternalStatus = 'baby'),
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 14),
+
+                          // Stage / Pregnancy Month (only visible when Expecting)
+                          if (_maternalStatus == 'expecting') ...[
+                            _buildInputLabel('Stage / Pregnancy Month'),
+                            const SizedBox(height: 6),
+                            Row(
+                              children: [
+                                _buildPillButton(
+                                  text: '1 - 3 Mo',
+                                  isSelected: _pregnancyStage == '1 - 3 Mo',
+                                  onTap: () => setState(
+                                      () => _pregnancyStage = '1 - 3 Mo'),
+                                ),
+                                const SizedBox(width: 8),
+                                _buildPillButton(
+                                  text: '4 - 6 Mo',
+                                  isSelected: _pregnancyStage == '4 - 6 Mo',
+                                  onTap: () => setState(
+                                      () => _pregnancyStage = '4 - 6 Mo'),
+                                ),
+                                const SizedBox(width: 8),
+                                _buildPillButton(
+                                  text: '7 - 9 Mo',
+                                  isSelected: _pregnancyStage == '7 - 9 Mo',
+                                  onTap: () => setState(
+                                      () => _pregnancyStage = '7 - 9 Mo'),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 14),
+                          ],
+
+                          // Number of Births (Parity)
+                          _buildInputLabel('Number of Births (Parity)'),
+                          const SizedBox(height: 6),
+                          Row(
+                            children: [
+                              _buildPillButton(
+                                text: 'First Baby (1st)',
+                                isSelected: _parity == 'First Baby (1st)',
+                                onTap: () => setState(
+                                    () => _parity = 'First Baby (1st)'),
+                              ),
+                              const SizedBox(width: 10),
+                              _buildPillButton(
+                                text: '2nd or More',
+                                isSelected: _parity == '2nd or More',
+                                onTap: () =>
+                                    setState(() => _parity = '2nd or More'),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 14),
+
+                          // Any Known Health Conditions?
+                          _buildInputLabel('Any Known Health Conditions?'),
+                          const SizedBox(height: 8),
+                          Wrap(
+                            spacing: 8,
+                            runSpacing: 8,
+                            children: [
+                              _buildConditionChip('None', Icons.check),
+                              _buildConditionChip(
+                                  'High BP', Icons.monitor_heart_outlined),
+                              _buildConditionChip(
+                                  'Anemia', Icons.bloodtype_outlined),
+                              _buildConditionChip(
+                                  'Other', Icons.medication_outlined),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+
+                    const SizedBox(height: 20),
+
+                    if (_errorMessage != null) ...[
+                      Text(
+                        _errorMessage!,
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(color: Colors.red),
+                      ),
+                      const SizedBox(height: 12),
+                    ],
+
+                    // Bottom Action: Save & Continue
+                    SizedBox(
+                      width: double.infinity,
+                      height: 56,
+                      child: ElevatedButton(
+                        onPressed: _isLoading ? null : _saveProfile,
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: colorPrimaryContainer,
+                          foregroundColor: colorOnPrimary,
+                          elevation: 2,
+                          shadowColor:
+                              colorPrimaryContainer.withValues(alpha: 0.35),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(28),
+                          ),
+                        ),
+                        child: _isLoading
+                            ? const SizedBox(
+                                width: 22,
+                                height: 22,
+                                child: CircularProgressIndicator(
+                                  color: Colors.white,
+                                  strokeWidth: 2.5,
+                                ),
+                              )
+                            : const Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    'Register',
+                                    style: TextStyle(
+                                      fontFamily: 'Inter',
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                  SizedBox(width: 8),
+                                  Icon(Icons.arrow_forward, size: 20),
+                                ],
+                              ),
+                      ),
+                    ),
+
+                    const SizedBox(height: 12),
+
+                    TextButton(
+                      onPressed: () =>
+                          Navigator.of(context).pushNamed('/login'),
+                      child: const Text('Already have an account? Sign in'),
+                    ),
+                    const SizedBox(height: 24),
+                  ],
                 ),
-                const SizedBox(height: 24),
-              ],
+              ),
             ),
           ),
         ),
       ),
-    ),
-  ),
-);
+    );
   }
 
   // --- Helper Widgets ---

@@ -45,9 +45,13 @@ class MyHealthScreen extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
-                "Today's Vitals",
-                style: Theme.of(context).textTheme.titleMedium,
+              Expanded(
+                child: Text(
+                  "Today's Vitals",
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: Theme.of(context).textTheme.titleMedium,
+                ),
               ),
               Text(date, style: Theme.of(context).textTheme.bodySmall),
             ],

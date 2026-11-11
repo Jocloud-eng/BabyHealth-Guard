@@ -78,17 +78,12 @@ class WelcomeScreen extends StatelessWidget {
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               GetStartedButton(
-                                onPressed: () => Navigator.of(context)
-                                    .pushNamed('/register'),
+                                label: 'Login',
+                                onPressed: () =>
+                                    Navigator.of(context).pushNamed('/login'),
                               ),
                               const SizedBox(height: 14),
                               const CareAccessIndicatorBar(),
-                              TextButton(
-                                onPressed: () =>
-                                    Navigator.of(context).pushNamed('/login'),
-                                child: const Text(
-                                    'Already have an account? Sign in'),
-                              ),
                             ],
                           ),
                         ),
