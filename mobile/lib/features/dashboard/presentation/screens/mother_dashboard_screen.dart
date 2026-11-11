@@ -539,7 +539,7 @@ class _MotherDashboardScreenState extends State<MotherDashboardScreen> {
   }
 
   Widget _buildNavigationDrawer() {
-    final drawerWidth = MediaQuery.sizeOf(context).width * 0.25;
+    final drawerWidth = MediaQuery.sizeOf(context).width * 0.4;
     return Drawer(
       width: drawerWidth,
       child: SafeArea(
@@ -556,13 +556,10 @@ class _MotherDashboardScreenState extends State<MotherDashboardScreen> {
                 ),
               ),
             ),
-            _buildDrawerItem(0, 'Home'),
-            _buildDrawerItem(1, 'My Health'),
-            _buildDrawerItem(
-              2,
-              'Warning Signs',
-            ),
-            _buildDrawerItem(3, 'Visits'),
+            _buildDrawerItem(0, 'Home', Icons.home_rounded),
+            _buildDrawerItem(1, 'My Health', Icons.health_and_safety_rounded),
+            _buildDrawerItem(2, 'Warning Signs', Icons.warning_amber_rounded),
+            _buildDrawerItem(3, 'Visits', Icons.calendar_month_rounded),
             const Spacer(),
             const Divider(height: 1),
             InkWell(
@@ -593,18 +590,23 @@ class _MotherDashboardScreenState extends State<MotherDashboardScreen> {
     );
   }
 
-  Widget _buildDrawerItem(int index, String label) {
+  Widget _buildDrawerItem(int index, String label, IconData icon) {
     final isSelected = _currentTab == index;
     return ListTile(
       dense: true,
       minVerticalPadding: 8,
-      contentPadding: const EdgeInsets.symmetric(horizontal: 6),
-      title: Center(
-        child: _drawerLabel(
-          label,
-          color: isSelected ? colorPrimaryContainer : colorOnSurface,
-          fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
-        ),
+      minLeadingWidth: 24,
+      horizontalTitleGap: 8,
+      contentPadding: const EdgeInsets.symmetric(horizontal: 16),
+      leading: Icon(
+        icon,
+        size: 20,
+        color: isSelected ? colorPrimaryContainer : colorOnSurfaceVariant,
+      ),
+      title: _drawerLabel(
+        label,
+        color: isSelected ? colorPrimaryContainer : colorOnSurface,
+        fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
       ),
       selected: isSelected,
       onTap: () {

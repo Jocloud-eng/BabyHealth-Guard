@@ -85,6 +85,19 @@ void main() {
 
     await tester.tap(find.byTooltip('Open navigation menu'));
     await tester.pumpAndSettle();
+    final drawer = find.byType(Drawer);
+    expect(tester.getSize(drawer).width, 390 * 0.4);
+    for (final icon in [
+      Icons.home_rounded,
+      Icons.health_and_safety_rounded,
+      Icons.warning_amber_rounded,
+      Icons.calendar_month_rounded,
+    ]) {
+      expect(
+        find.descendant(of: drawer, matching: find.byIcon(icon)),
+        findsOneWidget,
+      );
+    }
     await tester.tap(find.text('My Health').last);
     await tester.pumpAndSettle();
     expect(find.text("Today's Vitals"), findsOneWidget);
