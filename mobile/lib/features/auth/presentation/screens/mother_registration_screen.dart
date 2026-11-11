@@ -1,8 +1,10 @@
-import 'dart:typed_data';
-
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
-import '../../../dashboard/presentation/screens/mother_dashboard_screen.dart';
+
+import '../../../../core/utils/validators.dart';
+import '../../data/auth_repository.dart';
+import '../../../dashboard/data/care_repository.dart';
+import '../../../dashboard/domain/mother_profile.dart';
 
 /// Maternal Profile Registration Screen
 /// Matches the official Tailwind / Material Design spec for BabyHealth Guard.
@@ -20,10 +22,12 @@ class _MotherRegistrationScreenState extends State<MotherRegistrationScreen> {
   final _ageController = TextEditingController();
   final _villageController = TextEditingController();
   final _phoneController = TextEditingController();
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
+  final _authRepository = AuthRepository();
+  final _careRepository = CareRepository();
 
   // State variables matching interactive form controls
-  final ImagePicker _imagePicker = ImagePicker();
-  Uint8List? _profilePhotoBytes;
   String _selectedLanguage = 'Luganda';
   String _maternalStatus = 'expecting'; // 'expecting' or 'baby'
   String _pregnancyStage = '4 - 6 Mo'; // '1 - 3 Mo', '4 - 6 Mo', '7 - 9 Mo'
@@ -49,6 +53,8 @@ class _MotherRegistrationScreenState extends State<MotherRegistrationScreen> {
     _ageController.dispose();
     _villageController.dispose();
     _phoneController.dispose();
+    _emailController.dispose();
+    _passwordController.dispose();
     super.dispose();
   }
 
@@ -71,160 +77,97 @@ class _MotherRegistrationScreenState extends State<MotherRegistrationScreen> {
     });
   }
 
-  Future<void> _showPhotoSourcePicker() async {
-    final ImageSource? source = await showModalBottomSheet<ImageSource>(
-      context: context,
-      showDragHandle: true,
-      backgroundColor: colorSurfaceLowest,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
-      ),
-      builder: (context) => SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.fromLTRB(16, 0, 16, 20),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Text(
-                'Add your photo',
-                style: TextStyle(
-                  fontFamily: 'Inter',
-                  fontSize: 18,
-                  fontWeight: FontWeight.w600,
-                  color: colorOnSurface,
-                ),
-              ),
-              const SizedBox(height: 6),
-              const Text(
-                'Choose how you would like to add your profile photo.',
-                style: TextStyle(
-                  fontFamily: 'Inter',
-                  fontSize: 13,
-                  color: colorOnSurfaceVariant,
-                ),
-              ),
-              const SizedBox(height: 12),
-              ListTile(
-                contentPadding: EdgeInsets.zero,
-                leading: _buildPhotoSourceIcon(Icons.camera_alt_outlined),
-                title: const Text('Take a photo'),
-                subtitle: const Text('Open your camera'),
-                onTap: () => Navigator.pop(context, ImageSource.camera),
-              ),
-              ListTile(
-                contentPadding: EdgeInsets.zero,
-                leading: _buildPhotoSourceIcon(Icons.photo_library_outlined),
-                title: const Text('Choose from device'),
-                subtitle: const Text('Pick an existing photo'),
-                onTap: () => Navigator.pop(context, ImageSource.gallery),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-
-    if (source != null) {
-      await _pickProfilePhoto(source);
-    }
-  }
-
-  Future<void> _pickProfilePhoto(ImageSource source) async {
-    try {
-      final XFile? photo = await _imagePicker.pickImage(
-        source: source,
-        maxWidth: 1440,
-        imageQuality: 85,
-      );
-      if (photo == null) return;
-
-      final Uint8List photoBytes = await photo.readAsBytes();
-      if (!mounted) return;
-      setState(() => _profilePhotoBytes = photoBytes);
-    } catch (_) {
-      if (!mounted) return;
+  Future<void> _saveProfile() async {
+    final name = _nameController.text.trim();
+    final age = int.tryParse(_ageController.text.trim());
+    final village = _villageController.text.trim();
+    final phoneDigits = _phoneController.text.replaceAll(RegExp(r'\s'), '');
+    final email = _emailController.text.trim();
+    final password = _passwordController.text;
+    final error = AppValidators.requiredText(name, 'Full name') ??
+        (age == null || age < 10 || age > 120 ? 'Enter a valid age' : null) ??
+        AppValidators.requiredText(village, 'Village') ??
+        (RegExp(r'^\d{9}$').hasMatch(phoneDigits)
+            ? null
+            : 'Enter a valid 9-digit Ugandan phone number') ??
+        AppValidators.email(email) ??
+        AppValidators.password(password);
+    if (error != null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('We could not access that photo. Please try again.'),
-          behavior: SnackBarBehavior.floating,
-        ),
+        SnackBar(content: Text(error)),
       );
+      return;
+    }
+
+    setState(() {
+      _isLoading = true;
+      _errorMessage = null;
+    });
+    User? createdUser;
+    try {
+      final credential = await _authRepository.createAccount(
+        email: email,
+        password: password,
+      );
+      final user = credential.user;
+      if (user == null) {
+        throw StateError('Firebase did not return a newly created account.');
+      }
+      createdUser = user;
+      final profile = MotherProfile(
+        uid: user.uid,
+        fullName: name,
+        email: email,
+        age: age!,
+        village: village,
+        phone: '+256 $phoneDigits',
+        language: _selectedLanguage,
+        maternalStatus: _maternalStatus,
+        pregnancyStage: _pregnancyStage,
+        parity: _parity,
+        conditions: _selectedConditions.toList(growable: false),
+      );
+      await _careRepository.saveProfile(profile: profile);
+      if (mounted) Navigator.of(context).popUntil((route) => route.isFirst);
+    } on FirebaseAuthException catch (error) {
+      if (mounted) {
+        setState(() => _errorMessage = _authError(error.code));
+      }
+    } catch (error) {
+      if (createdUser != null) {
+        try {
+          await createdUser.delete();
+        } on FirebaseAuthException {
+          await _authRepository.signOut();
+        }
+      }
+      if (mounted) {
+        setState(() {
+          _errorMessage =
+              'We could not save your profile. Check your connection and try again.';
+        });
+      }
+    } finally {
+      if (mounted) setState(() => _isLoading = false);
     }
   }
 
-  void _saveProfile() {
-    if (_formKey.currentState?.validate() ?? false) {
-      setState(() => _isLoading = true);
-      Future.delayed(const Duration(milliseconds: 500), () {
-        if (!mounted) return;
-        setState(() => _isLoading = false);
-        
-        final name = _nameController.text.trim().isEmpty
-            ? 'Amina Brenda'
-            : _nameController.text.trim();
-        final village = _villageController.text.trim().isEmpty
-            ? 'Kagando'
-            : _villageController.text.trim();
-        final phone = _phoneController.text.trim().isEmpty
-            ? '+256 772 000 000'
-            : '+256 ${_phoneController.text.trim()}';
-
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            backgroundColor: colorPrimaryContainer,
-            behavior: SnackBarBehavior.floating,
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-            content: Row(
-              children: [
-                const Icon(Icons.check_circle_rounded,
-                    color: Colors.white, size: 22),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: Text(
-                    'Profile saved for $name! Offline & ready to sync.',
-                    style: const TextStyle(
-                        fontWeight: FontWeight.w600, fontSize: 13),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        );
-
-        // Navigate directly to the Mother's Dashboard Screen
-        Navigator.of(context).pushReplacement(
-          PageRouteBuilder(
-            transitionDuration: const Duration(milliseconds: 350),
-            pageBuilder: (context, anim, secondaryAnim) => MotherDashboardScreen(
-              motherName: name,
-              village: village,
-              phone: phone,
-              profilePhotoBytes: _profilePhotoBytes,
-              maternalStatus: _maternalStatus,
-              pregnancyStage: _pregnancyStage,
-            ),
-            transitionsBuilder: (context, anim, secondaryAnim, child) {
-              return FadeTransition(
-                opacity: anim,
-                child: SlideTransition(
-                  position: Tween<Offset>(
-                    begin: const Offset(0.05, 0),
-                    end: Offset.zero,
-                  ).animate(CurvedAnimation(
-                    parent: anim,
-                    curve: Curves.easeOutCubic,
-                  )),
-                  child: child,
-                ),
-              );
-            },
-          ),
-        );
-      });
+  String _authError(String code) {
+    switch (code) {
+      case 'email-already-in-use':
+        return 'An account already uses this email. Please sign in.';
+      case 'weak-password':
+        return 'Choose a stronger password with at least 6 characters.';
+      case 'invalid-email':
+        return 'Enter a valid email address.';
+      case 'network-request-failed':
+        return 'Could not connect. Check your internet connection and try again.';
+      default:
+        return 'We could not create your account. Please try again.';
     }
   }
+
+  String? _errorMessage;
 
   @override
   Widget build(BuildContext context) {
@@ -348,63 +291,6 @@ class _MotherRegistrationScreenState extends State<MotherRegistrationScreen> {
                 ),
                 const SizedBox(height: 16),
 
-                // Card 1: Add Photo Card
-                _buildCard(
-                  child: Row(
-                    children: [
-                      GestureDetector(
-                        onTap: _showPhotoSourcePicker,
-                        child: _buildPhotoAvatar(),
-                      ),
-                      const SizedBox(width: 16),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            InkWell(
-                              onTap: _showPhotoSourcePicker,
-                              child: Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Text(
-                                    _profilePhotoBytes == null
-                                        ? 'Add Your Photo (Required)'
-                                        : 'Change Your Photo',
-                                    style: const TextStyle(
-                                      fontFamily: 'Inter',
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.w600,
-                                      color: colorPrimary,
-                                    ),
-                                  ),
-                                  const SizedBox(width: 4),
-                                  Icon(
-                                    _profilePhotoBytes == null
-                                        ? Icons.photo_camera
-                                        : Icons.edit_outlined,
-                                    size: 16,
-                                    color: colorPrimary,
-                                  ),
-                                ],
-                              ),
-                            ),
-                            const SizedBox(height: 2),
-                            const Text(
-                              'Helps midwives recognize you at the clinic',
-                              style: TextStyle(
-                                fontFamily: 'Inter',
-                                fontSize: 12,
-                                fontWeight: FontWeight.w400,
-                                color: colorOnSurfaceVariant,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-
                 const SizedBox(height: 16),
 
                 // Card 2: Personal Details Card
@@ -524,6 +410,26 @@ class _MotherRegistrationScreenState extends State<MotherRegistrationScreen> {
                             ),
                           ],
                         ),
+                      ),
+                      const SizedBox(height: 14),
+
+                      _buildInputLabel('Email'),
+                      const SizedBox(height: 6),
+                      _buildTextInput(
+                        controller: _emailController,
+                        hint: 'you@example.com',
+                        icon: Icons.email_outlined,
+                        keyboardType: TextInputType.emailAddress,
+                      ),
+                      const SizedBox(height: 14),
+
+                      _buildInputLabel('Password'),
+                      const SizedBox(height: 6),
+                      _buildTextInput(
+                        controller: _passwordController,
+                        hint: 'At least 6 characters',
+                        icon: Icons.lock_outline,
+                        obscureText: true,
                       ),
                       const SizedBox(height: 14),
 
@@ -656,6 +562,15 @@ class _MotherRegistrationScreenState extends State<MotherRegistrationScreen> {
 
                 const SizedBox(height: 20),
 
+                if (_errorMessage != null) ...[
+                  Text(
+                    _errorMessage!,
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(color: Colors.red),
+                  ),
+                  const SizedBox(height: 12),
+                ],
+
                 // Bottom Action: Save & Continue
                 SizedBox(
                   width: double.infinity,
@@ -701,29 +616,9 @@ class _MotherRegistrationScreenState extends State<MotherRegistrationScreen> {
 
                 const SizedBox(height: 12),
 
-                // Offline accessibility tag
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Container(
-                      width: 8,
-                      height: 8,
-                      decoration: const BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: colorPrimary,
-                      ),
-                    ),
-                    const SizedBox(width: 6),
-                    const Text(
-                      'Works offline • Free *920# access',
-                      style: TextStyle(
-                        fontFamily: 'Inter',
-                        fontSize: 12,
-                        fontWeight: FontWeight.w400,
-                        color: colorOnSurfaceVariant,
-                      ),
-                    ),
-                  ],
+                TextButton(
+                  onPressed: () => Navigator.of(context).pushNamed('/login'),
+                  child: const Text('Already have an account? Sign in'),
                 ),
                 const SizedBox(height: 24),
               ],
@@ -756,64 +651,6 @@ class _MotherRegistrationScreenState extends State<MotherRegistrationScreen> {
         ],
       ),
       child: child,
-    );
-  }
-
-  Widget _buildPhotoAvatar() {
-    return Container(
-      width: 64,
-      height: 64,
-      clipBehavior: Clip.antiAlias,
-      decoration: BoxDecoration(
-        shape: BoxShape.circle,
-        color: colorSurfaceLow,
-        border: Border.all(
-          color: colorPrimary.withValues(alpha: 0.3),
-          width: 1.5,
-        ),
-        boxShadow: const [
-          BoxShadow(
-            color: Color(0x0D000000),
-            blurRadius: 4,
-            offset: Offset(0, 1),
-          ),
-        ],
-      ),
-      child: _profilePhotoBytes == null
-          ? const Icon(Icons.add_a_photo, size: 28, color: colorPrimary)
-          : Stack(
-              fit: StackFit.expand,
-              children: [
-                Image.memory(_profilePhotoBytes!, fit: BoxFit.cover),
-                Align(
-                  alignment: Alignment.bottomRight,
-                  child: Container(
-                    width: 24,
-                    height: 24,
-                    decoration: const BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: colorPrimary,
-                    ),
-                    alignment: Alignment.center,
-                    child:
-                        const Icon(Icons.edit, size: 14, color: colorOnPrimary),
-                  ),
-                ),
-              ],
-            ),
-    );
-  }
-
-  Widget _buildPhotoSourceIcon(IconData icon) {
-    return Container(
-      width: 44,
-      height: 44,
-      decoration: const BoxDecoration(
-        shape: BoxShape.circle,
-        color: colorSurfaceLow,
-      ),
-      alignment: Alignment.center,
-      child: Icon(icon, color: colorPrimary),
     );
   }
 
@@ -858,6 +695,7 @@ class _MotherRegistrationScreenState extends State<MotherRegistrationScreen> {
     required String hint,
     required IconData icon,
     TextInputType keyboardType = TextInputType.text,
+    bool obscureText = false,
   }) {
     return Container(
       height: 48,
@@ -882,6 +720,7 @@ class _MotherRegistrationScreenState extends State<MotherRegistrationScreen> {
             child: TextField(
               controller: controller,
               keyboardType: keyboardType,
+              obscureText: obscureText,
               style: const TextStyle(
                 fontFamily: 'Inter',
                 fontSize: 15,

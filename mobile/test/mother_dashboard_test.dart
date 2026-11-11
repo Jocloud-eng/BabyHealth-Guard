@@ -1,83 +1,109 @@
+import 'package:babyhealth_guard_mobile/features/dashboard/data/care_repository.dart';
+import 'package:babyhealth_guard_mobile/features/dashboard/domain/mother_profile.dart';
+import 'package:babyhealth_guard_mobile/features/dashboard/presentation/screens/mother_dashboard_screen.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:fake_cloud_firestore/fake_cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:babyhealth_guard_mobile/features/dashboard/presentation/screens/mother_dashboard_screen.dart';
 
 void main() {
-  testWidgets('MotherDashboardScreen renders profile, midwife and health checks',
+  testWidgets('Mother dashboard renders live profile and care records',
       (WidgetTester tester) async {
     tester.view.physicalSize = const Size(1080, 2400);
     tester.view.devicePixelRatio = 1.0;
     addTearDown(tester.view.resetPhysicalSize);
 
+    final firestore = FakeFirebaseFirestore();
+    final today = DateTime.now();
+    final dayKey = '${today.year.toString().padLeft(4, '0')}-'
+        '${today.month.toString().padLeft(2, '0')}-'
+        '${today.day.toString().padLeft(2, '0')}';
+    await firestore
+        .collection('users')
+        .doc('mother-1')
+        .collection('dailyVitals')
+        .doc(dayKey)
+        .set({
+      'systolic': 118,
+      'diastolic': 76,
+      'kicks': 10,
+      'ironTaken': true,
+    });
+    await firestore
+        .collection('users')
+        .doc('mother-1')
+        .collection('appointments')
+        .doc('visit-1')
+        .set({
+      'scheduledAt': Timestamp.fromDate(today.add(const Duration(days: 30))),
+      'clinic': 'Kagando Health Centre',
+      'status': 'Confirmed',
+      'midwifeName': 'Care team',
+      'midwifePhone': '+256700000000',
+      'room': '2',
+      'agenda': 'Routine check-up',
+    });
+
+    const profile = MotherProfile(
+      uid: 'mother-1',
+      fullName: 'Amina Brenda',
+      email: 'amina@example.com',
+      age: 24,
+      village: 'Kagando',
+      phone: '+256700000000',
+      language: 'Luganda',
+      maternalStatus: 'expecting',
+      pregnancyStage: '4 - 6 Mo',
+      parity: 'First Baby (1st)',
+      conditions: ['None'],
+      midwifeName: 'Care team',
+      midwifePhone: '+256700000000',
+      facilityName: 'Kagando Health Centre',
+    );
+
     await tester.pumpWidget(
-      const MaterialApp(
+      MaterialApp(
         home: MotherDashboardScreen(
-          motherName: 'Amina Brenda',
-          village: 'Kagando',
+          profile: profile,
+          onSignOut: () async {},
+          careRepository: CareRepository(firestore: firestore),
         ),
       ),
     );
+    await tester.pumpAndSettle();
 
-    // Profile & Header checks
     expect(find.text('Amina Brenda'), findsOneWidget);
     expect(find.text('Kagando'), findsOneWidget);
-    expect(find.text('Free USSD *920# Active'), findsOneWidget);
-
-    // Midwife & ANC checks
-    expect(find.text('Sr. Sarah Omondi'), findsOneWidget);
-    expect(find.text('Bwera Health Centre III'), findsWidgets);
-
-    // Health cards
     expect(find.text('10 kicks'), findsOneWidget);
     expect(find.text('118 / 76'), findsOneWidget);
     expect(find.text('Iron & Folic'), findsOneWidget);
+    expect(find.text('Care team'), findsOneWidget);
 
-    // Interactive Kick Counter: tap "+ Log Kick"
     await tester.tap(find.text('+ Log Kick'));
-    await tester.pump();
+    await tester.pumpAndSettle();
     expect(find.text('11 kicks'), findsOneWidget);
 
-    // Emergency action CTA
-    expect(find.text('Emergency Call (Toll-Free 24/7)'), findsOneWidget);
-
-    // Switch to "My Health" tab
     await tester.tap(find.text('My Health'));
     await tester.pumpAndSettle();
-
-    // Verify "My Health" view elements
     expect(find.text("Today's Vitals"), findsOneWidget);
     expect(find.text('Blood Pressure'), findsOneWidget);
     expect(find.text('Baby Kicks'), findsOneWidget);
     expect(find.text('Care & Medication'), findsOneWidget);
-    expect(find.text('Iron & Folic Acid'), findsOneWidget);
-    expect(find.text("Next Clinic Visit"), findsOneWidget);
+    expect(find.text('Recent Health Activity'), findsOneWidget);
     expect(find.text("+ Record Today's Vitals"), findsOneWidget);
 
-    // Switch to "Warning Signs" tab
     await tester.tap(find.text('Warning Signs'));
     await tester.pumpAndSettle();
-
-    // Verify Danger Signs view elements
     expect(find.text('Danger Signs'), findsOneWidget);
-    expect(find.text('Tap if you feel any of these'), findsOneWidget);
     expect(find.text('Bleeding'), findsOneWidget);
     expect(find.text('Severe Headache'), findsOneWidget);
     expect(find.text('Baby Not Moving'), findsOneWidget);
     expect(find.text('High Fever'), findsOneWidget);
-    expect(find.text('Call Midwife Now (Free)'), findsOneWidget);
 
-    // Switch to "Visits" tab
     await tester.tap(find.text('Visits'));
     await tester.pumpAndSettle();
-
-    // Verify Visits view elements
     expect(find.text('Clinic Visits & Reminders'), findsOneWidget);
-    expect(find.text('Thursday, 24 Oct'), findsOneWidget);
-    expect(find.text('9:00 AM • Morning slot'), findsOneWidget);
-    expect(find.text('Bwera Health Centre III'), findsWidgets);
-    expect(find.text('Midwife Sr. Sarah • Room 4B'), findsOneWidget);
-    expect(find.text('Call Clinic / Midwife'), findsOneWidget);
-    expect(find.text('Past Visit Progress'), findsOneWidget);
-    expect(find.text('2 of 4 Done'), findsOneWidget);
+    expect(find.text('Kagando Health Centre'), findsOneWidget);
+    expect(find.text('0 of 1 Done'), findsOneWidget);
   });
 }

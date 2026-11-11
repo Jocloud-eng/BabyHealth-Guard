@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../../../core/theme/app_colors.dart';
+import '../../../../core/constants/app_colors.dart';
 
 /// Hero visual card displaying a warm mother & baby portrait with smooth rounded corners,
 /// white glass border, organic soft shadow, and graceful offline fallback.
@@ -163,7 +163,9 @@ class HeroImageCard extends StatelessWidget {
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   color: AppColors.primary.withValues(alpha: 0.12),
-                  border: Border.all(color: AppColors.primary.withValues(alpha: 0.2), width: 2),
+                  border: Border.all(
+                      color: AppColors.primary.withValues(alpha: 0.2),
+                      width: 2),
                 ),
                 child: const Icon(
                   Icons.child_care_rounded,

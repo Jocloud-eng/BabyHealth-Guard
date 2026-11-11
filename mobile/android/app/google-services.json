@@ -1,0 +1,28 @@
+{
+  "project_info": {
+    "project_number": "644928159931",
+    "project_id": "babyhealth-guard"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:644928159931:android:b8150aea33aa1c4157a99e",
+        "android_client_info": {
+          "package_name": "com.example.babyhealth_guard_mobile"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCTOlpyhfkRxgrbnQuu9OCRTlbGdldRpkM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

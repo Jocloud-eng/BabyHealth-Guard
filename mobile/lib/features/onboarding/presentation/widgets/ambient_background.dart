@@ -1,6 +1,6 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
-import '../../../../core/theme/app_colors.dart';
+import '../../../../core/constants/app_colors.dart';
 
 /// Renders the soft ambient pastel gradient background with glowing blur orbs.
 class AmbientBackground extends StatelessWidget {

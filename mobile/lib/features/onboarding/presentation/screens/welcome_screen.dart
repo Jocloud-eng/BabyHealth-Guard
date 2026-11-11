@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-import '../../../../core/theme/app_colors.dart';
-import '../../../auth/presentation/screens/mother_registration_screen.dart';
+import '../../../../core/constants/app_colors.dart';
 import '../widgets/ambient_background.dart';
+import '../widgets/care_access_indicator_bar.dart';
 import '../widgets/get_started_button.dart';
 import '../widgets/hero_image_card.dart';
-import '../widgets/offline_indicator_bar.dart';
 
 /// The Mother's Interface Welcome Screen for BabyHealth Guard.
 ///
@@ -27,7 +26,8 @@ class WelcomeScreen extends StatelessWidget {
                 ),
                 child: IntrinsicHeight(
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 24.0, vertical: 12.0),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -71,40 +71,24 @@ class WelcomeScreen extends StatelessWidget {
                           ),
                         ),
 
-                        // Bottom Action Section: Interactive "Get Started" Pill & Rural Offline Tag
+                        // Bottom action section
                         Padding(
                           padding: const EdgeInsets.only(bottom: 8.0),
                           child: Column(
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               GetStartedButton(
-                                onPressed: () {
-                                  Navigator.of(context).push(
-                                    PageRouteBuilder(
-                                      transitionDuration: const Duration(milliseconds: 350),
-                                      pageBuilder: (context, anim, secondaryAnim) =>
-                                          const MotherRegistrationScreen(),
-                                      transitionsBuilder: (context, anim, secondaryAnim, child) {
-                                        return FadeTransition(
-                                          opacity: anim,
-                                          child: SlideTransition(
-                                            position: Tween<Offset>(
-                                              begin: const Offset(0.05, 0),
-                                              end: Offset.zero,
-                                            ).animate(CurvedAnimation(
-                                              parent: anim,
-                                              curve: Curves.easeOutCubic,
-                                            )),
-                                            child: child,
-                                          ),
-                                        );
-                                      },
-                                    ),
-                                  );
-                                },
+                                onPressed: () => Navigator.of(context)
+                                    .pushNamed('/register'),
                               ),
                               const SizedBox(height: 14),
-                              const OfflineIndicatorBar(),
+                              const CareAccessIndicatorBar(),
+                              TextButton(
+                                onPressed: () =>
+                                    Navigator.of(context).pushNamed('/login'),
+                                child: const Text(
+                                    'Already have an account? Sign in'),
+                              ),
                             ],
                           ),
                         ),

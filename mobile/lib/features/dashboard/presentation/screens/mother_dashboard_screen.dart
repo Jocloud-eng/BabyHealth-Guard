@@ -1,26 +1,23 @@
-import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
+import '../../data/care_repository.dart';
+import '../../domain/mother_profile.dart';
+import '../../../health_tracking/presentation/screens/my_health_screen.dart';
+import '../../../danger_signs/presentation/screens/danger_signs_screen.dart';
 
 /// Mother Dashboard Screen
 /// Faithful Flutter implementation of the BabyHealth Guard Mother Dashboard,
 /// My Health, and Danger Signs views.
 class MotherDashboardScreen extends StatefulWidget {
-  final String motherName;
-  final String village;
-  final String phone;
-  final Uint8List? profilePhotoBytes;
-  final String maternalStatus;
-  final String pregnancyStage;
+  final MotherProfile profile;
+  final Future<void> Function() onSignOut;
+  final CareRepository careRepository;
 
   const MotherDashboardScreen({
     super.key,
-    this.motherName = 'Amina Brenda',
-    this.village = 'Kagando',
-    this.phone = '+256 772 000 000',
-    this.profilePhotoBytes,
-    this.maternalStatus = 'expecting',
-    this.pregnancyStage = '4 - 6 Mo',
+    required this.profile,
+    required this.onSignOut,
+    required this.careRepository,
   });
 
   @override
@@ -28,11 +25,27 @@ class MotherDashboardScreen extends StatefulWidget {
 }
 
 class _MotherDashboardScreenState extends State<MotherDashboardScreen> {
+  final _scaffoldKey = GlobalKey<ScaffoldState>();
   int _currentTab = 0; // 0: Home, 1: My Health, 2: Warning Signs, 3: Visits
-  int _kickCount = 10;
-  bool _isIronFolicTaken = true;
-  String _bpSystolic = '118';
-  String _bpDiastolic = '76';
+  late DailyVitals _vitals;
+  List<Appointment> _appointments = const [];
+  List<HealthLog> _healthLogs = const [];
+
+  int get _kickCount => _vitals.kicks;
+  bool get _isIronFolicTaken => _vitals.ironTaken;
+  String get _bpSystolic => _vitals.systolic?.toString() ?? '—';
+  String get _bpDiastolic => _vitals.diastolic?.toString() ?? '—';
+  late final DateTime _today = DateTime.now();
+  Appointment? get _nextAppointment {
+    for (final appointment in _appointments) {
+      if (!appointment.scheduledAt.isBefore(_today)) return appointment;
+    }
+    return null;
+  }
+
+  int get _completedAppointments => _appointments
+      .where((appointment) => appointment.status.toLowerCase() == 'completed')
+      .length;
 
   // Design Token Colors matching Tailwind Config
   static const Color colorBackground = Color(0xFFFAF8FF);
@@ -44,18 +57,62 @@ class _MotherDashboardScreenState extends State<MotherDashboardScreen> {
   static const Color colorOnSurfaceVariant = Color(0xFF3F484C);
   static const Color colorSurfaceContainerLow = Color(0xFFF2F3FF);
   static const Color colorSurfaceContainerLowest = Color(0xFFFFFFFF);
-  static const Color colorSecondaryFixed = Color(0xFFACEDFF);
-  static const Color colorOnSecondaryFixed = Color(0xFF001F26);
-  static const Color colorPrimaryFixed = Color(0xFFB9EAFF);
+  Future<void> _recordKick() async {
+    try {
+      await widget.careRepository.logKick(widget.profile.uid, _today);
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Kick recorded.'),
+            duration: Duration(seconds: 1),
+            behavior: SnackBarBehavior.floating,
+          ),
+        );
+      }
+    } catch (_) {
+      _showSaveError();
+    }
+  }
+
+  Future<void> _toggleIronTaken() async {
+    try {
+      await widget.careRepository.setIronTaken(
+        uid: widget.profile.uid,
+        day: _today,
+        taken: !_isIronFolicTaken,
+      );
+    } catch (_) {
+      _showSaveError();
+    }
+  }
+
+  void _showSaveError() {
+    if (!mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text(
+            'Could not save your health record. Check your connection and try again.'),
+      ),
+    );
+  }
+
+  String _formatDateTime(DateTime dateTime) {
+    final date = MaterialLocalizations.of(context).formatFullDate(dateTime);
+    final time = MaterialLocalizations.of(context).formatTimeOfDay(
+      TimeOfDay.fromDateTime(dateTime),
+    );
+    return '$date at $time';
+  }
 
   Future<void> _makeCall(String phoneNumber) async {
+    if (phoneNumber.isEmpty) return;
     final uri = Uri.parse('tel:$phoneNumber');
     if (await canLaunchUrl(uri)) {
       await launchUrl(uri);
     } else {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Dialing $phoneNumber...')),
+        const SnackBar(content: Text('This device cannot place that call.')),
       );
     }
   }
@@ -67,14 +124,16 @@ class _MotherDashboardScreenState extends State<MotherDashboardScreen> {
     } else {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Opening SMS to $phoneNumber...')),
+        const SnackBar(content: Text('This device cannot open messaging.')),
       );
     }
   }
 
   void _showRecordVitalsSheet() {
-    final sysController = TextEditingController(text: _bpSystolic);
-    final diaController = TextEditingController(text: _bpDiastolic);
+    final sysController =
+        TextEditingController(text: _vitals.systolic?.toString() ?? '');
+    final diaController =
+        TextEditingController(text: _vitals.diastolic?.toString() ?? '');
     final kickController = TextEditingController(text: '$_kickCount');
 
     showModalBottomSheet(
@@ -140,7 +199,7 @@ class _MotherDashboardScreenState extends State<MotherDashboardScreen> {
                       controller: sysController,
                       keyboardType: TextInputType.number,
                       decoration: InputDecoration(
-                        hintText: '118',
+                        hintText: 'Systolic',
                         filled: true,
                         fillColor: colorSurfaceContainerLow,
                         border: OutlineInputBorder(
@@ -163,7 +222,7 @@ class _MotherDashboardScreenState extends State<MotherDashboardScreen> {
                       controller: diaController,
                       keyboardType: TextInputType.number,
                       decoration: InputDecoration(
-                        hintText: '76',
+                        hintText: 'Diastolic',
                         filled: true,
                         fillColor: colorSurfaceContainerLow,
                         border: OutlineInputBorder(
@@ -209,26 +268,46 @@ class _MotherDashboardScreenState extends State<MotherDashboardScreen> {
                 height: 50,
                 child: ElevatedButton(
                   onPressed: () {
-                    setState(() {
-                      if (sysController.text.trim().isNotEmpty) {
-                        _bpSystolic = sysController.text.trim();
-                      }
-                      if (diaController.text.trim().isNotEmpty) {
-                        _bpDiastolic = diaController.text.trim();
-                      }
-                      final parsedKicks =
-                          int.tryParse(kickController.text.trim());
-                      if (parsedKicks != null) {
-                        _kickCount = parsedKicks;
-                      }
+                    final navigator = Navigator.of(context);
+                    final messenger = ScaffoldMessenger.of(this.context);
+                    final systolic = int.tryParse(sysController.text.trim());
+                    final diastolic = int.tryParse(diaController.text.trim());
+                    final kicks = int.tryParse(kickController.text.trim());
+                    if ((sysController.text.trim().isNotEmpty &&
+                            (systolic == null || systolic <= 0)) ||
+                        (diaController.text.trim().isNotEmpty &&
+                            (diastolic == null || diastolic <= 0)) ||
+                        kicks == null ||
+                        kicks < 0 ||
+                        ((systolic == null) != (diastolic == null))) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text(
+                              'Enter valid blood pressure and kick values.'),
+                        ),
+                      );
+                      return;
+                    }
+                    widget.careRepository
+                        .saveVitals(
+                      uid: widget.profile.uid,
+                      day: _today,
+                      systolic: systolic,
+                      diastolic: diastolic,
+                      kicks: kicks,
+                    )
+                        .then((_) {
+                      if (!mounted) return;
+                      navigator.pop();
+                      messenger.showSnackBar(
+                        const SnackBar(
+                          content: Text("Today's vitals saved successfully."),
+                          behavior: SnackBarBehavior.floating,
+                        ),
+                      );
+                    }).catchError((Object _) {
+                      _showSaveError();
                     });
-                    Navigator.pop(context);
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text("Today's vitals saved successfully!"),
-                        behavior: SnackBarBehavior.floating,
-                      ),
-                    );
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: colorPrimaryContainer,
@@ -256,13 +335,23 @@ class _MotherDashboardScreenState extends State<MotherDashboardScreen> {
   }
 
   void _handleDangerCardTap(String signTitle, String signDescription) {
+    widget.careRepository
+        .logDangerSign(
+      uid: widget.profile.uid,
+      sign: signTitle,
+      description: signDescription,
+    )
+        .catchError((Object _) {
+      _showSaveError();
+    });
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
         title: Row(
           children: [
-            const Icon(Icons.warning_amber_rounded, color: Colors.red, size: 26),
+            const Icon(Icons.warning_amber_rounded,
+                color: Colors.red, size: 26),
             const SizedBox(width: 8),
             Expanded(
               child: Text(
@@ -294,7 +383,7 @@ class _MotherDashboardScreenState extends State<MotherDashboardScreen> {
           ElevatedButton.icon(
             onPressed: () {
               Navigator.pop(context);
-              _makeCall('0800100200');
+              _makeCall(widget.profile.midwifePhone ?? '112');
             },
             style: ElevatedButton.styleFrom(
               backgroundColor: colorPrimaryContainer,
@@ -312,30 +401,39 @@ class _MotherDashboardScreenState extends State<MotherDashboardScreen> {
   }
 
   void _showVisitDetails() {
+    final appointment = _nextAppointment;
+    if (appointment == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('No upcoming clinic visit is scheduled.')),
+      );
+      return;
+    }
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
         title: const Text(
-          'ANC Visit 3 of 4 Details',
+          'Clinic Visit Details',
           style: TextStyle(fontFamily: 'Inter', fontWeight: FontWeight.bold),
         ),
-        content: const Column(
+        content: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('• Date: Thursday, 24 Oct at 9:00 AM'),
-            SizedBox(height: 6),
-            Text('• Clinic: Bwera Health Centre III'),
-            SizedBox(height: 6),
-            Text('• Assigned Midwife: Sr. Sarah Omondi'),
-            SizedBox(height: 6),
+            Text('• Date: ${_formatDateTime(appointment.scheduledAt)}'),
+            const SizedBox(height: 6),
+            Text('• Clinic: ${appointment.clinic}'),
+            const SizedBox(height: 6),
             Text(
-                '• Agenda: Routine ultrasound, tetanus booster dose & blood pressure review.'),
-            SizedBox(height: 10),
+                '• Assigned Midwife: ${appointment.midwifeName ?? 'Not assigned'}'),
+            const SizedBox(height: 6),
             Text(
-              'SMS reminder has been dispatched to your registered phone number.',
-              style: TextStyle(fontSize: 12, color: colorPrimaryContainer),
+                '• Agenda: ${appointment.agenda ?? 'No visit notes available.'}'),
+            const SizedBox(height: 10),
+            Text(
+              'Visit status: ${appointment.status}',
+              style:
+                  const TextStyle(fontSize: 12, color: colorPrimaryContainer),
             ),
           ],
         ),
@@ -351,8 +449,71 @@ class _MotherDashboardScreenState extends State<MotherDashboardScreen> {
 
   @override
   Widget build(BuildContext context) {
+    return StreamBuilder<DailyVitals>(
+      stream: widget.careRepository.watchDailyVitals(
+        widget.profile.uid,
+        _today,
+      ),
+      builder: (context, vitalsSnapshot) {
+        if (vitalsSnapshot.hasError) {
+          return _dashboardError(
+            'Could not load today\'s health records. Check your connection and try again.',
+          );
+        }
+        if (!vitalsSnapshot.hasData) return _loadingScreen();
+        _vitals = vitalsSnapshot.data!;
+
+        return StreamBuilder<List<Appointment>>(
+          stream: widget.careRepository.watchAppointments(widget.profile.uid),
+          builder: (context, appointmentSnapshot) {
+            if (appointmentSnapshot.hasError) {
+              return _dashboardError(
+                'Could not load clinic visits. Check your connection and try again.',
+              );
+            }
+            if (!appointmentSnapshot.hasData) return _loadingScreen();
+            _appointments = appointmentSnapshot.data!;
+            return StreamBuilder<List<HealthLog>>(
+              stream: widget.careRepository.watchHealthLogs(widget.profile.uid),
+              builder: (context, healthLogSnapshot) {
+                if (healthLogSnapshot.hasError) {
+                  return _dashboardError(
+                    'Could not load your health history. Check your connection and try again.',
+                  );
+                }
+                if (!healthLogSnapshot.hasData) return _loadingScreen();
+                _healthLogs = healthLogSnapshot.data!;
+                return _buildDashboard();
+              },
+            );
+          },
+        );
+      },
+    );
+  }
+
+  Widget _loadingScreen() {
+    return const Scaffold(
+      body: Center(child: CircularProgressIndicator()),
+    );
+  }
+
+  Widget _dashboardError(String message) {
     return Scaffold(
+      body: Center(
+        child: Padding(
+          padding: const EdgeInsets.all(24),
+          child: Text(message, textAlign: TextAlign.center),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildDashboard() {
+    return Scaffold(
+      key: _scaffoldKey,
       backgroundColor: colorBackground,
+      drawer: _buildNavigationDrawer(),
       body: SafeArea(
         bottom: false,
         child: Column(
@@ -374,16 +535,93 @@ class _MotherDashboardScreenState extends State<MotherDashboardScreen> {
           ],
         ),
       ),
-      bottomNavigationBar: _buildBottomNav(),
+    );
+  }
+
+  Widget _buildNavigationDrawer() {
+    return Drawer(
+      child: SafeArea(
+        child: Column(
+          children: [
+            UserAccountsDrawerHeader(
+              decoration: const BoxDecoration(color: colorPrimary),
+              accountName: Text(widget.profile.fullName),
+              accountEmail: Text(widget.profile.email),
+              currentAccountPicture: const CircleAvatar(
+                backgroundColor: Colors.white,
+                child: Icon(Icons.person, color: colorPrimary),
+              ),
+            ),
+            _buildDrawerItem(0, Icons.home_rounded, 'Home'),
+            _buildDrawerItem(1, Icons.monitor_heart_rounded, 'My Health'),
+            _buildDrawerItem(
+              2,
+              Icons.health_and_safety_rounded,
+              'Warning Signs',
+            ),
+            _buildDrawerItem(3, Icons.event_available_rounded, 'Visits'),
+            const Spacer(),
+            const Divider(height: 1),
+            ListTile(
+              leading: const Icon(Icons.logout_rounded),
+              title: const Text('Logout'),
+              onTap: () {
+                Navigator.of(context).pop();
+                widget.onSignOut();
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildDrawerItem(int index, IconData icon, String label) {
+    final isSelected = _currentTab == index;
+    return ListTile(
+      leading: Icon(icon, color: isSelected ? colorPrimaryContainer : null),
+      title: Text(
+        label,
+        style: TextStyle(
+          color: isSelected ? colorPrimaryContainer : null,
+          fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
+        ),
+      ),
+      selected: isSelected,
+      onTap: () {
+        Navigator.of(context).pop();
+        setState(() => _currentTab = index);
+      },
+    );
+  }
+
+  Widget _buildMenuButton() {
+    return IconButton(
+      tooltip: 'Open navigation menu',
+      onPressed: () => _scaffoldKey.currentState?.openDrawer(),
+      icon: const Icon(Icons.menu_rounded, color: colorOnSurface),
     );
   }
 
   Widget _buildCurrentTabContent() {
     switch (_currentTab) {
       case 1:
-        return _buildMyHealthContent();
+        return MyHealthScreen(
+          profile: widget.profile,
+          vitals: _vitals,
+          healthLogs: _healthLogs,
+          appointment: _nextAppointment,
+          onRecordVitals: _showRecordVitalsSheet,
+          onLogKick: () => _recordKick(),
+          onToggleIron: () => _toggleIronTaken(),
+          onViewAppointment: _showVisitDetails,
+        );
       case 2:
-        return _buildDangerSignsContent();
+        return DangerSignsScreen(
+          onReport: _handleDangerCardTap,
+          onCallEmergency: () =>
+              _makeCall(widget.profile.midwifePhone ?? '112'),
+        );
       case 3:
         return _buildVisitsContent();
       default:
@@ -406,19 +644,7 @@ class _MotherDashboardScreenState extends State<MotherDashboardScreen> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          InkWell(
-            onTap: () => setState(() => _currentTab = 0),
-            borderRadius: BorderRadius.circular(100),
-            child: Container(
-              width: 40,
-              height: 40,
-              decoration: const BoxDecoration(
-                color: Color(0xFFEAEDFF),
-                shape: BoxShape.circle,
-              ),
-              child: const Icon(Icons.arrow_back, size: 22, color: colorOnSurface),
-            ),
-          ),
+          _buildMenuButton(),
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
             decoration: BoxDecoration(
@@ -480,12 +706,10 @@ class _MotherDashboardScreenState extends State<MotherDashboardScreen> {
 
   /// Header for the Visits tab (Tab 3)
   Widget _buildVisitsHeader() {
-    final namePart = widget.motherName.split(' ').first;
-    final stageLabel = widget.maternalStatus == 'baby'
+    final namePart = widget.profile.firstName;
+    final stageLabel = widget.profile.maternalStatus == 'baby'
         ? 'Newborn'
-        : (widget.pregnancyStage.isNotEmpty
-            ? widget.pregnancyStage
-            : '28 Wks');
+        : widget.profile.pregnancyStage;
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
@@ -498,6 +722,7 @@ class _MotherDashboardScreenState extends State<MotherDashboardScreen> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
+          _buildMenuButton(),
           // Left: pulsing dot + subtext + title
           Expanded(
             child: Column(
@@ -565,8 +790,7 @@ class _MotherDashboardScreenState extends State<MotherDashboardScreen> {
                   child: const Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Icon(Icons.call_rounded,
-                          size: 16, color: Colors.white),
+                      Icon(Icons.call_rounded, size: 16, color: Colors.white),
                       SizedBox(width: 4),
                       Text(
                         'Emergency',
@@ -599,262 +823,14 @@ class _MotherDashboardScreenState extends State<MotherDashboardScreen> {
     );
   }
 
-  Widget _buildDangerSignsContent() {
-    return SingleChildScrollView(
-      physics: const BouncingScrollPhysics(),
-      padding: const EdgeInsets.fromLTRB(20, 16, 20, 100),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          // Title Header
-          const SizedBox(height: 4),
-          const Text(
-            'Danger Signs',
-            style: TextStyle(
-              fontFamily: 'Inter',
-              fontSize: 24,
-              fontWeight: FontWeight.bold,
-              color: colorOnSurface,
-              letterSpacing: -0.5,
-            ),
-          ),
-          const SizedBox(height: 4),
-          const Text(
-            'Tap if you feel any of these',
-            style: TextStyle(
-              fontFamily: 'Inter',
-              fontSize: 14,
-              fontWeight: FontWeight.w500,
-              color: colorOnSurfaceVariant,
-            ),
-          ),
-          const SizedBox(height: 20),
-
-          // 4 Clean Large Visual Cards Grid
-          Row(
-            children: [
-              Expanded(
-                child: _buildDangerCard(
-                  icon: Icons.water_drop_rounded,
-                  iconColor: colorPrimaryContainer,
-                  title: 'Bleeding',
-                  subtitle: 'Any blood',
-                  onTap: () => _handleDangerCardTap(
-                    'Bleeding',
-                    'Vaginal bleeding during pregnancy requires immediate clinical review.',
-                  ),
-                ),
-              ),
-              const SizedBox(width: 14),
-              Expanded(
-                child: _buildDangerCard(
-                  icon: Icons.visibility_off_rounded,
-                  iconColor: colorPrimaryContainer,
-                  title: 'Severe Headache',
-                  subtitle: 'Blurry vision',
-                  onTap: () => _handleDangerCardTap(
-                    'Severe Headache',
-                    'Severe headache with blurry vision may indicate elevated blood pressure.',
-                  ),
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 14),
-          Row(
-            children: [
-              Expanded(
-                child: _buildDangerCard(
-                  icon: Icons.child_care_rounded,
-                  iconColor: colorPrimary,
-                  title: 'Baby Not Moving',
-                  subtitle: 'Fewer kicks',
-                  onTap: () => _handleDangerCardTap(
-                    'Baby Not Moving',
-                    'Noticeably reduced fetal kicks should be checked immediately by your midwife.',
-                  ),
-                ),
-              ),
-              const SizedBox(width: 14),
-              Expanded(
-                child: _buildDangerCard(
-                  icon: Icons.thermostat_rounded,
-                  iconColor: colorSecondary,
-                  title: 'High Fever',
-                  subtitle: 'Hot or chills',
-                  onTap: () => _handleDangerCardTap(
-                    'High Fever',
-                    'High fever or severe chills could indicate maternal infection.',
-                  ),
-                ),
-              ),
-            ],
-          ),
-
-          const SizedBox(height: 32),
-
-          // Emergency Help Card
-          Container(
-            padding: const EdgeInsets.all(20),
-            decoration: BoxDecoration(
-              color: colorSurfaceContainerLow,
-              borderRadius: BorderRadius.circular(28),
-              border: Border.all(
-                color: const Color(0xFFBEC8CD).withValues(alpha: 0.3),
-              ),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withValues(alpha: 0.02),
-                  blurRadius: 10,
-                ),
-              ],
-            ),
-            child: Column(
-              children: [
-                SizedBox(
-                  width: double.infinity,
-                  height: 54,
-                  child: ElevatedButton(
-                    onPressed: () => _makeCall('0800100200'),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: colorPrimaryContainer,
-                      foregroundColor: Colors.white,
-                      elevation: 2,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(16),
-                      ),
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Container(
-                          width: 32,
-                          height: 32,
-                          decoration: BoxDecoration(
-                            color: Colors.white.withValues(alpha: 0.2),
-                            shape: BoxShape.circle,
-                          ),
-                          child: const Icon(Icons.call,
-                              size: 18, color: Colors.white),
-                        ),
-                        const SizedBox(width: 12),
-                        const Text(
-                          'Call Midwife Now (Free)',
-                          style: TextStyle(
-                            fontFamily: 'Inter',
-                            fontSize: 15,
-                            fontWeight: FontWeight.w600,
-                            letterSpacing: 0.2,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 14),
-                const Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(Icons.dialpad, size: 16, color: colorPrimaryContainer),
-                    SizedBox(width: 6),
-                    Text(
-                      'Or dial *920# with no internet',
-                      style: TextStyle(
-                        fontFamily: 'Inter',
-                        fontSize: 12.5,
-                        fontWeight: FontWeight.w500,
-                        color: colorOnSurfaceVariant,
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildDangerCard({
-    required IconData icon,
-    required Color iconColor,
-    required String title,
-    required String subtitle,
-    required VoidCallback onTap,
-  }) {
-    return InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(24),
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
-        decoration: BoxDecoration(
-          color: colorSurfaceContainerLow,
-          borderRadius: BorderRadius.circular(24),
-          border: Border.all(
-            color: const Color(0xFFBEC8CD).withValues(alpha: 0.3),
-          ),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.02),
-              blurRadius: 8,
-              offset: const Offset(0, 2),
-            ),
-          ],
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Container(
-              width: 64,
-              height: 64,
-              decoration: BoxDecoration(
-                color: colorSurfaceContainerLowest,
-                borderRadius: BorderRadius.circular(18),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.03),
-                    blurRadius: 6,
-                  ),
-                ],
-              ),
-              child: Icon(icon, size: 34, color: iconColor),
-            ),
-            const SizedBox(height: 14),
-            Text(
-              title,
-              textAlign: TextAlign.center,
-              style: const TextStyle(
-                fontFamily: 'Inter',
-                fontSize: 15.5,
-                fontWeight: FontWeight.bold,
-                color: colorOnSurface,
-                height: 1.2,
-              ),
-            ),
-            const SizedBox(height: 3),
-            Text(
-              subtitle,
-              textAlign: TextAlign.center,
-              style: const TextStyle(
-                fontFamily: 'Inter',
-                fontSize: 12,
-                fontWeight: FontWeight.w500,
-                color: colorOnSurfaceVariant,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
   // --------------------------------------------------------------------------
   // TAB 1: MY HEALTH SECTION
   // --------------------------------------------------------------------------
   Widget _buildMyHealthHeader() {
-    final firstName = widget.motherName.split(' ').first;
-    final stageText = widget.maternalStatus == 'baby' ? 'Newborn' : '28 Wks';
+    final firstName = widget.profile.firstName;
+    final stageText = widget.profile.maternalStatus == 'baby'
+        ? 'Newborn'
+        : widget.profile.pregnancyStage;
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
@@ -867,6 +843,7 @@ class _MotherDashboardScreenState extends State<MotherDashboardScreen> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
+          _buildMenuButton(),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
@@ -944,462 +921,46 @@ class _MotherDashboardScreenState extends State<MotherDashboardScreen> {
     );
   }
 
-  Widget _buildMyHealthContent() {
-    return SingleChildScrollView(
-      physics: const BouncingScrollPhysics(),
-      padding: const EdgeInsets.fromLTRB(20, 16, 20, 100),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          // Section: Today's Vitals
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              const Text(
-                "Today's Vitals",
-                style: TextStyle(
-                  fontFamily: 'Inter',
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
-                  color: colorOnSurface,
-                ),
-              ),
-              Text(
-                'Oct 10',
-                style: TextStyle(
-                  fontFamily: 'Inter',
-                  fontSize: 12,
-                  color: colorOnSurfaceVariant.withValues(alpha: 0.8),
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 10),
-
-          // Grid: 2 Cards (Blood Pressure & Baby Kicks)
-          Row(
-            children: [
-              // Blood Pressure Card
-              Expanded(
-                child: Container(
-                  constraints: const BoxConstraints(minHeight: 130),
-                  padding: const EdgeInsets.all(14),
-                  decoration: BoxDecoration(
-                    color: colorSurfaceContainerLowest,
-                    borderRadius: BorderRadius.circular(16),
-                    border: Border.all(
-                      color: Colors.grey.shade200,
-                      width: 0.8,
-                    ),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withValues(alpha: 0.02),
-                        blurRadius: 8,
-                      ),
-                    ],
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      const Row(
-                        children: [
-                          Icon(Icons.favorite, size: 18, color: colorPrimary),
-                          SizedBox(width: 6),
-                          Text(
-                            'Blood Pressure',
-                            style: TextStyle(
-                              fontFamily: 'Inter',
-                              fontSize: 12,
-                              fontWeight: FontWeight.w500,
-                              color: colorOnSurfaceVariant,
-                            ),
-                          ),
-                        ],
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 8),
-                        child: RichText(
-                          text: TextSpan(
-                            children: [
-                              TextSpan(
-                                text: _bpSystolic,
-                                style: const TextStyle(
-                                  fontFamily: 'Inter',
-                                  fontSize: 26,
-                                  fontWeight: FontWeight.bold,
-                                  color: colorOnSurface,
-                                ),
-                              ),
-                              TextSpan(
-                                text: '/$_bpDiastolic',
-                                style: const TextStyle(
-                                  fontFamily: 'Inter',
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.normal,
-                                  color: colorOnSurfaceVariant,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      const Text(
-                        'Normal',
-                        style: TextStyle(
-                          fontFamily: 'Inter',
-                          fontSize: 11.5,
-                          fontWeight: FontWeight.w600,
-                          color: colorSecondary,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-
-              const SizedBox(width: 12),
-
-              // Baby Kicks Card (Interactive)
-              Expanded(
-                child: InkWell(
-                  onTap: () {
-                    setState(() => _kickCount++);
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text('Baby kick logged! Total: $_kickCount'),
-                        duration: const Duration(seconds: 1),
-                        behavior: SnackBarBehavior.floating,
-                      ),
-                    );
-                  },
-                  borderRadius: BorderRadius.circular(16),
-                  child: Container(
-                    constraints: const BoxConstraints(minHeight: 130),
-                    padding: const EdgeInsets.all(14),
-                    decoration: BoxDecoration(
-                      color: colorSurfaceContainerLowest,
-                      borderRadius: BorderRadius.circular(16),
-                      border: Border.all(
-                        color: Colors.grey.shade200,
-                        width: 0.8,
-                      ),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withValues(alpha: 0.02),
-                          blurRadius: 8,
-                        ),
-                      ],
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        const Row(
-                          children: [
-                            Icon(Icons.child_care,
-                                size: 18, color: colorPrimary),
-                            SizedBox(width: 6),
-                            Text(
-                              'Baby Kicks',
-                              style: TextStyle(
-                                fontFamily: 'Inter',
-                                fontSize: 12,
-                                fontWeight: FontWeight.w500,
-                                color: colorOnSurfaceVariant,
-                              ),
-                            ),
-                          ],
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 8),
-                          child: RichText(
-                            text: TextSpan(
-                              children: [
-                                TextSpan(
-                                  text: '$_kickCount ',
-                                  style: const TextStyle(
-                                    fontFamily: 'Inter',
-                                    fontSize: 26,
-                                    fontWeight: FontWeight.bold,
-                                    color: colorPrimary,
-                                  ),
-                                ),
-                                const TextSpan(
-                                  text: 'kicks',
-                                  style: TextStyle(
-                                    fontFamily: 'Inter',
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.normal,
-                                    color: colorOnSurface,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                        const Text(
-                          'Counted today ✓',
-                          style: TextStyle(
-                            fontFamily: 'Inter',
-                            fontSize: 11.5,
-                            fontWeight: FontWeight.w600,
-                            color: colorSecondary,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-
-          const SizedBox(height: 24),
-
-          // Section: Care & Medication
-          const Text(
-            'Care & Medication',
-            style: TextStyle(
-              fontFamily: 'Inter',
-              fontSize: 16,
-              fontWeight: FontWeight.w600,
-              color: colorOnSurface,
-            ),
-          ),
-          const SizedBox(height: 10),
-
-          Container(
-            padding: const EdgeInsets.all(12),
-            decoration: BoxDecoration(
-              color: colorSurfaceContainerLowest,
-              borderRadius: BorderRadius.circular(18),
-              border: Border.all(color: Colors.grey.shade200, width: 0.8),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withValues(alpha: 0.02),
-                  blurRadius: 8,
-                ),
-              ],
-            ),
-            child: Column(
-              children: [
-                // Item 1: Iron & Folic Acid
-                InkWell(
-                  onTap: () {
-                    setState(() => _isIronFolicTaken = !_isIronFolicTaken);
-                  },
-                  borderRadius: BorderRadius.circular(12),
-                  child: Container(
-                    padding: const EdgeInsets.all(10),
-                    decoration: BoxDecoration(
-                      color: colorSurfaceContainerLow,
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Row(
-                      children: [
-                        Container(
-                          width: 40,
-                          height: 40,
-                          decoration: const BoxDecoration(
-                            color: colorSecondaryFixed,
-                            shape: BoxShape.circle,
-                          ),
-                          child: const Icon(
-                            Icons.medication_rounded,
-                            size: 20,
-                            color: colorOnSecondaryFixed,
-                          ),
-                        ),
-                        const SizedBox(width: 12),
-                        const Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                'Iron & Folic Acid',
-                                style: TextStyle(
-                                  fontFamily: 'Inter',
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w600,
-                                  color: colorOnSurface,
-                                ),
-                              ),
-                              SizedBox(height: 2),
-                              Text(
-                                '1 tablet daily',
-                                style: TextStyle(
-                                  fontFamily: 'Inter',
-                                  fontSize: 11.5,
-                                  color: colorOnSurfaceVariant,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 10, vertical: 4),
-                          decoration: BoxDecoration(
-                            color: _isIronFolicTaken
-                                ? colorSecondaryFixed
-                                : Colors.amber.shade100,
-                            borderRadius: BorderRadius.circular(100),
-                          ),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Icon(
-                                _isIronFolicTaken
-                                    ? Icons.check
-                                    : Icons.schedule,
-                                size: 14,
-                                color: _isIronFolicTaken
-                                    ? colorOnSecondaryFixed
-                                    : Colors.amber.shade900,
-                              ),
-                              const SizedBox(width: 4),
-                              Text(
-                                _isIronFolicTaken
-                                    ? 'Taken today'
-                                    : 'Pending',
-                                style: TextStyle(
-                                  fontFamily: 'Inter',
-                                  fontSize: 11,
-                                  fontWeight: FontWeight.w600,
-                                  color: _isIronFolicTaken
-                                      ? colorOnSecondaryFixed
-                                      : Colors.amber.shade900,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-
-                const SizedBox(height: 8),
-
-                // Item 2: Next Clinic Visit
-                InkWell(
-                  onTap: _showVisitDetails,
-                  borderRadius: BorderRadius.circular(12),
-                  child: Container(
-                    padding: const EdgeInsets.all(10),
-                    decoration: BoxDecoration(
-                      color: colorSurfaceContainerLow,
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Row(
-                      children: [
-                        Container(
-                          width: 40,
-                          height: 40,
-                          decoration: const BoxDecoration(
-                            color: colorPrimaryFixed,
-                            shape: BoxShape.circle,
-                          ),
-                          child: const Icon(
-                            Icons.calendar_today_rounded,
-                            size: 19,
-                            color: colorPrimary,
-                          ),
-                        ),
-                        const SizedBox(width: 12),
-                        const Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                'Next Clinic Visit',
-                                style: TextStyle(
-                                  fontFamily: 'Inter',
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w600,
-                                  color: colorOnSurface,
-                                ),
-                              ),
-                              SizedBox(height: 2),
-                              Text(
-                                'Bwera Health Centre III',
-                                style: TextStyle(
-                                  fontFamily: 'Inter',
-                                  fontSize: 11.5,
-                                  color: colorOnSurfaceVariant,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        const Column(
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          children: [
-                            Text(
-                              'Thu 24 Oct',
-                              style: TextStyle(
-                                fontFamily: 'Inter',
-                                fontSize: 13,
-                                fontWeight: FontWeight.bold,
-                                color: colorPrimary,
-                              ),
-                            ),
-                            SizedBox(height: 1),
-                            Text(
-                              'Visit 3 of 4',
-                              style: TextStyle(
-                                fontFamily: 'Inter',
-                                fontSize: 11,
-                                color: colorOnSurfaceVariant,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-
-          const SizedBox(height: 20),
-
-          // + Record Today's Vitals Button
-          SizedBox(
-            width: double.infinity,
-            height: 52,
-            child: ElevatedButton.icon(
-              onPressed: _showRecordVitalsSheet,
-              style: ElevatedButton.styleFrom(
-                backgroundColor: colorPrimaryContainer,
-                foregroundColor: colorOnPrimary,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(16),
-                ),
-                elevation: 0,
-              ),
-              icon: const Icon(Icons.add_circle_outline_rounded, size: 22),
-              label: const Text(
-                "+ Record Today's Vitals",
-                style: TextStyle(
-                  fontFamily: 'Inter',
-                  fontSize: 14.5,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
   // --------------------------------------------------------------------------
   // TAB 3: VISITS SECTION
   // --------------------------------------------------------------------------
   Widget _buildVisitsContent() {
+    final appointment = _nextAppointment;
+    if (appointment == null) {
+      return SingleChildScrollView(
+        padding: const EdgeInsets.fromLTRB(20, 24, 20, 100),
+        child: Center(
+          child: Column(
+            children: [
+              const Icon(Icons.event_available_outlined,
+                  size: 52, color: colorPrimary),
+              const SizedBox(height: 12),
+              Text(
+                'No upcoming clinic visits',
+                style: Theme.of(context).textTheme.titleMedium,
+              ),
+              const SizedBox(height: 4),
+              const Text(
+                'Your clinic appointments will appear here when they are added to your care profile.',
+                textAlign: TextAlign.center,
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+    final visitNumber = _appointments.indexOf(appointment) + 1;
+    final progress = _appointments.isEmpty
+        ? 0.0
+        : _completedAppointments / _appointments.length;
+    final careContacts = [
+      if (appointment.midwifeName != null) appointment.midwifeName!,
+      if (appointment.room != null) 'Room ${appointment.room}',
+    ];
+    final careContact = careContacts.isEmpty
+        ? 'Care team not assigned'
+        : careContacts.join(' • ');
+
     return SingleChildScrollView(
       physics: const BouncingScrollPhysics(),
       padding: const EdgeInsets.fromLTRB(16, 16, 16, 100),
@@ -1487,9 +1048,9 @@ class _MotherDashboardScreenState extends State<MotherDashboardScreen> {
                                   ),
                                 ),
                                 const SizedBox(width: 6),
-                                const Text(
-                                  'Next ANC Visit (3 of 4)',
-                                  style: TextStyle(
+                                Text(
+                                  'Next ANC Visit ($visitNumber of ${_appointments.length})',
+                                  style: const TextStyle(
                                     fontFamily: 'Inter',
                                     fontSize: 11,
                                     fontWeight: FontWeight.w700,
@@ -1507,9 +1068,9 @@ class _MotherDashboardScreenState extends State<MotherDashboardScreen> {
                               color: const Color(0xFFE2E7FF),
                               borderRadius: BorderRadius.circular(100),
                             ),
-                            child: const Text(
-                              'Confirmed',
-                              style: TextStyle(
+                            child: Text(
+                              appointment.status,
+                              style: const TextStyle(
                                 fontFamily: 'Inter',
                                 fontSize: 11,
                                 fontWeight: FontWeight.w700,
@@ -1523,9 +1084,10 @@ class _MotherDashboardScreenState extends State<MotherDashboardScreen> {
                       const SizedBox(height: 12),
 
                       // Date & Time
-                      const Text(
-                        'Thursday, 24 Oct',
-                        style: TextStyle(
+                      Text(
+                        MaterialLocalizations.of(context)
+                            .formatFullDate(appointment.scheduledAt),
+                        style: const TextStyle(
                           fontFamily: 'Inter',
                           fontSize: 24,
                           fontWeight: FontWeight.w600,
@@ -1534,9 +1096,11 @@ class _MotherDashboardScreenState extends State<MotherDashboardScreen> {
                         ),
                       ),
                       const SizedBox(height: 2),
-                      const Text(
-                        '9:00 AM • Morning slot',
-                        style: TextStyle(
+                      Text(
+                        MaterialLocalizations.of(context).formatTimeOfDay(
+                          TimeOfDay.fromDateTime(appointment.scheduledAt),
+                        ),
+                        style: const TextStyle(
                           fontFamily: 'Inter',
                           fontSize: 16,
                           fontWeight: FontWeight.w500,
@@ -1568,13 +1132,13 @@ class _MotherDashboardScreenState extends State<MotherDashboardScreen> {
                               ),
                             ),
                             const SizedBox(width: 10),
-                            const Expanded(
+                            Expanded(
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    'Bwera Health Centre III',
-                                    style: TextStyle(
+                                    appointment.clinic,
+                                    style: const TextStyle(
                                       fontFamily: 'Inter',
                                       fontSize: 14,
                                       fontWeight: FontWeight.w600,
@@ -1582,8 +1146,8 @@ class _MotherDashboardScreenState extends State<MotherDashboardScreen> {
                                     ),
                                   ),
                                   Text(
-                                    'Midwife Sr. Sarah • Room 4B',
-                                    style: TextStyle(
+                                    careContact,
+                                    style: const TextStyle(
                                       fontFamily: 'Inter',
                                       fontSize: 12,
                                       color: colorOnSurfaceVariant,
@@ -1602,7 +1166,9 @@ class _MotherDashboardScreenState extends State<MotherDashboardScreen> {
                         width: double.infinity,
                         height: 46,
                         child: ElevatedButton.icon(
-                          onPressed: () {},
+                          onPressed: appointment.midwifePhone == null
+                              ? null
+                              : () => _makeCall(appointment.midwifePhone!),
                           style: ElevatedButton.styleFrom(
                             backgroundColor: colorPrimaryContainer,
                             foregroundColor: Colors.white,
@@ -1734,9 +1300,9 @@ class _MotherDashboardScreenState extends State<MotherDashboardScreen> {
                         color: colorPrimary.withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(100),
                       ),
-                      child: const Text(
-                        '2 of 4 Done',
-                        style: TextStyle(
+                      child: Text(
+                        '$_completedAppointments of ${_appointments.length} Done',
+                        style: const TextStyle(
                           fontFamily: 'Inter',
                           fontSize: 11,
                           fontWeight: FontWeight.w700,
@@ -1752,18 +1318,18 @@ class _MotherDashboardScreenState extends State<MotherDashboardScreen> {
                 // Progress bar
                 ClipRRect(
                   borderRadius: BorderRadius.circular(100),
-                  child: const LinearProgressIndicator(
-                    value: 0.5,
+                  child: LinearProgressIndicator(
+                    value: progress,
                     minHeight: 8,
-                    backgroundColor: Color(0xFFE2E7FF),
+                    backgroundColor: const Color(0xFFE2E7FF),
                     valueColor:
-                        AlwaysStoppedAnimation<Color>(colorPrimary),
+                        const AlwaysStoppedAnimation<Color>(colorPrimary),
                   ),
                 ),
                 const SizedBox(height: 6),
-                const Text(
-                  '2 of 4 visits completed • Next check-up is Visit 3',
-                  style: TextStyle(
+                Text(
+                  '$_completedAppointments of ${_appointments.length} visits completed • Next check-up is Visit $visitNumber',
+                  style: const TextStyle(
                     fontFamily: 'Inter',
                     fontSize: 12,
                     color: colorOnSurfaceVariant,
@@ -1790,12 +1356,10 @@ class _MotherDashboardScreenState extends State<MotherDashboardScreen> {
         ),
       ),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Row(
-            children: [
-              // Avatar
-              Container(
+          _buildMenuButton(),
+          const SizedBox(width: 4),
+          Container(
                 width: 44,
                 height: 44,
                 decoration: BoxDecoration(
@@ -1810,36 +1374,30 @@ class _MotherDashboardScreenState extends State<MotherDashboardScreen> {
                     ),
                   ],
                 ),
-                child: ClipOval(
-                  child: widget.profilePhotoBytes != null
-                      ? Image.memory(
-                          widget.profilePhotoBytes!,
-                          fit: BoxFit.cover,
-                        )
-                      : Image.network(
-                          'https://lh3.googleusercontent.com/aida/ALJJyrB02uNzgSUFmyA16NdXCEdl86RHOVW_SV4uhcvcQVIo7BNtuvhGPopPUo0PpIzaDWxVmK3GOU_6UJ2Gt-HJXfp0Vn2pcetClnxxoNwiA4tRwlLoPWINdj5PQEJuc-R7CAS70KJxBYggnyirlfbSEPRl02scU-DsOyO8Muaz97pajK7fgWNuVlbvNOi2kZJMf_3mt6Z3U_MtH7VeZLSDAUMeJ21fSr4OpfU9mZwwfjv-Hw',
-                          fit: BoxFit.cover,
-                          errorBuilder: (context, error, stackTrace) =>
-                              const Icon(Icons.person, color: colorPrimary),
-                        ),
+                child: const ClipOval(
+                  child: Icon(Icons.person, color: colorPrimary),
                 ),
               ),
-              const SizedBox(width: 12),
-              // Name + Village Tag + USSD Active
-              Column(
+          const SizedBox(width: 10),
+          Expanded(
+            child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Row(
                     children: [
-                      Text(
-                        widget.motherName,
-                        style: const TextStyle(
+                      Flexible(
+                        child: Text(
+                          widget.profile.fullName,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: const TextStyle(
                           fontFamily: 'Inter',
                           fontSize: 15,
                           fontWeight: FontWeight.bold,
                           color: colorOnSurface,
                         ),
+                      ),
                       ),
                       const SizedBox(width: 6),
                       Container(
@@ -1854,7 +1412,9 @@ class _MotherDashboardScreenState extends State<MotherDashboardScreen> {
                           ),
                         ),
                         child: Text(
-                          widget.village,
+                          widget.profile.village,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
                           style: const TextStyle(
                             fontFamily: 'Inter',
                             fontSize: 11,
@@ -1866,79 +1426,19 @@ class _MotherDashboardScreenState extends State<MotherDashboardScreen> {
                     ],
                   ),
                   const SizedBox(height: 2),
-                  Row(
-                    children: [
-                      Container(
-                        width: 7,
-                        height: 7,
-                        decoration: const BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: Color(0xFF10B981),
-                        ),
-                      ),
-                      const SizedBox(width: 6),
-                      const Text(
-                        'Free USSD *920# Active',
-                        style: TextStyle(
-                          fontFamily: 'Inter',
-                          fontSize: 11,
-                          fontWeight: FontWeight.w500,
-                          color: colorOnSurfaceVariant,
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ],
-          ),
-
-          // Notifications
-          InkWell(
-            onTap: () {
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text('No new urgent clinic alerts.'),
-                  duration: Duration(seconds: 2),
-                ),
-              );
-            },
-            borderRadius: BorderRadius.circular(20),
-            child: Container(
-              width: 40,
-              height: 40,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: Colors.white,
-                border: Border.all(color: Colors.grey.shade200, width: 0.8),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.03),
-                    blurRadius: 4,
-                  ),
-                ],
-              ),
-              child: Stack(
-                alignment: Alignment.center,
-                children: [
-                  const Icon(Icons.notifications_none_rounded,
-                      size: 20, color: colorOnSurface),
-                  Positioned(
-                    top: 10,
-                    right: 10,
-                    child: Container(
-                      width: 7,
-                      height: 7,
-                      decoration: BoxDecoration(
-                        color: Colors.amber.shade600,
-                        shape: BoxShape.circle,
-                        border: Border.all(color: Colors.white, width: 1.5),
-                      ),
+                  Text(
+                    widget.profile.email,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(
+                      fontFamily: 'Inter',
+                      fontSize: 11,
+                      fontWeight: FontWeight.w500,
+                      color: colorOnSurfaceVariant,
                     ),
                   ),
                 ],
               ),
-            ),
           ),
         ],
       ),
@@ -1948,7 +1448,7 @@ class _MotherDashboardScreenState extends State<MotherDashboardScreen> {
   Widget _buildHomeContent() {
     return SingleChildScrollView(
       physics: const BouncingScrollPhysics(),
-      padding: const EdgeInsets.fromLTRB(20, 16, 20, 100),
+      padding: const EdgeInsets.fromLTRB(20, 16, 20, 24),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
@@ -2002,26 +1502,23 @@ class _MotherDashboardScreenState extends State<MotherDashboardScreen> {
           child: Stack(
             fit: StackFit.expand,
             children: [
-              // Hero Photo
-              widget.profilePhotoBytes != null
-                  ? Image.memory(widget.profilePhotoBytes!, fit: BoxFit.cover)
-                  : Image.network(
-                      'https://lh3.googleusercontent.com/aida/ALJJyrB02uNzgSUFmyA16NdXCEdl86RHOVW_SV4uhcvcQVIo7BNtuvhGPopPUo0PpIzaDWxVmK3GOU_6UJ2Gt-HJXfp0Vn2pcetClnxxoNwiA4tRwlLoPWINdj5PQEJuc-R7CAS70KJxBYggnyirlfbSEPRl02scU-DsOyO8Muaz97pajK7fgWNuVlbvNOi2kZJMf_3mt6Z3U_MtH7VeZLSDAUMeJ21fSr4OpfU9mZwwfjv-Hw',
-                      fit: BoxFit.cover,
-                      errorBuilder: (context, error, stackTrace) => Container(
-                        decoration: const BoxDecoration(
-                          gradient: LinearGradient(
-                            colors: [Color(0xFF0E7490), Color(0xFF005A71)],
-                            begin: Alignment.topLeft,
-                            end: Alignment.bottomRight,
-                          ),
-                        ),
-                        child: const Center(
-                          child: Icon(Icons.favorite_rounded,
-                              size: 64, color: Colors.white70),
-                        ),
-                      ),
+              Image.asset(
+                'assets/images/baby_welcome.jpg',
+                fit: BoxFit.cover,
+                errorBuilder: (context, error, stackTrace) => Container(
+                  decoration: const BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [Color(0xFF0E7490), Color(0xFF005A71)],
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
                     ),
+                  ),
+                  child: const Center(
+                    child: Icon(Icons.favorite_rounded,
+                        size: 64, color: Colors.white70),
+                  ),
+                ),
+              ),
 
               // Gradient Overlay at Bottom
               Positioned.fill(
@@ -2068,9 +1565,11 @@ class _MotherDashboardScreenState extends State<MotherDashboardScreen> {
                       ),
                       const SizedBox(width: 6),
                       Text(
-                        widget.maternalStatus == 'baby'
+                        widget.profile.maternalStatus == 'baby'
                             ? 'Newborn Baby Stage'
-                            : 'Week 28 • Trimester 3',
+                            : (widget.profile.pregnancyStage.isEmpty
+                                ? 'Pregnancy stage not set'
+                                : widget.profile.pregnancyStage),
                         style: const TextStyle(
                           fontFamily: 'Inter',
                           fontSize: 11.5,
@@ -2093,9 +1592,9 @@ class _MotherDashboardScreenState extends State<MotherDashboardScreen> {
                     color: Colors.white.withValues(alpha: 0.92),
                     borderRadius: BorderRadius.circular(100),
                   ),
-                  child: const Text(
-                    'Dec 2024',
-                    style: TextStyle(
+                  child: Text(
+                    MaterialLocalizations.of(context).formatMonthYear(_today),
+                    style: const TextStyle(
                       fontFamily: 'Inter',
                       fontSize: 11,
                       fontWeight: FontWeight.w600,
@@ -2115,7 +1614,7 @@ class _MotherDashboardScreenState extends State<MotherDashboardScreen> {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(
-                      '${widget.motherName} & ${widget.maternalStatus == 'baby' ? 'Newborn' : 'Baby'}',
+                      '${widget.profile.fullName} & ${widget.profile.maternalStatus == 'baby' ? 'Newborn' : 'Baby'}',
                       style: const TextStyle(
                         fontFamily: 'Inter',
                         fontSize: 16,
@@ -2132,9 +1631,9 @@ class _MotherDashboardScreenState extends State<MotherDashboardScreen> {
                     ),
                     const SizedBox(height: 2),
                     Text(
-                      widget.maternalStatus == 'baby'
+                      widget.profile.maternalStatus == 'baby'
                           ? 'Postnatal checkup recommended at 6 weeks'
-                          : 'Estimated due in ~10 weeks (40-day window)',
+                          : 'Pregnancy stage: ${widget.profile.pregnancyStage}',
                       style: TextStyle(
                         fontFamily: 'Inter',
                         fontSize: 12,
@@ -2194,11 +1693,11 @@ class _MotherDashboardScreenState extends State<MotherDashboardScreen> {
           ),
           const SizedBox(width: 12),
           // Details
-          const Expanded(
+          Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
+                const Text(
                   'YOUR MIDWIFE',
                   style: TextStyle(
                     fontFamily: 'Inter',
@@ -2208,10 +1707,10 @@ class _MotherDashboardScreenState extends State<MotherDashboardScreen> {
                     color: Color(0xFF0F766E),
                   ),
                 ),
-                SizedBox(height: 1),
+                const SizedBox(height: 1),
                 Text(
-                  'Sr. Sarah Omondi',
-                  style: TextStyle(
+                  widget.profile.midwifeName ?? 'Care team not assigned',
+                  style: const TextStyle(
                     fontFamily: 'Inter',
                     fontSize: 14,
                     fontWeight: FontWeight.bold,
@@ -2219,8 +1718,8 @@ class _MotherDashboardScreenState extends State<MotherDashboardScreen> {
                   ),
                 ),
                 Text(
-                  'Bwera Health Centre III',
-                  style: TextStyle(
+                  widget.profile.facilityName ?? 'Health facility not assigned',
+                  style: const TextStyle(
                     fontFamily: 'Inter',
                     fontSize: 11,
                     color: colorOnSurfaceVariant,
@@ -2233,7 +1732,9 @@ class _MotherDashboardScreenState extends State<MotherDashboardScreen> {
           Row(
             children: [
               InkWell(
-                onTap: () => _makeCall('0800100200'),
+                onTap: widget.profile.midwifePhone == null
+                    ? null
+                    : () => _makeCall(widget.profile.midwifePhone!),
                 borderRadius: BorderRadius.circular(100),
                 child: Container(
                   width: 36,
@@ -2247,7 +1748,9 @@ class _MotherDashboardScreenState extends State<MotherDashboardScreen> {
               ),
               const SizedBox(width: 8),
               InkWell(
-                onTap: () => _sendSms('0800100200'),
+                onTap: widget.profile.midwifePhone == null
+                    ? null
+                    : () => _sendSms(widget.profile.midwifePhone!),
                 borderRadius: BorderRadius.circular(100),
                 child: Container(
                   width: 36,
@@ -2275,18 +1778,11 @@ class _MotherDashboardScreenState extends State<MotherDashboardScreen> {
         Expanded(
           child: InkWell(
             onTap: () {
-              setState(() => _kickCount++);
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text('Kick logged! Total: $_kickCount kicks today.'),
-                  duration: const Duration(seconds: 1),
-                  behavior: SnackBarBehavior.floating,
-                ),
-              );
+              _recordKick();
             },
             borderRadius: BorderRadius.circular(18),
             child: Container(
-              height: 116,
+              height: 136,
               padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 10),
               decoration: BoxDecoration(
                 color: Colors.white,
@@ -2316,6 +1812,9 @@ class _MotherDashboardScreenState extends State<MotherDashboardScreen> {
                     children: [
                       Text(
                         '$_kickCount kicks',
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        textAlign: TextAlign.center,
                         style: const TextStyle(
                           fontFamily: 'Inter',
                           fontSize: 14,
@@ -2325,6 +1824,8 @@ class _MotherDashboardScreenState extends State<MotherDashboardScreen> {
                       ),
                       const Text(
                         'Count Today',
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
                         style: TextStyle(
                           fontFamily: 'Inter',
                           fontSize: 10.5,
@@ -2353,7 +1854,7 @@ class _MotherDashboardScreenState extends State<MotherDashboardScreen> {
         // Blood Pressure Card
         Expanded(
           child: Container(
-            height: 116,
+            height: 136,
             padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 10),
             decoration: BoxDecoration(
               color: Colors.white,
@@ -2383,6 +1884,9 @@ class _MotherDashboardScreenState extends State<MotherDashboardScreen> {
                   children: [
                     Text(
                       '$_bpSystolic / $_bpDiastolic',
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      textAlign: TextAlign.center,
                       style: const TextStyle(
                         fontFamily: 'Inter',
                         fontSize: 14,
@@ -2390,9 +1894,13 @@ class _MotherDashboardScreenState extends State<MotherDashboardScreen> {
                         color: colorOnSurface,
                       ),
                     ),
-                    const Text(
-                      'Normal BP',
-                      style: TextStyle(
+                    Text(
+                      _vitals.systolic == null
+                          ? 'No reading'
+                          : 'Latest reading',
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(
                         fontFamily: 'Inter',
                         fontSize: 10.5,
                         color: colorOnSurfaceVariant,
@@ -2400,13 +1908,18 @@ class _MotherDashboardScreenState extends State<MotherDashboardScreen> {
                     ),
                   ],
                 ),
-                const Text(
-                  'Healthy',
-                  style: TextStyle(
+                Text(
+                  Text(
+                    _vitals.systolic == null ? 'Not recorded' : 'Recorded today',
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    textAlign: TextAlign.center,
+                  style: const TextStyle(
                     fontFamily: 'Inter',
                     fontSize: 10.5,
                     fontWeight: FontWeight.w600,
                     color: Color(0xFF10B981),
+                  ),
                   ),
                 ),
               ],
@@ -2420,11 +1933,11 @@ class _MotherDashboardScreenState extends State<MotherDashboardScreen> {
         Expanded(
           child: InkWell(
             onTap: () {
-              setState(() => _isIronFolicTaken = !_isIronFolicTaken);
+              _toggleIronTaken();
             },
             borderRadius: BorderRadius.circular(18),
             child: Container(
-              height: 116,
+              height: 136,
               padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 10),
               decoration: BoxDecoration(
                 color: Colors.white,
@@ -2454,6 +1967,8 @@ class _MotherDashboardScreenState extends State<MotherDashboardScreen> {
                     children: [
                       Text(
                         'Iron & Folic',
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
                         style: TextStyle(
                           fontFamily: 'Inter',
                           fontSize: 13.5,
@@ -2463,6 +1978,8 @@ class _MotherDashboardScreenState extends State<MotherDashboardScreen> {
                       ),
                       Text(
                         '1 Pill Daily',
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
                         style: TextStyle(
                           fontFamily: 'Inter',
                           fontSize: 10.5,
@@ -2484,8 +2001,12 @@ class _MotherDashboardScreenState extends State<MotherDashboardScreen> {
                             : Colors.amber.shade700,
                       ),
                       const SizedBox(width: 3),
-                      Text(
-                        _isIronFolicTaken ? 'Taken' : 'Pending',
+                      Flexible(
+                        child: Text(
+                          _isIronFolicTaken ? 'Taken' : 'Pending',
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          textAlign: TextAlign.center,
                         style: TextStyle(
                           fontFamily: 'Inter',
                           fontSize: 10.5,
@@ -2493,6 +2014,7 @@ class _MotherDashboardScreenState extends State<MotherDashboardScreen> {
                           color: _isIronFolicTaken
                               ? const Color(0xFF10B981)
                               : Colors.amber.shade700,
+                          ),
                         ),
                       ),
                     ],
@@ -2508,6 +2030,25 @@ class _MotherDashboardScreenState extends State<MotherDashboardScreen> {
 
   // Next ANC Visit Card
   Widget _buildAncVisitCard() {
+    final appointment = _nextAppointment;
+    if (appointment == null) {
+      return Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(color: Colors.grey.shade100),
+        ),
+        child: const Row(
+          children: [
+            Icon(Icons.calendar_month_rounded, color: colorPrimary),
+            SizedBox(width: 12),
+            Expanded(child: Text('No upcoming clinic visit is scheduled.')),
+          ],
+        ),
+      );
+    }
+    final visitNumber = _appointments.indexOf(appointment) + 1;
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -2538,15 +2079,15 @@ class _MotherDashboardScreenState extends State<MotherDashboardScreen> {
             ),
           ),
           const SizedBox(width: 12),
-          const Expanded(
+          Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Row(
                   children: [
                     Text(
-                      'ANC VISIT 3 OF 4',
-                      style: TextStyle(
+                      'ANC VISIT $visitNumber OF ${_appointments.length}',
+                      style: const TextStyle(
                         fontFamily: 'Inter',
                         fontSize: 11,
                         fontWeight: FontWeight.bold,
@@ -2554,10 +2095,10 @@ class _MotherDashboardScreenState extends State<MotherDashboardScreen> {
                         color: Color(0xFF0F766E),
                       ),
                     ),
-                    SizedBox(width: 6),
+                    const SizedBox(width: 6),
                     Text(
-                      'SMS Sent',
-                      style: TextStyle(
+                      appointment.status,
+                      style: const TextStyle(
                         fontFamily: 'Inter',
                         fontSize: 10,
                         fontWeight: FontWeight.w500,
@@ -2566,10 +2107,10 @@ class _MotherDashboardScreenState extends State<MotherDashboardScreen> {
                     ),
                   ],
                 ),
-                SizedBox(height: 2),
+                const SizedBox(height: 2),
                 Text(
-                  'Thu, 24 Oct • 9:00 AM',
-                  style: TextStyle(
+                  _formatDateTime(appointment.scheduledAt),
+                  style: const TextStyle(
                     fontFamily: 'Inter',
                     fontSize: 14,
                     fontWeight: FontWeight.w600,
@@ -2577,8 +2118,8 @@ class _MotherDashboardScreenState extends State<MotherDashboardScreen> {
                   ),
                 ),
                 Text(
-                  'Bwera Health Centre III',
-                  style: TextStyle(
+                  appointment.clinic,
+                  style: const TextStyle(
                     fontFamily: 'Inter',
                     fontSize: 11,
                     color: colorOnSurfaceVariant,
@@ -2710,75 +2251,4 @@ class _MotherDashboardScreenState extends State<MotherDashboardScreen> {
     );
   }
 
-  // Floating Bottom Navigation Bar
-  Widget _buildBottomNav() {
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.white.withValues(alpha: 0.95),
-        border: Border(
-          top: BorderSide(color: Colors.grey.shade100, width: 1),
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.04),
-            blurRadius: 20,
-            offset: const Offset(0, -4),
-          ),
-        ],
-      ),
-      child: SafeArea(
-        top: false,
-        child: SizedBox(
-          height: 64,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              _buildNavItem(0, Icons.home_rounded, 'Home'),
-              _buildNavItem(1, Icons.monitor_heart_rounded, 'My Health'),
-              _buildNavItem(
-                  2, Icons.health_and_safety_rounded, 'Warning Signs'),
-              _buildNavItem(3, Icons.event_available_rounded, 'Visits'),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildNavItem(int index, IconData icon, String label) {
-    final isSelected = _currentTab == index;
-    return InkWell(
-      onTap: () {
-        setState(() => _currentTab = index);
-      },
-      borderRadius: BorderRadius.circular(12),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(
-              icon,
-              size: 24,
-              color: isSelected
-                  ? colorPrimaryContainer
-                  : Colors.grey.shade400,
-            ),
-            const SizedBox(height: 3),
-            Text(
-              label,
-              style: TextStyle(
-                fontFamily: 'Inter',
-                fontSize: 11,
-                fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
-                color: isSelected
-                    ? colorPrimaryContainer
-                    : Colors.grey.shade400,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
 }

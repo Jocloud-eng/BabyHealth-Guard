@@ -45,7 +45,7 @@ At the time this specification was prepared, the repository contains:
 
 - A Java 21 / Spring Boot 3.3 API with authentication, mother records, maternal vital-sign records, and appointment endpoints; PostgreSQL is configured, and H2 is a declared runtime dependency.
 - A vanilla JavaScript dashboard that calls selected authentication, mother, vital, and appointment endpoints but also contains in-memory/demo content.
-- A Flutter welcome, registration, and mother dashboard flow with local UI state, profile photo selection, health check screens, and call/SMS link launch actions.
+- A Flutter welcome, registration, and mother dashboard flow with health check screens and call/SMS link launch actions.
 - A project proposal describing broader mobile, web, SMS/USSD, offline, newborn, alert, follow-up, and reporting capabilities.
 
 The mobile screens are not currently integrated with the backend; the mobile profile save and displayed health data are local/demo state. The repository does not evidence an operational SMS or USSD gateway, durable offline synchronization, newborn API workflows, clinical alert workflow, automated reminder delivery, or report generation. The interface's "Works offline"/USSD indicators and SMS status text are not proof those services are connected. These capabilities are specified below as target requirements and must be implemented and verified before being represented as available to users.
@@ -348,4 +348,3 @@ Key risks include misleading clinical reassurance, wrong-patient association, un
 - OWASP Application Security Verification Standard (ASVS) and OWASP Mobile Application Security Verification Standard (MASVS), current versions at implementation and release.
 - W3C Web Content Accessibility Guidelines (WCAG) 2.2.
 - BabyHealth Guard project proposal: *A Digital Maternal and Newborn Health Monitoring System with SMS and USSD Integration for Rural Communities*.
-

@@ -13,9 +13,10 @@ Digital maternal and newborn health monitoring system (MVP).
 - Source: frontend/index.html
 
 ## Mobile (Flutter)
-- Mobile application for mothers located in `mobile/`.
-- Includes mother's welcome, registration, and dashboard prototype screens. Offline synchronization and USSD (*920#) are not yet integrated services.
-- Run: `cd mobile && flutter pub get && flutter run` (or view `mobile/welcome_preview.html`).
+- Native Flutter application for mothers located in `mobile/`, using Firebase Authentication and Cloud Firestore.
+- Firestore offline persistence is disabled; internet access is required for account and health-record operations.
+- See [`mobile/README.md`](mobile/README.md) for Firebase setup, data structure, and run instructions.
+- Run: `cd mobile && flutter pub get && flutter run`.
 
 ## Architecture
 Modular monolith with domain/application/infrastructure/presentation layers. See the project proposal and Software Requirements Specification in `documentation/`.

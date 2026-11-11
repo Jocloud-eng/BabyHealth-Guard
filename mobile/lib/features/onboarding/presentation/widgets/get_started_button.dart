@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../../../core/theme/app_colors.dart';
+import '../../../../core/constants/app_colors.dart';
 
 /// Interactive "Get Started" Pill Button with animated slide shimmer trailing chevrons,
 /// responsive scale feedback on press, and signature teal circular arrow badge.
