@@ -133,7 +133,7 @@ tailwind.config = {
 
 <!-- Header -->
 <header class="fixed top-0 w-full z-50 pt-safe bg-surface/90 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)]">
-  <div class="h-20 px-margin flex items-center justify-between gap-space-sm max-w-md mx-auto">
+  <div class="h-20 px-margin flex items-center justify-between gap-space-sm max-w-md md:max-w-3xl lg:max-w-4xl mx-auto">
     <div class="flex flex-col min-w-0 justify-center">
       <h1 class="font-headline-sm text-headline-sm text-on-surface truncate font-bold">My Health</h1>
       <div class="flex items-center gap-1.5 mt-0.5">
@@ -151,7 +151,7 @@ tailwind.config = {
 </header>
 
 <!-- Main Health Content -->
-<main class="flex flex-col relative w-full px-margin pt-24 pb-28 bg-surface min-h-screen max-w-md mx-auto">
+<main class="flex flex-col relative w-full px-margin pt-24 pb-28 bg-surface min-h-screen max-w-md md:max-w-3xl lg:max-w-4xl mx-auto">
   <div class="flex flex-col w-full gap-space-md">
 
     <!-- Section: Today's Vitals -->
@@ -242,6 +242,18 @@ tailwind.config = {
       <span>+ Record Today's Vitals</span>
     </button>
 
+    <!-- WhatsApp Support for Health Checks -->
+    <a href="https://wa.me/256778501066?text=Hello%20Midwife%2C%20I%20have%20questions%20about%20my%20daily%20vitals%20and%20health." target="_blank" class="w-full min-h-[46px] bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-200 rounded-xl flex items-center justify-center gap-2 font-label-lg text-xs font-bold shadow-xs active:scale-[0.98] transition-all">
+      <svg class="w-4 h-4 fill-emerald-600" viewBox="0 0 24 24"><path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.711 2.598 2.664-.698c.969.585 1.961.949 2.796.949 3.181 0 5.767-2.586 5.768-5.766.001-3.18-2.585-5.736-5.768-5.736zm0-1.872c4.225 0 7.639 3.414 7.639 7.638 0 4.225-3.414 7.639-7.639 7.639-.995 0-1.95-.194-2.825-.548l-4.706 1.233 1.258-4.597c-.439-.958-.667-2.008-.667-3.727 0-4.224 3.414-7.638 7.639-7.638zm0 0"/></svg>
+      <span>Consult Midwife on WhatsApp (+256 778 501 066)</span>
+    </a>
+
+    <!-- Footer Support Information -->
+    <div class="pt-4 text-center text-xs text-on-surface-variant space-y-1">
+      <p class="font-medium text-slate-600">BabyHealth Guard Support: <a href="tel:+256778501066" class="text-primary font-bold hover:underline">+256 778 501 066</a></p>
+      <p class="text-[11px] text-slate-500">Email: <a href="mailto:infor@babyguard.org" class="underline">infor@babyguard.org</a> • USSD: *920#</p>
+    </div>
+
   </div>
 </main>
 
@@ -280,7 +292,7 @@ tailwind.config = {
 
 <!-- Bottom Navigation Bar -->
 <nav class="fixed bottom-0 w-full z-50 pb-safe bg-surface/90 backdrop-blur-xl shadow-[0_-2px_12px_rgba(0,0,0,0.05)]">
-  <div class="flex justify-around items-center h-20 px-space-xs max-w-md mx-auto">
+  <div class="flex justify-around items-center h-20 px-space-xs max-w-md md:max-w-3xl lg:max-w-4xl mx-auto">
     <a class="flex flex-col items-center justify-center min-w-[64px] min-h-[48px] py-1 px-2 rounded-xl text-on-surface-variant hover:text-on-surface transition-all gap-0.5" href="dashboard_preview.html">
       <span class="material-symbols-outlined text-[24px]">home</span>
       <span class="font-label-sm text-label-sm">Home</span>

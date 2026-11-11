@@ -316,13 +316,16 @@ class _MotherRegistrationScreenState extends State<MotherRegistrationScreen> {
       ),
       body: SafeArea(
         top: false,
-        child: SingleChildScrollView(
-          physics: const BouncingScrollPhysics(),
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-          child: Form(
-            key: _formKey,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+        child: Center(
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 780),
+            child: SingleChildScrollView(
+              physics: const BouncingScrollPhysics(),
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 // Page Header Title
                 const SizedBox(height: 6),
@@ -731,7 +734,9 @@ class _MotherRegistrationScreenState extends State<MotherRegistrationScreen> {
           ),
         ),
       ),
-    );
+    ),
+  ),
+);
   }
 
   // --- Helper Widgets ---

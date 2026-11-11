@@ -4,6 +4,11 @@
 <meta charset="utf-8">
 <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport">
 <meta content="mobile_tab" name="shell-type">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#0e7490">
+<link rel="manifest" href="/manifest.json">
 <title>BabyHealth Guard — Mother Dashboard</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
@@ -58,38 +63,236 @@
       }
     };
 </script>
+  <script src="https://checkout.flutterwave.com/v3.js"></script>
+
+  <style id="bhg-dark-mode-styles">
+    /* Universal Dark Mode CSS Overrides */
+    html.dark {
+      color-scheme: dark;
+    }
+    html.dark body {
+      background-color: #090e17 !important;
+      color: #e2e8f0 !important;
+    }
+    html.dark header {
+      background-color: rgba(15, 23, 42, 0.95) !important;
+      border-color: #1e293b !important;
+    }
+    html.dark nav {
+      background-color: rgba(15, 23, 42, 0.95) !important;
+      border-color: #1e293b !important;
+    }
+    html.dark aside {
+      background-color: #0f172a !important;
+      border-color: #1e293b !important;
+    }
+    html.dark main {
+      background-color: #090e17 !important;
+    }
+    html.dark .bg-white {
+      background-color: #0f172a !important;
+      color: #e2e8f0 !important;
+      border-color: #1e293b !important;
+    }
+    html.dark .bg-slate-50,
+    html.dark .bg-surface,
+    html.dark .bg-surface-bright {
+      background-color: #0b1120 !important;
+      color: #cbd5e1 !important;
+      border-color: #1e293b !important;
+    }
+    html.dark .bg-slate-100,
+    html.dark .bg-surface-container-low,
+    html.dark .bg-surface-container {
+      background-color: #1e293b !important;
+      color: #cbd5e1 !important;
+      border-color: #334155 !important;
+    }
+    html.dark .bg-slate-200 {
+      background-color: #334155 !important;
+    }
+    html.dark .text-slate-900,
+    html.dark .text-on-surface {
+      color: #f8fafc !important;
+    }
+    html.dark .text-slate-800 {
+      color: #f1f5f9 !important;
+    }
+    html.dark .text-slate-700,
+    html.dark .text-on-surface-variant {
+      color: #cbd5e1 !important;
+    }
+    html.dark .text-slate-600 {
+      color: #94a3b8 !important;
+    }
+    html.dark .text-slate-500 {
+      color: #64748b !important;
+    }
+    html.dark .text-slate-400 {
+      color: #94a3b8 !important;
+    }
+    html.dark .border-slate-100,
+    html.dark .border-slate-200,
+    html.dark .border-outline-variant {
+      border-color: #1e293b !important;
+    }
+    html.dark table thead th {
+      background-color: #1e293b !important;
+      color: #94a3b8 !important;
+    }
+    html.dark table tbody tr {
+      border-color: #1e293b !important;
+    }
+    html.dark table tbody tr:hover {
+      background-color: #1e293b80 !important;
+    }
+    html.dark input, 
+    html.dark select, 
+    html.dark textarea {
+      background-color: #1e293b !important;
+      color: #f8fafc !important;
+      border-color: #334155 !important;
+    }
+    html.dark .shadow-xs,
+    html.dark .shadow-sm,
+    html.dark .shadow-md,
+    html.dark .shadow-lg,
+    html.dark .shadow-xl {
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.45) !important;
+    }
+    html.dark .bg-cyan-50,
+    html.dark .bg-teal-50,
+    html.dark .bg-emerald-50,
+    html.dark .bg-amber-50,
+    html.dark .bg-red-50,
+    html.dark .bg-indigo-50 {
+      background-color: #1e293b !important;
+    }
+    html.dark #aiSideDrawer,
+    html.dark #flutterwaveModal > div,
+    html.dark #flwReceiptModal,
+    html.dark #danger-signs-modal > div {
+      background-color: #0f172a !important;
+      color: #f8fafc !important;
+      border-color: #334155 !important;
+    }
+  </style>
+  <script>
+    // Immediate Theme Initialization (prevents flash of unstyled content)
+    (function() {
+      try {
+        var saved = localStorage.getItem('bhg_theme');
+        var prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+        if (saved === 'dark' || (!saved && prefersDark)) {
+          document.documentElement.classList.add('dark');
+        } else {
+          document.documentElement.classList.remove('dark');
+        }
+      } catch (e) {}
+    })();
+
+    function toggleTheme() {
+      var isDark = document.documentElement.classList.toggle('dark');
+      try {
+        localStorage.setItem('bhg_theme', isDark ? 'dark' : 'light');
+      } catch (e) {}
+      updateThemeIcons(isDark);
+      if (typeof toast === 'function') {
+        toast(isDark ? '🌙 Dark Mode activated' : '☀️ Light Mode activated');
+      }
+    }
+
+    function updateThemeIcons(isDark) {
+      document.querySelectorAll('.theme-toggle-icon').forEach(function(el) {
+        el.textContent = isDark ? 'light_mode' : 'dark_mode';
+      });
+      document.querySelectorAll('.theme-toggle-btn').forEach(function(el) {
+        el.setAttribute('title', isDark ? 'Switch to Light Mode' : 'Switch to Dark Mode');
+      });
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+      var isDark = document.documentElement.classList.contains('dark');
+      updateThemeIcons(isDark);
+    });
+  </script>
+
 </head>
 <body class="bg-[#F6F7FA] font-['Inter'] text-on-surface flex flex-col min-h-screen antialiased select-none">
 
-<!-- Minimal App Header inspired by Reference -->
-<header class="fixed top-0 inset-x-0 z-40 pt-safe bg-[#F6F7FA]/90 backdrop-blur-md">
-  <div class="px-5 pt-2 pb-2.5 flex items-center justify-between border-b border-slate-100 max-w-md mx-auto">
-    <div class="flex items-center gap-3">
-      <div class="w-11 h-11 rounded-full overflow-hidden p-0.5 bg-white shadow-sm flex-shrink-0 border border-slate-200/80">
-        <img id="header-avatar" alt="Mother profile" class="w-full h-full object-cover rounded-full" src="https://lh3.googleusercontent.com/aida/ALJJyrB02uNzgSUFmyA16NdXCEdl86RHOVW_SV4uhcvcQVIo7BNtuvhGPopPUo0PpIzaDWxVmK3GOU_6UJ2Gt-HJXfp0Vn2pcetClnxxoNwiA4tRwlLoPWINdj5PQEJuc-R7CAS70KJxBYggnyirlfbSEPRl02scU-DsOyO8Muaz97pajK7fgWNuVlbvNOi2kZJMf_3mt6Z3U_MtH7VeZLSDAUMeJ21fSr4OpfU9mZwwfjv-Hw">
+<!-- Minimal App Header with Navigation Back & Sign Out -->
+<!-- Professional App Header with Back, Forward, Breadcrumbs & Theme Switcher -->
+<header class="fixed top-0 inset-x-0 z-40 pt-safe bg-white/95 dark:bg-slate-900/95 backdrop-blur-xl border-b border-slate-200/80 dark:border-slate-800 shadow-xs transition-colors">
+  <div class="px-3 sm:px-4 pt-2.5 pb-2 flex items-center justify-between gap-2 max-w-md md:max-w-4xl lg:max-w-6xl mx-auto">
+    
+    <!-- Left Navigation: Back & Forward Controls -->
+    <div class="flex items-center gap-1.5 shrink-0">
+      <button onclick="navigateBack()" aria-label="Go Back" class="w-9 h-9 rounded-full bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 flex items-center justify-center transition-all active:scale-95 shadow-2xs cursor-pointer" title="Go to Previous Page">
+        <span class="material-symbols-outlined text-[20px]">arrow_back</span>
+      </button>
+      <button onclick="navigateForward()" aria-label="Go Forward" class="w-9 h-9 rounded-full bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 flex items-center justify-center transition-all active:scale-95 shadow-2xs cursor-pointer" title="Go to Next Page">
+        <span class="material-symbols-outlined text-[20px]">arrow_forward</span>
+      </button>
+    </div>
+
+    <!-- Center Profile & Breadcrumb -->
+    <div class="flex items-center gap-2.5 min-w-0 flex-1">
+      <div class="relative w-10 h-10 rounded-full overflow-hidden shrink-0 border-2 border-teal-500 shadow-sm bg-slate-100">
+        <img id="header-avatar" alt="Amina Brenda - Ugandan Expectant Mother" class="w-full h-full object-cover" src="/assets/images/african_pregnant_mother.jpg" onerror="this.onerror=null; this.src='/assets/images/pregnant_mother.svg';">
+        <span class="absolute bottom-0 right-0 w-3 h-3 bg-emerald-500 rounded-full border-2 border-white dark:border-slate-900"></span>
       </div>
-      <div class="flex flex-col">
+      <div class="flex flex-col min-w-0">
         <div class="flex items-center gap-1.5">
-          <h1 id="header-mother-name" class="text-[15px] font-bold tracking-tight text-slate-800">Amina Brenda</h1>
-          <span id="header-mother-village" class="px-2 py-0.5 rounded-full bg-teal-50 text-teal-700 text-[11px] font-semibold border border-teal-100/60">Kagando</span>
+          <span class="text-xs font-bold text-slate-900 dark:text-white truncate">Amina Brenda</span>
+          <span class="px-2 py-0.2 rounded-full bg-teal-50 dark:bg-teal-900/40 text-teal-700 dark:text-teal-300 text-[10px] font-bold border border-teal-200/60 dark:border-teal-800 shrink-0">Kagando Village</span>
         </div>
-        <div class="flex items-center gap-1.5 mt-0.5">
-          <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
-          <span class="text-[11px] font-medium text-slate-500">Free USSD *920# Active</span>
+        <div class="flex items-center gap-1 text-[11px] text-slate-500 dark:text-slate-400">
+          <span class="text-teal-700 dark:text-teal-400 font-semibold">Home</span>
+          <span>›</span>
+          <span class="truncate font-medium">Mother Dashboard (Week 28)</span>
         </div>
       </div>
     </div>
-    <div class="flex items-center gap-2">
-      <button id="btn-notifications" aria-label="Notifications" class="relative w-10 h-10 rounded-full bg-white shadow-sm flex items-center justify-center text-slate-700 border border-slate-100 active:scale-95 transition-transform" type="button">
-        <span class="material-symbols-outlined text-[20px]">notifications</span>
-        <span class="absolute top-2.5 right-2.5 w-2 h-2 bg-amber-500 rounded-full ring-2 ring-white"></span>
+
+    <!-- Right Actions: Theme Toggle, Sync, Notifications & Sign Out -->
+    <div class="flex items-center gap-1.5 shrink-0">
+      <button onclick="toggleTheme()" class="theme-toggle-btn w-9 h-9 rounded-full bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 flex items-center justify-center transition-transform active:scale-95 shadow-2xs cursor-pointer" title="Toggle Dark/Light Mode">
+        <span class="material-symbols-outlined theme-toggle-icon text-[18px]">dark_mode</span>
       </button>
+      <button onclick="handleMotherSignOut()" aria-label="Sign Out" class="p-2 sm:px-2.5 sm:py-1.5 rounded-full bg-rose-50 hover:bg-rose-100 dark:bg-rose-950/40 dark:hover:bg-rose-900/60 text-rose-700 dark:text-rose-300 font-bold text-xs flex items-center gap-1 border border-rose-200/80 dark:border-rose-900 shadow-2xs active:scale-95 transition-all cursor-pointer" title="Sign Out Profile">
+        <span class="material-symbols-outlined text-[16px]">logout</span>
+        <span class="hidden md:inline">Sign Out</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Quick Screen Switcher Pill Ribbon (Mobile & Tablet) -->
+  <div class="px-3 sm:px-4 py-1.5 bg-slate-50/90 dark:bg-slate-950/90 border-t border-slate-100 dark:border-slate-800 overflow-x-auto no-scrollbar">
+    <div class="flex items-center gap-2 text-xs font-semibold max-w-md md:max-w-4xl lg:max-w-6xl mx-auto whitespace-nowrap">
+      <a href="/index.html" class="px-3 py-1 rounded-full bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700 hover:border-teal-500 transition-colors flex items-center gap-1 shadow-2xs">
+        <span class="material-symbols-outlined text-[15px] text-teal-600">home</span> Home
+      </a>
+      <a href="/mobile/dashboard_preview.html" class="px-3 py-1 rounded-full bg-[#0e7490] text-white flex items-center gap-1 shadow-xs">
+        <span class="material-symbols-outlined text-[15px]">pregnant_woman</span> Dashboard
+      </a>
+      <a href="/mobile/visits_preview.html" class="px-3 py-1 rounded-full bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700 hover:border-teal-500 transition-colors flex items-center gap-1 shadow-2xs">
+        <span class="material-symbols-outlined text-[15px] text-teal-600">calendar_month</span> ANC Visits
+      </a>
+      <a href="/mobile/danger_signs_preview.html" class="px-3 py-1 rounded-full bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700 hover:border-amber-500 transition-colors flex items-center gap-1 shadow-2xs">
+        <span class="material-symbols-outlined text-[15px] text-amber-500">warning</span> Danger Signs
+      </a>
+      <a href="/frontend/index.html" class="px-3 py-1 rounded-full bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700 hover:border-teal-500 transition-colors flex items-center gap-1 shadow-2xs">
+        <span class="material-symbols-outlined text-[15px] text-emerald-600">local_hospital</span> Clinic Workstation
+      </a>
     </div>
   </div>
 </header>
 
 <!-- Main Scrollable Feed with Minimal Visual Style -->
-<main class="flex flex-col w-full px-5 pt-24 pb-32 gap-5 max-w-md mx-auto">
+<main class="w-full px-4 sm:px-6 lg:px-8 pt-24 pb-32 max-w-md md:max-w-4xl lg:max-w-6xl mx-auto">
+  <div class="grid grid-cols-1 md:grid-cols-12 gap-5 md:gap-6">
+    <!-- Left Column: Pregnancy Status & Midwife Care -->
+    <div class="md:col-span-7 flex flex-col gap-5">
 
   <!-- Registration Success Flash Banner (if arriving from registration) -->
   <div id="registration-banner" class="hidden bg-emerald-50 border border-emerald-200/80 rounded-2xl p-3.5 flex items-center gap-3 shadow-sm animate-fade-in">
@@ -106,9 +309,81 @@
   </div>
 
   <!-- Hero Card with Image and Pregnancy Countdown -->
+
+    <!-- Fetal Growth & Ultrasound Milestones Card -->
+  <div class="bg-gradient-to-br from-cyan-900 via-teal-900 to-slate-900 rounded-3xl p-5 text-white shadow-xl flex flex-col gap-4 relative overflow-hidden">
+    <div class="absolute -right-10 -bottom-10 w-40 h-40 bg-teal-500/10 rounded-full blur-2xl pointer-events-none"></div>
+    <div class="flex items-center justify-between">
+      <div class="flex items-center gap-2">
+        <span class="w-2.5 h-2.5 rounded-full bg-cyan-400 animate-pulse"></span>
+        <span class="text-xs font-bold text-cyan-300 uppercase tracking-wider">Baby Development • Week 28</span>
+      </div>
+      <span class="px-2.5 py-0.5 rounded-full bg-white/10 backdrop-blur-md text-[11px] font-semibold text-white/90">Trimester 3</span>
+    </div>
+
+    <div class="flex items-center gap-4">
+      <div class="w-16 h-16 rounded-2xl bg-white/10 backdrop-blur-md border border-white/20 flex flex-col items-center justify-center text-center p-2 shrink-0">
+        <span class="material-symbols-outlined text-cyan-300 text-[26px]">child_care</span>
+        <span class="text-[10px] text-white/80 font-semibold mt-0.5">~1.1 kg</span>
+      </div>
+      <div class="flex flex-col">
+        <h4 class="text-[15px] font-bold text-white tracking-tight">Baby is the Size of an Eggplant (~38 cm)</h4>
+        <p class="text-xs text-white/80 mt-0.5 leading-relaxed">
+          Your baby's eyes can now open and close. Rapid brain development and sleep-wake cycles are well underway.
+        </p>
+      </div>
+    </div>
+
+    <!-- Active Fetal Kick Tracker Bar -->
+    <div class="bg-white/10 backdrop-blur-md p-3 rounded-2xl border border-white/10 space-y-1.5">
+      <div class="flex items-center justify-between text-xs">
+        <span class="text-white/80 font-medium">Daily Fetal Movements Goal</span>
+        <span class="text-cyan-300 font-bold">10 of 10 kicks logged today (100%)</span>
+      </div>
+      <div class="w-full bg-white/20 h-2 rounded-full overflow-hidden">
+        <div class="bg-cyan-400 h-full rounded-full" style="width: 100%"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Hospital Delivery Bag & Mama Kit Readiness Checklist -->
+  <div class="bg-white dark:bg-slate-900 rounded-3xl p-5 border border-slate-200/90 dark:border-slate-800 shadow-xs flex flex-col gap-3">
+    <div class="flex items-center justify-between">
+      <div class="flex items-center gap-2">
+        <div class="w-8 h-8 rounded-xl bg-teal-50 dark:bg-teal-950/60 text-[#0e7490] dark:text-cyan-400 flex items-center justify-center">
+          <span class="material-symbols-outlined text-[18px]">medical_services</span>
+        </div>
+        <div>
+          <h4 class="text-sm font-bold text-slate-900 dark:text-white">Delivery Bag &amp; Mama Kit Prep</h4>
+          <span class="text-[11px] text-slate-500">Essential supplies for safe delivery at Bwera HC III</span>
+        </div>
+      </div>
+      <span class="px-2 py-0.5 rounded-full bg-emerald-100 dark:bg-emerald-950/60 text-emerald-800 dark:text-emerald-400 text-[10px] font-bold">Ready</span>
+    </div>
+
+    <div class="grid grid-cols-2 gap-2 text-xs text-slate-700 dark:text-slate-300 pt-1">
+      <div class="p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 flex items-center gap-2">
+        <span class="material-symbols-outlined text-emerald-600 text-[18px]">check_circle</span>
+        <span>Mama Kit Sterile Pack</span>
+      </div>
+      <div class="p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 flex items-center gap-2">
+        <span class="material-symbols-outlined text-emerald-600 text-[18px]">check_circle</span>
+        <span>Baby Warm Clothes</span>
+      </div>
+      <div class="p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 flex items-center gap-2">
+        <span class="material-symbols-outlined text-emerald-600 text-[18px]">check_circle</span>
+        <span>Mother Kitenge Wraps</span>
+      </div>
+      <div class="p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 flex items-center gap-2">
+        <span class="material-symbols-outlined text-emerald-600 text-[18px]">check_circle</span>
+        <span>Yellow ANC Card</span>
+      </div>
+    </div>
+  </div>
+
   <div class="relative bg-white rounded-3xl p-2.5 shadow-[0_10px_30px_rgba(0,0,0,0.03)] border border-slate-100 flex flex-col">
     <div class="relative w-full aspect-[4/3] rounded-2xl overflow-hidden bg-slate-100">
-      <img id="hero-image" alt="Mother smiling holding baby" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida/ALJJyrB02uNzgSUFmyA16NdXCEdl86RHOVW_SV4uhcvcQVIo7BNtuvhGPopPUo0PpIzaDWxVmK3GOU_6UJ2Gt-HJXfp0Vn2pcetClnxxoNwiA4tRwlLoPWINdj5PQEJuc-R7CAS70KJxBYggnyirlfbSEPRl02scU-DsOyO8Muaz97pajK7fgWNuVlbvNOi2kZJMf_3mt6Z3U_MtH7VeZLSDAUMeJ21fSr4OpfU9mZwwfjv-Hw">
+      <img id="hero-image" alt="Ugandan African Expectant Mother smiling in clinic" class="w-full h-full object-cover transform hover:scale-105 transition-transform duration-700" src="/assets/images/african_pregnant_mother.jpg" onerror="this.onerror=null; this.src='/assets/images/pregnant_mother.svg';">
       
       <!-- Trimester & Status Badges -->
       <div class="absolute top-3 left-3 bg-white/95 backdrop-blur-md px-3 py-1.5 rounded-full flex items-center gap-1.5 shadow-sm border border-white/60">
@@ -209,6 +484,52 @@
     <button id="btn-visit-details" class="px-3.5 py-1.5 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-700 text-[12px] font-semibold flex-shrink-0 transition-colors active:scale-95" type="button">Details</button>
   </div>
 
+  <!-- Maternal Care Continuum: Lactating Mother & Kangaroo Mother Care -->
+  <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5 pt-1">
+    
+    <!-- Card 1: Lactating Mother & Breastfeeding -->
+    <div class="bg-white dark:bg-slate-900 rounded-2xl p-4 shadow-[0_4px_20px_rgba(0,0,0,0.02)] border border-emerald-100 dark:border-emerald-900/60 flex items-center gap-3.5 hover:border-emerald-300 transition-all">
+      <div class="relative w-16 h-16 rounded-2xl overflow-hidden shrink-0 border-2 border-emerald-500 shadow-sm bg-slate-900">
+        <img src="/assets/images/african_lactating_mother_nursing.jpg" 
+             onerror="this.onerror=null; this.src='/assets/images/lactating_mother.svg';" 
+             alt="Ugandan African Lactating Mother Breastfeeding Baby" 
+             class="w-full h-full object-cover">
+      </div>
+      <div class="flex flex-col min-w-0">
+        <span class="text-[10px] font-bold uppercase tracking-wider text-emerald-700 dark:text-emerald-400">Lactating Mother</span>
+        <span class="text-[13px] font-bold text-slate-900 dark:text-white leading-snug">Exclusive Breastfeeding</span>
+        <span class="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">Colostrum &amp; proper latch tips for newborn care.</span>
+      </div>
+    </div>
+
+    <!-- Card 2: Mother Doing Kangaroo Care (KMC) -->
+    <div class="bg-white dark:bg-slate-900 rounded-2xl p-4 shadow-[0_4px_20px_rgba(0,0,0,0.02)] border border-teal-100 dark:border-teal-900/60 flex items-center gap-3.5 hover:border-teal-300 transition-all">
+      <div class="relative w-16 h-16 rounded-2xl overflow-hidden shrink-0 border-2 border-teal-500 shadow-sm bg-slate-900">
+        <img src="/assets/images/african_mother_kangaroo_care.jpg" 
+             onerror="this.onerror=null; this.src='/assets/images/healthy_baby.svg';" 
+             alt="Ugandan African Mother Doing Kangaroo Care for Baby" 
+             class="w-full h-full object-cover">
+      </div>
+      <div class="flex flex-col min-w-0">
+        <span class="text-[10px] font-bold uppercase tracking-wider text-teal-700 dark:text-teal-400">Kangaroo Care (KMC)</span>
+        <span class="text-[13px] font-bold text-slate-900 dark:text-white leading-snug">Mother Doing Kangaroo Care</span>
+        <span class="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">Skin-to-skin Kangaroo Care &amp; thermal bonding.</span>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Quick Switch to Edit Profile -->
+  <div class="text-center pt-2">
+    <a href="registration_preview.html" class="text-[12px] text-teal-700 hover:underline inline-flex items-center gap-1 font-medium">
+      <span class="material-symbols-outlined text-[14px]">edit</span>
+      Update Registration Details
+    </a>
+  </div>
+</div>
+<!-- Right Column: Daily Health Tracking & Emergency Actions -->
+<div class="md:col-span-5 flex flex-col gap-5">
+
   <!-- Warning / Danger Signs & Emergency Dispatch CTA -->
   <div class="flex flex-col gap-2.5 w-full pt-1">
     <a id="btn-danger-signs" class="w-full flex items-center justify-between p-3.5 rounded-2xl bg-white border border-amber-200/80 shadow-sm active:scale-[0.98] transition-transform text-slate-800 cursor-pointer" href="danger_signs_preview.html">
@@ -227,16 +548,90 @@
       <span class="material-symbols-outlined text-[20px]">call</span>
       <span class="">Emergency Call (Toll-Free 24/7)</span>
     </a>
+
+    <!-- 2G USSD (*920#) Zero Data Quick Launcher (No Firebase / Pure GSM) -->
+    <button onclick="openMobileUssdModal()" class="w-full flex items-center justify-between p-3.5 rounded-2xl bg-gradient-to-r from-emerald-600 to-teal-700 text-white shadow-sm active:scale-[0.98] transition-all cursor-pointer">
+      <div class="flex items-center gap-2.5">
+        <div class="w-9 h-9 rounded-xl bg-white/20 flex items-center justify-center">
+          <span class="material-symbols-outlined text-[20px]">dialpad</span>
+        </div>
+        <div class="flex flex-col text-left">
+          <span class="text-[13px] font-bold leading-tight">Dial *920# (Zero-Data USSD)</span>
+          <span class="text-[11px] text-teal-100 leading-tight">Free 2G menu for visits, danger alerts &amp; SMS</span>
+        </div>
+      </div>
+      <span class="px-2.5 py-1 rounded-full bg-white/20 text-[10px] font-bold">Open Dialer</span>
+    </button>
+
+    
+  <!-- Flutterwave Mama Kit & Delivery Fund Card -->
+  <div class="bg-gradient-to-br from-amber-50 via-orange-50/60 to-white rounded-3xl p-4 border border-amber-200/80 shadow-[0_4px_20px_rgba(245,158,11,0.06)] flex flex-col gap-3">
+    <div class="flex items-center justify-between">
+      <div class="flex items-center gap-2.5">
+        <div class="w-10 h-10 rounded-2xl bg-amber-500 text-white flex items-center justify-center shadow-xs">
+          <span class="material-symbols-outlined text-[20px]">payments</span>
+        </div>
+        <div>
+          <span class="text-[10px] font-bold text-amber-800 uppercase tracking-wider block">Flutterwave Delivery Fund</span>
+          <span class="text-[14px] font-bold text-slate-900 block leading-tight">Mama Kit &amp; Transport Savings</span>
+        </div>
+      </div>
+      <span class="px-2 py-0.5 rounded-full bg-amber-100 text-amber-900 text-[10px] font-bold">UGX Mobile Money</span>
+    </div>
+
+    <div class="flex items-center justify-between bg-white/80 backdrop-blur-xs p-3 rounded-2xl border border-amber-100">
+      <div>
+        <span class="text-[11px] text-slate-500 block">Saved Balance</span>
+        <span id="maternalVoucherBalance" class="text-[18px] font-extrabold text-slate-900 block mt-0.5">25,000 UGX</span>
+      </div>
+      <div class="text-right">
+        <span class="text-[11px] text-emerald-700 font-semibold flex items-center gap-1 justify-end">
+          <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span> Mama Kit Funded
+        </span>
+        <span class="text-[10px] text-slate-400 block mt-0.5">MTN / Airtel Supported</span>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-2 gap-2 pt-0.5">
+      <button onclick="openFlutterwaveModal(25000, 'Mama Kit Safe Delivery Pack')" class="py-2.5 px-3 rounded-xl bg-amber-500 hover:bg-amber-600 text-white text-xs font-bold shadow-xs active:scale-95 transition-all flex items-center justify-center gap-1.5 cursor-pointer">
+        <span class="material-symbols-outlined text-[16px]">add_card</span>
+        <span>+ Add Voucher</span>
+      </button>
+      <button onclick="openFlutterwaveModal(10000, 'Emergency Boda Transport Voucher')" class="py-2.5 px-3 rounded-xl bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 text-xs font-bold active:scale-95 transition-all flex items-center justify-center gap-1.5 cursor-pointer">
+        <span class="material-symbols-outlined text-[16px]">two_wheeler</span>
+        <span>Boda Voucher</span>
+      </button>
+    </div>
   </div>
 
-  <!-- Quick Switch to Edit Profile -->
-  <div class="text-center pt-2">
-    <a href="registration_preview.html" class="text-[12px] text-teal-700 hover:underline inline-flex items-center gap-1 font-medium">
-      <span class="material-symbols-outlined text-[14px]">edit</span>
-      Update Registration Details
+
+    <!-- Functioning WhatsApp Action Button -->
+    <a href="https://wa.me/256778501066?text=Hello%20BabyHealth%20Guard%2C%20I%20am%20Amina%20Brenda%20from%20Kagando%20Village%2C%20reaching%20out%20to%20my%20care%20midwife." target="_blank" class="w-full flex items-center justify-center gap-2 py-3 px-6 rounded-full bg-emerald-50 hover:bg-emerald-100 text-emerald-800 font-bold text-[13px] border border-emerald-200/80 shadow-xs active:scale-[0.98] transition-all">
+      <svg class="w-4 h-4 fill-emerald-600" viewBox="0 0 24 24"><path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.711 2.598 2.664-.698c.969.585 1.961.949 2.796.949 3.181 0 5.767-2.586 5.768-5.766.001-3.18-2.585-5.736-5.768-5.736zm0-1.872c4.225 0 7.639 3.414 7.639 7.638 0 4.225-3.414 7.639-7.639 7.639-.995 0-1.95-.194-2.825-.548l-4.706 1.233 1.258-4.597c-.439-.958-.667-2.008-.667-3.727 0-4.224 3.414-7.638 7.639-7.638zm0 0"/></svg>
+      <span>WhatsApp Midwife (+256 778 501 066)</span>
     </a>
   </div>
 
+  <!-- Contact & Help Footer -->
+  <div class="pt-3 border-t border-slate-100 text-center text-xs text-slate-500 space-y-1.5">
+    <div class="flex items-center justify-center gap-3 text-[12px]">
+      <a href="https://wa.me/256778501066" target="_blank" class="text-emerald-700 font-bold hover:underline">WhatsApp</a>
+      <span>•</span>
+      <a href="tel:+256778501066" class="text-slate-700 font-semibold hover:underline">+256 778 501 066</a>
+      <span>•</span>
+      <a href="mailto:infor@babyguard.org" class="text-teal-700 hover:underline">infor@babyguard.org</a>
+    </div>
+    <div class="flex items-center justify-center gap-3 text-[11px] text-slate-400">
+      <a href="https://tiktok.com/@babyhealthguard" target="_blank" class="hover:text-slate-600">TikTok</a>
+      <span>•</span>
+      <a href="https://x.com/babyhealthguard" target="_blank" class="hover:text-slate-600">X (Twitter)</a>
+      <span>•</span>
+      <span>Free *920#</span>
+    </div>
+  </div>
+
+    </div>
+  </div>
 </main>
 
 <!-- Danger Signs Modal / Sheet -->
@@ -289,7 +684,7 @@
 
 <!-- Minimal Floating Bottom Navigation Bar -->
 <nav class="fixed bottom-0 inset-x-0 z-50 pb-safe bg-white/95 backdrop-blur-xl border-t border-slate-100/80 shadow-[0_-4px_24px_rgba(0,0,0,0.04)]">
-  <div class="flex justify-around items-center h-16 max-w-md mx-auto px-4">
+  <div class="flex justify-around items-center h-16 max-w-md md:max-w-4xl lg:max-w-6xl mx-auto px-4">
     <button aria-label="Home" class="flex flex-col items-center justify-center text-teal-700 transition-all gap-1 py-1 nav-tab" data-tab="home">
       <span class="material-symbols-outlined text-[24px] material-symbols-fill">home</span>
       <span class="text-[11px] font-semibold">Home</span>
@@ -446,6 +841,931 @@
       dangerModal.classList.remove('flex');
     }
   }
+</script>
+
+
+<script>
+function handleMotherSignOut() {
+  if (confirm("Are you sure you want to sign out of your maternal care profile?")) {
+    window.location.href = '/index.html';
+  }
+}
+
+function downloadMotherHealthCard() {
+  const content = `BABYHEALTH GUARD - MATERNAL HEALTH PASSPORT\n--------------------------------------------\nMother Name: Amina Brenda\nAge: 24 yrs\nVillage: Kagando Village, Bwera Sub-County\nGestational Age: 28 Weeks (Trimester 3)\nBlood Pressure: 118/76 mmHg (Normal)\nDaily Kicks Logged: 11 kicks / 2 hours\nIron & Folic Pills: Taken Today\nAssigned Midwife: Sr. Sarah Omondi\nNext Clinic Date: Thursday 24 Oct (Bwera HC III)\nEmergency Hotlines: 112 / 0800 100 200\nUSSD Service: *920# (Free on 2G)`;
+  const blob = new Blob(["\uFEFF" + content], { type: 'text/plain;charset=utf-8;' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'amina_brenda_maternal_passport.txt';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  alert("Maternal Health Card downloaded successfully!");
+}
+</script>
+
+
+<!-- STRICTLY ONE FLOATING AI ASSISTANT BUTTON (MOBILE) -->
+<div class="fixed bottom-20 right-4 z-40">
+  <button onclick="openAiSideDrawer()" aria-label="Open MaamaCare AI Assistant" class="flex items-center gap-2 px-3.5 py-2.5 rounded-full bg-[#0e7490] hover:bg-[#08232c] text-white font-bold text-xs shadow-xl active:scale-95 transition-all border border-white/20 cursor-pointer" title="Open 10 Ugandan Languages Maternal AI Assistant">
+    <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+    <span class="material-symbols-outlined text-[18px]">auto_awesome</span>
+    <span>MaamaCare AI</span>
+  </button>
+</div>
+
+
+<!-- ========================================================================= -->
+<!-- MAAMACARE AI ASSISTANT SIDE DRAWER (10 UGANDAN LOCAL LANGUAGES)           -->
+<!-- ========================================================================= -->
+<div id="aiSideDrawerBackdrop" onclick="closeAiSideDrawer()" class="fixed inset-0 bg-slate-900/50 backdrop-blur-xs z-50 hidden transition-opacity duration-300"></div>
+
+<aside id="aiSideDrawer" class="fixed top-0 right-0 h-full w-full sm:w-[420px] bg-white shadow-2xl z-50 flex flex-col transform translate-x-full transition-transform duration-300 ease-in-out border-l border-slate-200">
+  
+  <!-- Drawer Header -->
+  <div class="bg-gradient-to-r from-[#08232c] to-[#0e7490] p-4 text-white flex items-center justify-between shrink-0 shadow-sm">
+    <div class="flex items-center gap-3">
+      <div class="w-10 h-10 rounded-xl bg-white/15 flex items-center justify-center text-xl">🤱</div>
+      <div>
+        <h3 class="font-extrabold text-sm sm:text-base leading-tight">MaamaCare AI Assistant</h3>
+        <p class="text-[11px] text-cyan-200" id="drawerDialectBadge">Luganda Active • Audio Spoken</p>
+      </div>
+    </div>
+    <button onclick="closeAiSideDrawer()" class="w-8 h-8 rounded-lg bg-white/10 hover:bg-white/20 flex items-center justify-center text-white transition-colors cursor-pointer" title="Close AI Assistant">
+      <span class="material-symbols-outlined text-[20px]">close</span>
+    </button>
+  </div>
+
+  <!-- Language Selector Dropdown in Drawer -->
+  <div class="p-3 bg-slate-50 border-b border-slate-200 flex items-center justify-between text-xs shrink-0">
+    <span class="font-bold text-slate-700">Choose Language:</span>
+    <select onchange="switchLanguage(this.value)" id="drawerLangSelect" class="bg-white text-slate-900 font-bold text-xs rounded-xl px-2.5 py-1.5 border border-slate-300 focus:outline-hidden focus:ring-2 focus:ring-[#0e7490] cursor-pointer">
+      <option value="luganda">🇺🇬 Luganda (Central)</option>
+      <option value="runyankore">🇺🇬 Runyankore (Western)</option>
+      <option value="rukiga">🇺🇬 Rukiga (Kigezi)</option>
+      <option value="lusoga">🇺🇬 Lusoga (Busoga)</option>
+      <option value="acholi">🇺🇬 Acholi (Northern / Luo)</option>
+      <option value="lango">🇺🇬 Lango (Northern)</option>
+      <option value="ateso">🇺🇬 Ateso (Eastern / Teso)</option>
+      <option value="lugbara">🇺🇬 Lugbara (West Nile)</option>
+      <option value="runyoro">🇺🇬 Runyoro-Rutooro (Western)</option>
+      <option value="lumasaba">🇺🇬 Lumasaba (Bugisu)</option>
+      <option value="english">🌐 English (Official)</option>
+      <option value="swahili">🇹🇿 Kiswahili (East Africa)</option>
+    </select>
+  </div>
+
+  <!-- Chat Messages Window -->
+  <div id="drawerChatMessages" class="flex-1 p-4 overflow-y-auto space-y-3.5 bg-slate-50/70 text-xs">
+    <!-- Messages populated by JS -->
+  </div>
+
+  <!-- Quick Question Chips -->
+  <div id="drawerQuickChips" class="px-3.5 py-2.5 bg-white border-t border-slate-100 flex flex-wrap gap-1.5 shrink-0">
+    <!-- Chips populated by JS -->
+  </div>
+
+  <!-- Input Bar -->
+  <div class="p-3 bg-white border-t border-slate-200 shrink-0">
+    <form onsubmit="handleDrawerChatSubmit(event)" class="flex items-center gap-2">
+      <button type="button" onclick="startVoiceInput()" id="drawerMicBtn" title="Speak via microphone" class="w-9 h-9 rounded-xl bg-slate-100 hover:bg-cyan-50 text-slate-700 hover:text-[#0e7490] border border-slate-200 flex items-center justify-center shrink-0 transition-colors cursor-pointer">
+        <span class="material-symbols-outlined text-[18px]">mic</span>
+      </button>
+      <input type="text" id="drawerChatInput" placeholder="Buuza ekibuuzo..." class="flex-1 bg-slate-50 text-xs px-3.5 py-2 rounded-xl border border-slate-200 focus:outline-hidden focus:ring-1 focus:ring-[#0e7490]">
+      <button type="submit" class="px-3.5 py-2 rounded-xl bg-[#0e7490] hover:bg-[#08232c] text-white font-bold text-xs flex items-center justify-center shrink-0 transition-colors cursor-pointer">
+        <span class="material-symbols-outlined text-[16px]">send</span>
+      </button>
+    </form>
+    <div class="mt-2 flex items-center justify-between text-[10px] text-slate-400 px-1">
+      <span>🔊 Tap "Listen" to hear spoken pronunciation</span>
+      <a href="https://wa.me/256778501066" target="_blank" class="text-emerald-600 font-bold hover:underline">WhatsApp Help</a>
+    </div>
+  </div>
+
+</aside>
+
+
+<script>
+// MaamaCare AI Multilingual Knowledge Engine (10 Ugandan Languages)
+const MAAMA_LANGUAGES = {
+  "luganda": {
+    "name": "Luganda (Central)",
+    "greeting": "Oli otya Maama! Nze MaamaCare AI, omuyambi wo ku by'obulamu bwo n'obw'omwana wo. Ndi wano okukuyamba ku bintu byonna ebikwata ku lubuto, okugenda mu ddwaliro, n'obulamu bw'omwana.",
+    "placeholder": "Buuza ekibuuzo ku lubuto oba omwana...",
+    "listenText": "Wuliriza eddoboozi",
+    "quickChips": ["🚨 Obubonero obw'obulabe", "👶 Omwana akuba atya?", "🥗 Eby'okulya n'eddagala lya ayoni", "🏥 Eddwaliro n'okubala emyezi"],
+    "intents": {
+      "danger": { "keywords": ["obulabe", "omusaayi", "omutwe", "amaaso", "omusujja", "kuzimba", "okulumwa", "bleeding", "headache"], "response": "⚠️ OBULABE OBW'AMANGU! Singa ofuna okuvaamu omusaayi, omutwe ogutawona ng'olina ebire mu maaso, omusujja omungi, oba okuzimba ennyo, genda mu ddwaliro amangu ddala! Kuba essimu ku 112 oba 0800 100 200 ku bwereere, oba omusawo wo ku +256 778 501 066." },
+      "kicks": { "keywords": ["kuba", "okukuba", "omwana", "kicks", "move"], "response": "👶 OKUKUBA KW'OMWANA: Omwana asaanidde akube emirundi egitakka wansi wa 10 mu ssaawa bbiri (2) ng'oli mu kuwummula ku lubiriizi olwa kkono. Bw'aleka okukuba, yanguwa ogende mu ddwaliro bakebe omutima gwe." },
+      "nutrition": { "keywords": ["lya", "okulya", "enva", "ayoni", "doodo", "food"], "response": "🥗 EBY'OKULYA: Lya emmere ezimba omusaayi: doodo, nakati, bbugga, ebijanjaalo, amagi, n'amata. Mira buli lunaku ebinini bya Ayoni ne Folic Acid eby'omusaayi." },
+      "visits": { "keywords": ["ddwaliro", "anc", "omusawo", "appointment"], "response": "🏥 OKUGENDA MU DDWALIRO (ANC): Buli maama agende mu ddwaliro emirundi egitakka wansi wa 4. Koona *920# ku ssimu yo okumanya olunaku lwo." }
+    },
+    "default": "Weebale maama! Ekyo ekibuuzo kikulu nnyo. Osobola okumbuuza ku bubonero obw'obulabe, okukuba kw'omwana, eby'okulya, oba okukuba essimu eri omusawo ku +256 778 501 066."
+  },
+  "runyankore": {
+    "name": "Runyankore (Western)",
+    "greeting": "Agandi Maama! Ndi MaamaCare AI, omuyambi waawe w'eby'amagara gaanyu n'omwana waawe ori munda.",
+    "placeholder": "Buuza ekibuuzo aha nda nari omwana...",
+    "listenText": "Huuriza eiraka",
+    "quickChips": ["🚨 Obumanyiso bw'akabi", "👶 Omwana arikutera ata?", "🥗 Eby'okurya n'obujuma", "🏥 Okwija omu ddwaliro"],
+    "intents": {
+      "danger": { "keywords": ["akabi", "omusaayi", "omutwe", "amaisho", "bleeding"], "response": "⚠️ AKABI K'AMAANI! Waareeba omusaayi kuruga omuriiwe, omutwe gw'amaani, nari omusujja, yiruka aha ddwaliro ahonaaho! Nari teera 112 / 0800 100 200, nari midwife aha +256 778 501 066." },
+      "kicks": { "keywords": ["kutera", "omwana", "kicks"], "response": "👶 OKUTERA KW'OMWANA: Omwana ashemereire kutera emirundi ikumi (10) omu shaaha ibiri ohuumwire aha rubaju rwa bumosho. Yaaba atari kutera, yiruka aha ddwaliro." },
+      "nutrition": { "keywords": ["kurya", "ebyokurya", "doodo", "iron"], "response": "🥗 EBY'OKURYA: Rya emboga ziragrikirwe (doodo, ebitakuri), ebihimba, amagi n'amata. Mira obujuma bwa Iron & Folic Acid buri eizooba." }
+    },
+    "default": "Webare maama! Ndi wano kukuyamba. Noobaasa kumbuuza aha kutera kw'omwana, eby'okurya, obumanyiso bw'akabi, nari waateera essimu aha +256 778 501 066."
+  },
+  "rukiga": {
+    "name": "Rukiga (Kigezi)",
+    "greeting": "Oraire ota Maama! Ndi MaamaCare AI, omukuru w'amagara gaanyu n'omwana ori munda omu Kigezi.",
+    "placeholder": "Buuza aha nda n'omwana wo...",
+    "listenText": "Huuriza eiraka",
+    "quickChips": ["🚨 Obumanyiso bw'akabi", "👶 Omwana arikutera ata?", "🥗 Eby'okurya by'omusaayi", "🏥 Okugyenda aha ddwaliro"],
+    "intents": {
+      "danger": { "keywords": ["akabi", "omusaayi", "omutwe", "bleeding"], "response": "⚠️ AKABI K'AMAANI! Waaza omu musaayi kuruga omu nda, omutwe gukurema gwine ebihoho omu maisho, yiruka aha ddwaliro erikukira haihi ahonaaho!" }
+    },
+    "default": "Webare kwebuuza maama! Amagara gaawe n'omwana nigo g'omugasho. Kumbuuza aha by'okurya, okutera kw'omwana, obumanyiso bw'akabi, nari +256 778 501 066."
+  },
+  "lusoga": {
+    "name": "Lusoga (Busoga)",
+    "greeting": "Kodheyo Maama! Nze MaamaCare AI ow'omulala gwo ku by'obulamu bwo n'obw'omwana ori mu nda.",
+    "placeholder": "Buuza ekibuuzo kyo ku nda...",
+    "listenText": "Wuliriza eddoboozi",
+    "quickChips": ["🚨 Obubonero obubi", "👶 Omwana akuba atya?", "🥗 Eby'okulya n'amata", "🏥 Enaku dh'eddwaliro"],
+    "intents": {
+      "danger": { "keywords": ["obulabe", "omusaayi", "omutwe", "bleeding"], "response": "⚠️ AKABANGA AKABI! Singa obona omusaayi gukuvaamu oba omutwe ogukutemye, yanguwa ogende mu ddwaliro lw'amangu ddala! Kuba ku 112 oba 0800 100 200." }
+    },
+    "default": "Webale kwogera nange maama! Buuza ku buli kintu ky'oyagala oba kubira abasawo baffe ku +256 778 501 066."
+  },
+  "acholi": {
+    "name": "Acholi (Northern / Luo)",
+    "greeting": "Kop ango Maama! An aye MaamaCare AI me konyi i kom yotkom meri ki pa litino ma itye kwede i ici.",
+    "placeholder": "Peny lapiny i kom ic...",
+    "listenText": "Winye dwon",
+    "quickChips": ["🚨 Pwony me gemo", "👶 Gayo pa litino", "🥗 Cam me yotkom", "🏥 Cito i ot yat"],
+    "intents": {
+      "danger": { "keywords": ["gemo", "remo", "wic", "bleeding"], "response": "⚠️ PWONY ME GEMO MADIT! Ka ineno remo cwer ki i dyere onyo wic abara madit marac, citi i ot yat ma cok loyo oyotoyot! Go cim 112 onyo 0800 100 200." }
+    },
+    "default": "Apwoyo tutwal maama! Yotkom meri ki pa litino tye gin madit. Peny lapiny mo keken nyo go cim i +256 778 501 066."
+  },
+  "lango": {
+    "name": "Lango (Northern)",
+    "greeting": "Kop ango Maama! Atye kany me konyi i yotkom me ic meri kede me litino ame itye kede.",
+    "placeholder": "Peny lapiny i yotkom...",
+    "listenText": "Winye dwon",
+    "quickChips": ["🚨 Obanga gema", "👶 Kwano gayo pa litino", "🥗 Cam me remo", "🏥 Nino me ot yat"],
+    "intents": {
+      "danger": { "keywords": ["gema", "remo", "wiye", "bleeding"], "response": "⚠️ OBANGA GEMA MALELE! Ka icwec remo onyo wiye obaro atek tutwal, wot i ot yat atotot! Go cim me nono 112 onyo 0800 100 200." }
+    },
+    "default": "Apwoyo matek maama! Peny lapiny i kom yotkom me ic, nino me ot yat, onyo go cim i +256 778 501 066."
+  },
+  "ateso": {
+    "name": "Ateso (Eastern / Teso)",
+    "greeting": "Yoga noi Maama! Eong nesi MaamaCare AI ikepakoni kede aijar kon kede naka ikoku kotoma aberu.",
+    "placeholder": "Ingit aingiset nako ikoku...",
+    "listenText": "Koko eporoto",
+    "quickChips": ["🚨 Agogon naka akalany", "👶 Aikeun naka ikoku", "🥗 Inyamat ka aokot", "🏥 Airot ore eipone"],
+    "intents": {
+      "danger": { "keywords": ["akalany", "aokot", "akou", "bleeding"], "response": "⚠️ AGOGON NAKA AKALANY! Arai ituru aokot arai ekukuni akou noi, kotor ore loka eipone (hospital) atipet! Epedori jo aiyalam simu 112 arai 0800 100 200." }
+    },
+    "default": "Eyalama noi maama! Ingit aingiset kere nako aikeun naka ikoku, inyamat, arai koom simu mama +256 778 501 066."
+  },
+  "lugbara": {
+    "name": "Lugbara (West Nile)",
+    "greeting": "Mi ngoni Maama! Ma mini MaamaCare AI, aza koza mini kpere mva mini dria vule.",
+    "placeholder": "Zi e'yo mva kede ali vule...",
+    "listenText": "Eri o'du",
+    "quickChips": ["🚨 E'yo ndri ka", "👶 Mva saza (Kicks)", "🥗 Enya kede aya ari", "🏥 Muza osipitali sia"],
+    "intents": {
+      "danger": { "keywords": ["ndri", "ari", "dri", "bleeding"], "response": "⚠️ E'YO NDRI KA! Ari ka le'e mi ti vule, dri ka sa nyari-nyari, mu osipitali sia azo amvu! Zaza simu 112 ko 0800 100 200 awu be ku." }
+    },
+    "default": "Awa'difo maama! Yotkom mini be mva mini be nesi e'yo eripi. Zi e'yo azi mini lezuri dria, ko zaza midwife mini i +256 778 501 066."
+  },
+  "runyoro": {
+    "name": "Runyoro-Rutooro (Western)",
+    "greeting": "Oraire ota Maama! Ninyowe MaamaCare AI, omuyambi waawe ow'eby'obwomeezi bwawe n'obw'omwana ori munda.",
+    "placeholder": "Buuza ekibuuzo kyona...",
+    "listenText": "Huuriza iraka",
+    "quickChips": ["🚨 Obulumuna bw'amaani", "👶 Omwana arikutera ata?", "🥗 Eby'okulya eby'omusaayi", "🏥 Ebiro by'okugenda"],
+    "intents": {
+      "danger": { "keywords": ["obulumuna", "omusaayi", "omutwe", "bleeding"], "response": "⚠️ OBULUMUNA BW'AMAANI! Obworaaba oine omusaayi ogurukukwija nari omutwe ogurukukulema, genda ha ddwaliro erikukira haihi ahonaaho!" }
+    },
+    "default": "Webale muno maama! Obwomeezi bwawe n'obw'omwana nigo b'omugaso. Kumbuuza ekiro kyona nari oteere essimu aha +256 778 501 066."
+  },
+  "lumasaba": {
+    "name": "Lumasaba (Bugisu)",
+    "greeting": "Mulembe Maama! Inze MaamaCare AI, omuyambi wo khulwe bulamu bwoosi n'obwo mwana ori munda.",
+    "placeholder": "Buuza khulwe bulamu...",
+    "listenText": "Wulila lilaka",
+    "quickChips": ["🚨 Kamatsai n'obulabe", "👶 Okhukuba khwo mwana", "🥗 By'okhulia n'eddagala", "🏥 Tsikhabado tsyo mu dwalilo"],
+    "intents": {
+      "danger": { "keywords": ["kamatsai", "lilulu", "omutwe", "bleeding"], "response": "⚠️ LUBANGA LULULU! Wakhabona kamatsai kakhuvaamu, omutwe ogukulumina, khenda mu dwalilo mangu mangu! Khuba lisiimu ku 112 naye 0800 100 200." }
+    },
+    "default": "Wanyala naabi maama! Obulamu bwo n'obwo mwana bwebufuna imbeli. Buuza khuri kyosi ky'oyenda kuteera lisiimu ku +256 778 501 066."
+  },
+  "english": {
+    "name": "English (Official)",
+    "greeting": "Hello Mama! I am MaamaCare AI, your maternal and newborn health assistant. How can I help you today with pregnancy signs, fetal kicks, or clinic visits?",
+    "placeholder": "Ask any maternal or baby question...",
+    "listenText": "Listen to Voice",
+    "quickChips": ["🚨 Danger signs in pregnancy", "👶 How to count baby kicks", "🥗 Nutrition & Iron pills", "🏥 Next clinic visit date"],
+    "intents": {
+      "danger": { "keywords": ["danger", "bleeding", "headache", "vision", "fever", "pain"], "response": "⚠️ CRITICAL EMERGENCY: If you experience vaginal bleeding, severe unyielding headache with blurred vision, or high fever, proceed to the nearest health facility immediately! Dial toll-free 112 or 0800 100 200, or call +256 778 501 066." },
+      "kicks": { "keywords": ["kicks", "kick", "movement", "move"], "response": "👶 BABY KICKS: Rest on your left side after a meal. You should feel at least 10 distinct movements within 2 hours. If movement decreases noticeably, visit your clinic right away." },
+      "nutrition": { "keywords": ["food", "nutrition", "eat", "iron", "greens"], "response": "🥗 NUTRITION: Eat green vegetables (doodo, nakati), beans, eggs, and take your daily Iron & Folic Acid supplements to build strong maternal blood and support baby development." },
+      "visits": { "keywords": ["visit", "anc", "clinic", "hospital", "appointment"], "response": "🏥 CLINIC VISITS: The Ministry of Health recommends at least 4 ANC visits. BabyHealth Guard automatically sends SMS reminders, or dial *920# on any phone to check your dates." }
+    },
+    "default": "Thank you Mama! Your health and baby's care are our priority. Ask me about danger signs, counting kicks, or reach our midwife team at +256 778 501 066."
+  },
+  "swahili": {
+    "name": "Kiswahili (East Africa)",
+    "greeting": "Jambo Mama! Mimi ni MaamaCare AI, msaidizi wako wa afya ya uzazi na mtoto. Una swali lolote kuhusu ujauzito au mtoto leo?",
+    "placeholder": "Uliza swali kuhusu ujauzito au mtoto...",
+    "listenText": "Sikiliza sauti",
+    "quickChips": ["🚨 Dalili za hatari", "👶 Mateke ya mtoto", "🥗 Lishe na vidonge vya damu", "🏥 Tarehe ya kliniki"],
+    "intents": {
+      "danger": { "keywords": ["hatari", "damu", "kichwa", "macho", "homa", "bleeding"], "response": "⚠️ TAHADHARI YA HATARI! Ukiona damu inatoka, maumivu makali ya kichwa na kutoona vizuri, fika hospitalini haraka! Piga simu ya bure 112 au 0800 100 200, au piga +256 778 501 066." }
+    },
+    "default": "Asante sana mama! Afya yako ndiyo kipaumbele chetu. Uliza kuhusu dalili za hatari, mateke ya mtoto, au piga simu kwa +256 778 501 066."
+  }
+};
+
+let currentMaamaLang = 'luganda';
+
+function openAiSideDrawer() {
+  const drawer = document.getElementById('aiSideDrawer');
+  const backdrop = document.getElementById('aiSideDrawerBackdrop');
+  if (!drawer || !backdrop) return;
+  initMaamaDrawerChat();
+  backdrop.classList.remove('hidden');
+  setTimeout(() => drawer.classList.remove('translate-x-full'), 10);
+}
+
+function closeAiSideDrawer() {
+  const drawer = document.getElementById('aiSideDrawer');
+  const backdrop = document.getElementById('aiSideDrawerBackdrop');
+  if (!drawer || !backdrop) return;
+  drawer.classList.add('translate-x-full');
+  setTimeout(() => backdrop.classList.add('hidden'), 300);
+  if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+}
+
+function switchLanguage(langKey) {
+  if (!MAAMA_LANGUAGES[langKey]) return;
+  currentMaamaLang = langKey;
+  
+  const langData = MAAMA_LANGUAGES[langKey];
+  const badge = document.getElementById('drawerDialectBadge');
+  const input = document.getElementById('drawerChatInput');
+  const select = document.getElementById('drawerLangSelect');
+  
+  if (badge) badge.textContent = `${langData.name} Active • Audio Spoken`;
+  if (input) input.placeholder = langData.placeholder;
+  if (select) select.value = langKey;
+
+  initMaamaDrawerChat();
+}
+
+function initMaamaDrawerChat() {
+  const langData = MAAMA_LANGUAGES[currentMaamaLang];
+  const container = document.getElementById('drawerChatMessages');
+  if (!container) return;
+  
+  container.innerHTML = `
+    <div class="flex items-start gap-2.5">
+      <div class="w-7 h-7 rounded-lg bg-gradient-to-tr from-cyan-600 to-teal-500 text-white flex items-center justify-center text-xs shrink-0 shadow-xs">
+        🤱
+      </div>
+      <div class="bg-white rounded-2xl rounded-tl-none p-3 shadow-xs border border-slate-200 text-xs text-slate-800 leading-relaxed max-w-[85%]">
+        <span class="font-bold text-[#0e7490] block mb-1">${langData.name}</span>
+        <p>${langData.greeting}</p>
+        <div class="mt-2.5 pt-1.5 border-t border-slate-100 flex items-center justify-between text-[11px]">
+          <button type="button" onclick="speakMaamaText('${escapeMaamaQuotes(langData.greeting)}', '${currentMaamaLang}')" class="inline-flex items-center gap-1 font-bold text-[#0e7490] hover:text-cyan-800 cursor-pointer">
+            <span class="material-symbols-outlined text-[15px]">volume_up</span>
+            <span>${langData.listenText}</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  `;
+
+  const chipsBox = document.getElementById('drawerQuickChips');
+  if (chipsBox) {
+    chipsBox.innerHTML = '';
+    langData.quickChips.forEach(chip => {
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'px-2.5 py-1 rounded-full bg-slate-100 hover:bg-cyan-50 hover:text-[#0e7490] text-slate-700 text-[11px] font-medium border border-slate-200 transition-colors cursor-pointer';
+      btn.textContent = chip;
+      btn.onclick = () => {
+        const inp = document.getElementById('drawerChatInput');
+        if (inp) inp.value = chip;
+        processMaamaDrawerMessage(chip);
+      };
+      chipsBox.appendChild(btn);
+    });
+  }
+}
+
+function handleDrawerChatSubmit(e) {
+  e.preventDefault();
+  const input = document.getElementById('drawerChatInput');
+  if (!input) return;
+  const text = input.value.trim();
+  if (!text) return;
+  processMaamaDrawerMessage(text);
+  input.value = '';
+}
+
+function processMaamaDrawerMessage(text) {
+  const container = document.getElementById('drawerChatMessages');
+  if (!container) return;
+  
+  // User bubble
+  container.insertAdjacentHTML('beforeend', `
+    <div class="flex items-start justify-end gap-2">
+      <div class="bg-[#0e7490] text-white rounded-2xl rounded-tr-none p-3 shadow-xs text-xs leading-relaxed max-w-[85%]">
+        <p>${text}</p>
+      </div>
+      <div class="w-7 h-7 rounded-lg bg-slate-800 text-white flex items-center justify-center text-xs shrink-0">
+        👤
+      </div>
+    </div>
+  `);
+  container.scrollTop = container.scrollHeight;
+
+  // AI Response
+  setTimeout(() => {
+    const langData = MAAMA_LANGUAGES[currentMaamaLang];
+    let responseText = langData.default;
+    const q = text.toLowerCase();
+    if (langData.intents) {
+      for (const [key, val] of Object.entries(langData.intents)) {
+        if (val.keywords.some(k => q.includes(k.toLowerCase()))) {
+          responseText = val.response;
+          break;
+        }
+      }
+    }
+    
+    container.insertAdjacentHTML('beforeend', `
+      <div class="flex items-start gap-2.5">
+        <div class="w-7 h-7 rounded-lg bg-gradient-to-tr from-cyan-600 to-teal-500 text-white flex items-center justify-center text-xs shrink-0 shadow-xs">
+          🤱
+        </div>
+        <div class="bg-white rounded-2xl rounded-tl-none p-3 shadow-xs border border-slate-200 text-xs text-slate-800 leading-relaxed max-w-[85%]">
+          <span class="font-bold text-[#0e7490] block mb-1">${langData.name}</span>
+          <p>${responseText}</p>
+          <div class="mt-2.5 pt-1.5 border-t border-slate-100 flex items-center justify-between text-[11px]">
+            <button type="button" onclick="speakMaamaText('${escapeMaamaQuotes(responseText)}', '${currentMaamaLang}')" class="inline-flex items-center gap-1 font-bold text-[#0e7490] hover:text-cyan-800 cursor-pointer">
+              <span class="material-symbols-outlined text-[15px]">volume_up</span>
+              <span>${langData.listenText}</span>
+            </button>
+            <a href="https://wa.me/256778501066?text=${encodeURIComponent('MaamaCare AI: ' + text)}" target="_blank" class="text-[10px] font-bold text-emerald-600 hover:underline">
+              Midwife WhatsApp →
+            </a>
+          </div>
+        </div>
+      </div>
+    `);
+    container.scrollTop = container.scrollHeight;
+
+    speakMaamaText(responseText, currentMaamaLang);
+  }, 350);
+}
+
+function speakMaamaText(text, langKey) {
+  if (!('speechSynthesis' in window)) return;
+  window.speechSynthesis.cancel();
+  
+  const cleanText = text.replace(/⚠️|👶|🥗|🏥|🤱|●|🚨/g, '').trim();
+  const utterance = new SpeechSynthesisUtterance(cleanText);
+  
+  const voices = window.speechSynthesis.getVoices();
+  const preferred = voices.find(v => v.lang.startsWith('sw') || v.lang.includes('ZA') || v.lang.includes('KE') || v.lang.includes('NG')) 
+                 || voices.find(v => v.lang.startsWith('en')) 
+                 || voices[0];
+  if (preferred) utterance.voice = preferred;
+  utterance.rate = 0.93;
+  utterance.pitch = 1.04;
+  window.speechSynthesis.speak(utterance);
+}
+
+function startVoiceInput() {
+  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (!SpeechRecognition) {
+    alert("Voice speech recognition is not supported in this browser. Please type your question.");
+    return;
+  }
+  const micBtn = document.getElementById('drawerMicBtn');
+  if (micBtn) micBtn.classList.add('bg-rose-100', 'text-rose-600', 'animate-pulse');
+  
+  const recognition = new SpeechRecognition();
+  recognition.lang = 'en-UG';
+  recognition.continuous = false;
+  recognition.interimResults = false;
+
+  recognition.onresult = function(event) {
+    const transcript = event.results[0][0].transcript;
+    const inp = document.getElementById('drawerChatInput');
+    if (inp) inp.value = transcript;
+    processMaamaDrawerMessage(transcript);
+  };
+
+  recognition.onerror = function() {
+    if (micBtn) micBtn.classList.remove('bg-rose-100', 'text-rose-600', 'animate-pulse');
+  };
+
+  recognition.onend = function() {
+    if (micBtn) micBtn.classList.remove('bg-rose-100', 'text-rose-600', 'animate-pulse');
+  };
+
+  recognition.start();
+}
+
+function escapeMaamaQuotes(str) {
+  return str.replace(/'/g, "\\'").replace(/"/g, '&quot;').replace(/\n/g, ' ');
+}
+</script>
+
+
+<!-- Flutterwave Maternal Delivery Fund & Voucher Modal -->
+<div id="flutterwaveModal" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs hidden items-center justify-center p-4">
+  <div class="bg-white w-full max-w-md rounded-3xl shadow-2xl overflow-hidden border border-slate-200 flex flex-col animate-fade-in">
+    <!-- Header with Flutterwave Branding -->
+    <div class="bg-gradient-to-r from-amber-500 via-orange-500 to-rose-500 p-5 text-white flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-white/20 backdrop-blur-md flex items-center justify-center">
+          <span class="material-symbols-outlined text-[24px]">payments</span>
+        </div>
+        <div>
+          <div class="flex items-center gap-1.5">
+            <h3 class="font-bold text-base leading-tight">Flutterwave Checkout</h3>
+            <span class="px-2 py-0.5 rounded-full bg-white/25 text-[10px] font-bold uppercase tracking-wider">Uganda UGX</span>
+          </div>
+          <p class="text-xs text-white/90">MTN MoMo • Airtel Money • Visa/Mastercard</p>
+        </div>
+      </div>
+      <button onclick="closeFlutterwaveModal()" class="w-8 h-8 rounded-full bg-white/20 hover:bg-white/30 text-white flex items-center justify-center transition-colors">
+        <span class="material-symbols-outlined text-[18px]">close</span>
+      </button>
+    </div>
+
+    <!-- Modal Form Body -->
+    <div class="p-6 space-y-4 max-h-[80vh] overflow-y-auto">
+      <div>
+        <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">Select Maternal Support Package</label>
+        <div class="grid grid-cols-2 gap-2.5">
+          <button type="button" onclick="selectFlwPackage(25000, 'Mama Kit Safe Delivery Pack')" class="flw-pkg-btn p-3 rounded-2xl border-2 border-[#0e7490] bg-cyan-50/50 text-left transition-all" data-amount="25000">
+            <span class="text-[11px] font-bold text-slate-500 block uppercase">Mama Kit Pack</span>
+            <span class="text-sm font-extrabold text-slate-900 block mt-0.5">25,000 UGX</span>
+            <span class="text-[10px] text-teal-700 font-medium">Sterile delivery pack</span>
+          </button>
+          <button type="button" onclick="selectFlwPackage(10000, 'Emergency Boda Transport Voucher')" class="flw-pkg-btn p-3 rounded-2xl border border-slate-200 hover:border-slate-300 text-left transition-all" data-amount="10000">
+            <span class="text-[11px] font-bold text-slate-500 block uppercase">Boda Transport</span>
+            <span class="text-sm font-extrabold text-slate-900 block mt-0.5">10,000 UGX</span>
+            <span class="text-[10px] text-slate-500 font-medium">Emergency ride to clinic</span>
+          </button>
+          <button type="button" onclick="selectFlwPackage(15000, 'Antenatal Ultrasound Scan Voucher')" class="flw-pkg-btn p-3 rounded-2xl border border-slate-200 hover:border-slate-300 text-left transition-all" data-amount="15000">
+            <span class="text-[11px] font-bold text-slate-500 block uppercase">Ultrasound Scan</span>
+            <span class="text-sm font-extrabold text-slate-900 block mt-0.5">15,000 UGX</span>
+            <span class="text-[10px] text-slate-500 font-medium">Routine obstetric scan</span>
+          </button>
+          <button type="button" onclick="selectFlwPackage(5000, 'Maternal Micro-Savings Top-up')" class="flw-pkg-btn p-3 rounded-2xl border border-slate-200 hover:border-slate-300 text-left transition-all" data-amount="5000">
+            <span class="text-[11px] font-bold text-slate-500 block uppercase">Micro-Savings</span>
+            <span class="text-sm font-extrabold text-slate-900 block mt-0.5">5,000 UGX</span>
+            <span class="text-[10px] text-slate-500 font-medium">Weekly delivery savings</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Payment Method Selection -->
+      <div>
+        <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">Payment Method</label>
+        <div class="grid grid-cols-3 gap-2">
+          <label class="flex flex-col items-center justify-center p-2.5 rounded-xl border-2 border-amber-400 bg-amber-50/40 cursor-pointer text-center">
+            <input type="radio" name="flwMethod" value="mtn" checked class="sr-only">
+            <span class="text-xs font-bold text-slate-900">MTN MoMo</span>
+            <span class="text-[10px] text-amber-700 font-semibold">*165# Uganda</span>
+          </label>
+          <label class="flex flex-col items-center justify-center p-2.5 rounded-xl border border-slate-200 hover:border-red-300 cursor-pointer text-center">
+            <input type="radio" name="flwMethod" value="airtel" class="sr-only">
+            <span class="text-xs font-bold text-slate-900">Airtel Money</span>
+            <span class="text-[10px] text-red-600 font-semibold">*185# Uganda</span>
+          </label>
+          <label class="flex flex-col items-center justify-center p-2.5 rounded-xl border border-slate-200 hover:border-slate-300 cursor-pointer text-center">
+            <input type="radio" name="flwMethod" value="card" class="sr-only">
+            <span class="text-xs font-bold text-slate-900">Visa / Card</span>
+            <span class="text-[10px] text-slate-500">Debit / Credit</span>
+          </label>
+        </div>
+      </div>
+
+      <!-- Payer Details -->
+      <div class="space-y-3">
+        <div>
+          <label class="block text-xs font-medium text-slate-600 mb-1">Mobile Money Phone Number</label>
+          <div class="relative">
+            <span class="material-symbols-outlined absolute left-3 top-2.5 text-slate-400 text-[18px]">phone_iphone</span>
+            <input id="flwPayerPhone" type="tel" value="+256 778 501 066" placeholder="+256 7XX XXX XXX" class="w-full h-10 pl-9 pr-3 rounded-xl bg-slate-50 border border-slate-200 text-slate-800 text-xs font-semibold focus:outline-none focus:bg-white focus:border-[#0e7490]">
+          </div>
+        </div>
+        <div>
+          <label class="block text-xs font-medium text-slate-600 mb-1">Beneficiary Mother / Payer Name</label>
+          <div class="relative">
+            <span class="material-symbols-outlined absolute left-3 top-2.5 text-slate-400 text-[18px]">person</span>
+            <input id="flwPayerName" type="text" value="Amina Brenda" placeholder="Full Name" class="w-full h-10 pl-9 pr-3 rounded-xl bg-slate-50 border border-slate-200 text-slate-800 text-xs font-semibold focus:outline-none focus:bg-white focus:border-[#0e7490]">
+          </div>
+        </div>
+      </div>
+
+      <!-- Action Button -->
+      <div class="pt-2">
+        <button id="flwPaySubmitBtn" onclick="processFlutterwavePayment()" class="w-full py-3.5 px-5 rounded-2xl bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-white font-extrabold text-sm shadow-md active:scale-98 transition-all flex items-center justify-center gap-2">
+          <span class="material-symbols-outlined text-[20px]">lock</span>
+          <span id="flwBtnText">Pay 25,000 UGX with Flutterwave</span>
+        </button>
+        <div class="flex items-center justify-center gap-2 mt-2 text-[11px] text-slate-400">
+          <span class="material-symbols-outlined text-[13px] text-emerald-600">verified_user</span>
+          <span>Secured by Flutterwave Uganda (PCI-DSS Level 1)</span>
+        </div>
+      </div>
+
+      <!-- Dynamic Receipt / Processing View (Hidden Initially) -->
+      <div id="flwProcessingState" class="hidden text-center py-4 space-y-3">
+        <div class="w-12 h-12 rounded-full border-4 border-amber-500 border-t-transparent animate-spin mx-auto"></div>
+        <div class="space-y-1">
+          <span class="text-xs font-bold text-slate-900 block">Waiting for Mobile Money PIN confirmation...</span>
+          <p class="text-[11px] text-slate-500">A push notification has been sent to your phone. Approve prompt on MTN *165# or Airtel *185#.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Flutterwave Success Toast / Receipt Modal -->
+<div id="flwReceiptModal" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs hidden items-center justify-center p-4">
+  <div class="bg-white w-full max-w-sm rounded-3xl p-6 shadow-2xl text-center space-y-4 border border-slate-100 animate-fade-in">
+    <div class="w-14 h-14 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center mx-auto">
+      <span class="material-symbols-outlined text-[32px]">check_circle</span>
+    </div>
+    <div class="space-y-1">
+      <span class="px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-800 text-[10px] font-bold uppercase tracking-wider border border-emerald-200">Payment Verified</span>
+      <h3 class="text-lg font-bold text-slate-900 mt-1">Maternal Voucher Activated!</h3>
+      <p id="flwReceiptDesc" class="text-xs text-slate-600">Your 25,000 UGX Mama Kit Safe Delivery Pack is funded and linked to your clinic ID.</p>
+    </div>
+    <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-100 text-left text-xs space-y-1.5">
+      <div class="flex justify-between text-slate-500">
+        <span>Tx Ref:</span>
+        <strong id="flwReceiptTxRef" class="text-slate-800 font-mono">FLW-UGX-89210</strong>
+      </div>
+      <div class="flex justify-between text-slate-500">
+        <span>Payment Method:</span>
+        <strong id="flwReceiptMethod" class="text-slate-800">MTN Mobile Money</strong>
+      </div>
+      <div class="flex justify-between text-slate-500">
+        <span>Amount:</span>
+        <strong id="flwReceiptAmount" class="text-emerald-700 font-bold">25,000 UGX</strong>
+      </div>
+    </div>
+    <button onclick="closeFlutterwaveReceipt()" class="w-full py-3 bg-[#0e7490] hover:bg-[#0c627a] text-white rounded-xl text-xs font-bold transition-all">
+      Continue to Dashboard
+    </button>
+  </div>
+</div>
+
+<script>
+// Flutterwave Integration Logic
+let flwSelectedAmount = 25000;
+let flwSelectedPackage = 'Mama Kit Safe Delivery Pack';
+
+function openFlutterwaveModal(amount, pkgName) {
+  if (amount) selectFlwPackage(amount, pkgName || 'Maternal Support');
+  const modal = document.getElementById('flutterwaveModal');
+  if (modal) {
+    modal.classList.remove('hidden');
+    modal.classList.add('flex');
+  }
+}
+
+function closeFlutterwaveModal() {
+  const modal = document.getElementById('flutterwaveModal');
+  if (modal) {
+    modal.classList.add('hidden');
+    modal.classList.remove('flex');
+  }
+}
+
+function selectFlwPackage(amount, pkgName) {
+  flwSelectedAmount = amount;
+  flwSelectedPackage = pkgName;
+  document.querySelectorAll('.flw-pkg-btn').forEach(btn => {
+    if (parseInt(btn.dataset.amount) === amount) {
+      btn.className = 'flw-pkg-btn p-3 rounded-2xl border-2 border-[#0e7490] bg-cyan-50/50 text-left transition-all';
+    } else {
+      btn.className = 'flw-pkg-btn p-3 rounded-2xl border border-slate-200 hover:border-slate-300 text-left transition-all';
+    }
+  });
+  const btnText = document.getElementById('flwBtnText');
+  if (btnText) {
+    btnText.textContent = `Pay ${amount.toLocaleString()} UGX with Flutterwave`;
+  }
+}
+
+function processFlutterwavePayment() {
+  const phone = document.getElementById('flwPayerPhone')?.value || '+256778501066';
+  const name = document.getElementById('flwPayerName')?.value || 'Amina Brenda';
+  const txRef = 'BHG-FLW-' + Date.now();
+
+  // If live FlutterwaveCheckout SDK is available in browser:
+  if (typeof FlutterwaveCheckout === 'function') {
+    FlutterwaveCheckout({
+      public_key: 'FLWPUBK_TEST-SANDBOXDEMO-X',
+      tx_ref: txRef,
+      amount: flwSelectedAmount,
+      currency: 'UGX',
+      payment_options: 'mobilemoneyuganda, card',
+      customer: {
+        email: 'infor@babyguard.org',
+        phone_number: phone,
+        name: name,
+      },
+      customizations: {
+        title: 'BabyHealth Guard - ' + flwSelectedPackage,
+        description: 'Maternal & Newborn Safe Care Support',
+        logo: 'https://images.unsplash.com/photo-1596704017254-9b121068fb31?auto=format&fit=crop&w=200&q=80',
+      },
+      callback: function(data) {
+        finishFlutterwavePayment(txRef, flwSelectedAmount, flwSelectedPackage);
+      },
+      onclose: function() {
+        console.log('Flutterwave window closed');
+      }
+    });
+  } else {
+    // Offline / direct Mobile Money push simulation:
+    const procState = document.getElementById('flwProcessingState');
+    const submitBtn = document.getElementById('flwPaySubmitBtn');
+    if (procState && submitBtn) {
+      procState.classList.remove('hidden');
+      submitBtn.classList.add('opacity-50', 'pointer-events-none');
+      setTimeout(() => {
+        procState.classList.add('hidden');
+        submitBtn.classList.remove('opacity-50', 'pointer-events-none');
+        finishFlutterwavePayment(txRef, flwSelectedAmount, flwSelectedPackage);
+      }, 2200);
+    } else {
+      finishFlutterwavePayment(txRef, flwSelectedAmount, flwSelectedPackage);
+    }
+  }
+}
+
+function finishFlutterwavePayment(txRef, amount, pkgName) {
+  closeFlutterwaveModal();
+  const receipt = document.getElementById('flwReceiptModal');
+  if (receipt) {
+    document.getElementById('flwReceiptTxRef').textContent = txRef;
+    document.getElementById('flwReceiptAmount').textContent = amount.toLocaleString() + ' UGX';
+    document.getElementById('flwReceiptDesc').textContent = `Your ${amount.toLocaleString()} UGX ${pkgName} is verified and active.`;
+    receipt.classList.remove('hidden');
+    receipt.classList.add('flex');
+  }
+
+  // Update voucher balance in local state
+  const prevBalance = parseInt(localStorage.getItem('bhg_voucher_balance') || '0');
+  localStorage.setItem('bhg_voucher_balance', (prevBalance + amount).toString());
+  const balanceDisplay = document.getElementById('maternalVoucherBalance');
+  if (balanceDisplay) {
+    balanceDisplay.textContent = (prevBalance + amount).toLocaleString() + ' UGX';
+  }
+}
+
+function closeFlutterwaveReceipt() {
+  const receipt = document.getElementById('flwReceiptModal');
+  if (receipt) {
+    receipt.classList.add('hidden');
+    receipt.classList.remove('flex');
+  }
+}
+</script>
+
+
+<!-- ========================================================================= -->
+<!-- 2G USSD (*920#) SIMULATOR DIALOG FOR MOBILE                               -->
+<!-- ========================================================================= -->
+<div id="mobileUssdModal" class="fixed inset-0 z-50 bg-black/75 backdrop-blur-sm hidden items-center justify-center p-4">
+  <div class="bg-slate-900 text-white rounded-3xl max-w-sm w-full p-5 shadow-2xl border border-slate-700 flex flex-col space-y-4 animate-in fade-in zoom-in-95 duration-200">
+    
+    <div class="flex items-center justify-between pb-2 border-b border-slate-800">
+      <div class="flex items-center gap-2">
+        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+        <span class="text-xs font-mono font-bold text-cyan-300">2G GSM USSD (*920#)</span>
+      </div>
+      <button onclick="closeMobileUssdModal()" class="w-7 h-7 rounded-full bg-slate-800 hover:bg-slate-700 text-slate-300 flex items-center justify-center cursor-pointer">
+        <span class="material-symbols-outlined text-[16px]">close</span>
+      </button>
+    </div>
+
+    <!-- Green Retro LCD Screen -->
+    <div class="bg-[#c8e6c9] dark:bg-[#1a3826] text-slate-900 dark:text-emerald-100 rounded-2xl p-4 font-mono shadow-inner border border-emerald-800/30 min-h-[170px] flex flex-col justify-between">
+      <div class="flex items-center justify-between text-[9px] pb-1 border-b border-emerald-900/20 font-bold">
+        <span>MTN UG</span>
+        <span>*920#</span>
+        <span>100%</span>
+      </div>
+      <div id="mobileUssdLcdText" class="py-2 text-[11px] leading-relaxed whitespace-pre-wrap flex-1 select-text">
+Welcome to BabyHealth Guard (*920#)
+1. Register Pregnancy (Maama)
+2. Next ANC Clinic Visit
+3. Report Danger Signs (🚨)
+4. Newborn &amp; KMC Care
+5. Mama Kit Voucher
+6. Change Language
+      </div>
+      <div class="pt-1.5 border-t border-emerald-900/20 flex items-center gap-1">
+        <span class="text-xs font-bold">&gt;</span>
+        <input id="mobileUssdInput" type="text" placeholder="Type option..." class="w-full bg-transparent border-0 text-slate-900 dark:text-emerald-100 text-xs font-mono font-bold focus:outline-none" onkeydown="if(event.key==='Enter') sendMobileUssd();">
+      </div>
+    </div>
+
+    <!-- Dial / Clear Controls -->
+    <div class="grid grid-cols-2 gap-2">
+      <button onclick="sendMobileUssd()" class="py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl font-bold text-xs flex items-center justify-center gap-1 shadow-sm active:scale-95 transition-all cursor-pointer">
+        <span class="material-symbols-outlined text-[16px]">call</span>
+        <span>SEND / DIAL</span>
+      </button>
+      <button onclick="resetMobileUssd()" class="py-2.5 bg-rose-600 hover:bg-rose-500 text-white rounded-xl font-bold text-xs flex items-center justify-center gap-1 shadow-sm active:scale-95 transition-all cursor-pointer">
+        <span class="material-symbols-outlined text-[16px]">call_end</span>
+        <span>RESET</span>
+      </button>
+    </div>
+
+    <!-- Keypad Numbers -->
+    <div class="grid grid-cols-3 gap-1.5 text-center">
+      <button onclick="appendMobileKey('1')" class="py-2 bg-slate-800 hover:bg-slate-700 text-white rounded-lg font-mono text-xs font-bold border border-slate-700">1</button>
+      <button onclick="appendMobileKey('2')" class="py-2 bg-slate-800 hover:bg-slate-700 text-white rounded-lg font-mono text-xs font-bold border border-slate-700">2</button>
+      <button onclick="appendMobileKey('3')" class="py-2 bg-slate-800 hover:bg-slate-700 text-white rounded-lg font-mono text-xs font-bold border border-slate-700">3</button>
+      <button onclick="appendMobileKey('4')" class="py-2 bg-slate-800 hover:bg-slate-700 text-white rounded-lg font-mono text-xs font-bold border border-slate-700">4</button>
+      <button onclick="appendMobileKey('5')" class="py-2 bg-slate-800 hover:bg-slate-700 text-white rounded-lg font-mono text-xs font-bold border border-slate-700">5</button>
+      <button onclick="appendMobileKey('6')" class="py-2 bg-slate-800 hover:bg-slate-700 text-white rounded-lg font-mono text-xs font-bold border border-slate-700">6</button>
+      <button onclick="appendMobileKey('7')" class="py-2 bg-slate-800 hover:bg-slate-700 text-white rounded-lg font-mono text-xs font-bold border border-slate-700">7</button>
+      <button onclick="appendMobileKey('8')" class="py-2 bg-slate-800 hover:bg-slate-700 text-white rounded-lg font-mono text-xs font-bold border border-slate-700">8</button>
+      <button onclick="appendMobileKey('9')" class="py-2 bg-slate-800 hover:bg-slate-700 text-white rounded-lg font-mono text-xs font-bold border border-slate-700">9</button>
+      <button onclick="appendMobileKey('*')" class="py-2 bg-slate-800 hover:bg-slate-700 text-amber-300 rounded-lg font-mono text-xs font-bold border border-slate-700">*</button>
+      <button onclick="appendMobileKey('0')" class="py-2 bg-slate-800 hover:bg-slate-700 text-white rounded-lg font-mono text-xs font-bold border border-slate-700">0</button>
+      <button onclick="appendMobileKey('#')" class="py-2 bg-slate-800 hover:bg-slate-700 text-amber-300 rounded-lg font-mono text-xs font-bold border border-slate-700">#</button>
+    </div>
+
+    <!-- Quick Presets -->
+    <div class="pt-2 border-t border-slate-800 flex flex-wrap gap-1 justify-center">
+      <button onclick="triggerMobilePresetUssd('')" class="px-2 py-0.5 bg-slate-800 hover:bg-slate-700 text-cyan-200 text-[10px] font-bold rounded">
+        *920# Menu
+      </button>
+      <button onclick="triggerMobilePresetUssd('2')" class="px-2 py-0.5 bg-slate-800 hover:bg-slate-700 text-emerald-300 text-[10px] font-bold rounded">
+        2. ANC Date
+      </button>
+      <button onclick="triggerMobilePresetUssd('3*1')" class="px-2 py-0.5 bg-rose-950 text-rose-300 text-[10px] font-bold rounded border border-rose-800/60">
+        3. Danger 🚨
+      </button>
+      <button onclick="triggerMobilePresetUssd('4*1*8')" class="px-2 py-0.5 bg-slate-800 hover:bg-slate-700 text-teal-300 text-[10px] font-bold rounded">
+        4. KMC 8h
+      </button>
+      <button onclick="triggerMobilePresetUssd('5')" class="px-2 py-0.5 bg-slate-800 hover:bg-slate-700 text-amber-300 text-[10px] font-bold rounded">
+        5. Voucher
+      </button>
+    </div>
+
+  </div>
+</div>
+
+<script>
+let mobileUssdSessionText = "";
+
+function openMobileUssdModal() {
+  const m = document.getElementById('mobileUssdModal');
+  if (m) {
+    m.classList.remove('hidden');
+    m.classList.add('flex');
+  }
+}
+
+function closeMobileUssdModal() {
+  const m = document.getElementById('mobileUssdModal');
+  if (m) {
+    m.classList.add('hidden');
+    m.classList.remove('flex');
+  }
+}
+
+function appendMobileKey(k) {
+  const input = document.getElementById('mobileUssdInput');
+  if (input) {
+    input.value += k;
+    input.focus();
+  }
+}
+
+function resetMobileUssd() {
+  mobileUssdSessionText = "";
+  const input = document.getElementById('mobileUssdInput');
+  if (input) input.value = "";
+  const lcd = document.getElementById('mobileUssdLcdText');
+  if (lcd) {
+    lcd.textContent = `Welcome to BabyHealth Guard (*920#)
+1. Register Pregnancy (Maama)
+2. Next ANC Clinic Visit
+3. Report Danger Signs (🚨)
+4. Newborn & KMC Care
+5. Mama Kit Voucher
+6. Change Language`;
+  }
+}
+
+async function sendMobileUssd() {
+  const input = document.getElementById('mobileUssdInput');
+  const lcd = document.getElementById('mobileUssdLcdText');
+  if (!input || !lcd) return;
+
+  const val = input.value.trim();
+  if (mobileUssdSessionText) {
+    mobileUssdSessionText += "*" + val;
+  } else {
+    mobileUssdSessionText = val;
+  }
+  input.value = "";
+
+  lcd.textContent = "Connecting to *920#...";
+
+  try {
+    const res = await fetch('/api/ussd', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        text: mobileUssdSessionText,
+        phoneNumber: '+256 778 501 066',
+        serviceCode: '*920#'
+      })
+    });
+    const data = await res.json();
+    lcd.textContent = data.response;
+
+    if (data.response && (data.response.includes("END") || data.response.includes("SMS sent") || data.response.includes("EMERGENCY"))) {
+      mobileUssdSessionText = "";
+      if (typeof toast === 'function') toast("USSD completed! SMS confirmation sent.");
+    }
+  } catch (e) {
+    lcd.textContent = "Offline USSD: Dial *920# on your button phone without internet.";
+  }
+}
+
+async function triggerMobilePresetUssd(preset) {
+  mobileUssdSessionText = preset;
+  const input = document.getElementById('mobileUssdInput');
+  if (input) input.value = "";
+  const lcd = document.getElementById('mobileUssdLcdText');
+  if (lcd) lcd.textContent = "Connecting to *920#...";
+
+  try {
+    const res = await fetch('/api/ussd', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        text: preset,
+        phoneNumber: '+256 778 501 066',
+        serviceCode: '*920#'
+      })
+    });
+    const data = await res.json();
+    if (lcd) lcd.textContent = data.response;
+    if (data.response && (data.response.includes("END") || data.response.includes("SMS"))) {
+      mobileUssdSessionText = "";
+      if (typeof toast === 'function') toast("USSD response received.");
+    }
+  } catch (e) {
+    if (lcd) lcd.textContent = "Offline 2G USSD (*920#)";
+  }
+}
+</script>
+
+<script>
+// Universal Back / Forward / View Navigation Logic
+function navigateBack() {
+  if (window.history.length > 1) {
+    window.history.back();
+  } else {
+    window.location.href = '/index.html';
+  }
+}
+
+function navigateForward() {
+  window.history.forward();
+}
+
+function quickNavigate(path) {
+  window.location.href = path;
+}
 </script>
 
 </body>

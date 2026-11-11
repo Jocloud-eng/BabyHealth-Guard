@@ -19,6 +19,97 @@ class WelcomeScreen extends StatelessWidget {
       body: AmbientBackground(
         child: LayoutBuilder(
           builder: (context, constraints) {
+            final isWideScreen = constraints.maxWidth >= 640;
+
+            if (isWideScreen) {
+              // Tablet and Laptop layout: Elegant two-column presentation
+              return Center(
+                child: SingleChildScrollView(
+                  physics: const BouncingScrollPhysics(),
+                  padding: const EdgeInsets.symmetric(horizontal: 40.0, vertical: 32.0),
+                  child: ConstrainedBox(
+                    constraints: const BoxConstraints(maxWidth: 1040),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        // Left Column: Branding, typography, and controls
+                        Expanded(
+                          flex: 5,
+                          child: Padding(
+                            padding: const EdgeInsets.only(right: 40.0),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Container(
+                                  padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
+                                  decoration: BoxDecoration(
+                                    color: AppColors.teal700.withValues(alpha: 0.1),
+                                    borderRadius: BorderRadius.circular(100),
+                                  ),
+                                  child: const Text(
+                                    'BABYHEALTH GUARD • MOTHER CARE',
+                                    style: TextStyle(
+                                      fontFamily: 'Plus Jakarta Sans',
+                                      fontSize: 11,
+                                      fontWeight: FontWeight.w700,
+                                      letterSpacing: 0.8,
+                                      color: AppColors.teal700,
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(height: 18),
+                                const Text(
+                                  'Welcome to\nBabyHealth Guard',
+                                  style: TextStyle(
+                                    fontFamily: 'Plus Jakarta Sans',
+                                    fontSize: 42,
+                                    fontWeight: FontWeight.w800,
+                                    letterSpacing: -1.2,
+                                    height: 1.15,
+                                    color: AppColors.stone900,
+                                  ),
+                                ),
+                                const SizedBox(height: 16),
+                                const Text(
+                                  'Simple, accessible health monitoring and direct midwife care for you and your baby — works seamlessly offline and across all devices.',
+                                  style: TextStyle(
+                                    fontFamily: 'Plus Jakarta Sans',
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w500,
+                                    height: 1.5,
+                                    color: AppColors.stone600,
+                                  ),
+                                ),
+                                const SizedBox(height: 36),
+                                ConstrainedBox(
+                                  constraints: const BoxConstraints(maxWidth: 360),
+                                  child: GetStartedButton(
+                                    onPressed: () => _navigateToRegistration(context),
+                                  ),
+                                ),
+                                const SizedBox(height: 18),
+                                const OfflineIndicatorBar(),
+                              ],
+                            ),
+                          ),
+                        ),
+                        // Right Column: Hero Visual portrait
+                        const Expanded(
+                          flex: 4,
+                          child: AspectRatio(
+                            aspectRatio: 0.85,
+                            child: HeroImageCard(),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              );
+            }
+
+            // Phone layout (standard vertical stack)
             return SingleChildScrollView(
               physics: const ClampingScrollPhysics(),
               child: ConstrainedBox(
@@ -78,30 +169,7 @@ class WelcomeScreen extends StatelessWidget {
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               GetStartedButton(
-                                onPressed: () {
-                                  Navigator.of(context).push(
-                                    PageRouteBuilder(
-                                      transitionDuration: const Duration(milliseconds: 350),
-                                      pageBuilder: (context, anim, secondaryAnim) =>
-                                          const MotherRegistrationScreen(),
-                                      transitionsBuilder: (context, anim, secondaryAnim, child) {
-                                        return FadeTransition(
-                                          opacity: anim,
-                                          child: SlideTransition(
-                                            position: Tween<Offset>(
-                                              begin: const Offset(0.05, 0),
-                                              end: Offset.zero,
-                                            ).animate(CurvedAnimation(
-                                              parent: anim,
-                                              curve: Curves.easeOutCubic,
-                                            )),
-                                            child: child,
-                                          ),
-                                        );
-                                      },
-                                    ),
-                                  );
-                                },
+                                onPressed: () => _navigateToRegistration(context),
                               ),
                               const SizedBox(height: 14),
                               const OfflineIndicatorBar(),
@@ -116,6 +184,31 @@ class WelcomeScreen extends StatelessWidget {
             );
           },
         ),
+      ),
+    );
+  }
+
+  void _navigateToRegistration(BuildContext context) {
+    Navigator.of(context).push(
+      PageRouteBuilder(
+        transitionDuration: const Duration(milliseconds: 350),
+        pageBuilder: (context, anim, secondaryAnim) =>
+            const MotherRegistrationScreen(),
+        transitionsBuilder: (context, anim, secondaryAnim, child) {
+          return FadeTransition(
+            opacity: anim,
+            child: SlideTransition(
+              position: Tween<Offset>(
+                begin: const Offset(0.05, 0),
+                end: Offset.zero,
+              ).animate(CurvedAnimation(
+                parent: anim,
+                curve: Curves.easeOutCubic,
+              )),
+              child: child,
+            ),
+          );
+        },
       ),
     );
   }

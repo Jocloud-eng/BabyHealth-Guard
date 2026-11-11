@@ -600,7 +600,10 @@ class _MotherDashboardScreenState extends State<MotherDashboardScreen> {
   }
 
   Widget _buildDangerSignsContent() {
-    return SingleChildScrollView(
+    return Center(
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(maxWidth: 860),
+        child: SingleChildScrollView(
       physics: const BouncingScrollPhysics(),
       padding: const EdgeInsets.fromLTRB(20, 16, 20, 100),
       child: Column(
@@ -773,7 +776,9 @@ class _MotherDashboardScreenState extends State<MotherDashboardScreen> {
           ),
         ],
       ),
-    );
+    ),
+  ),
+);
   }
 
   Widget _buildDangerCard({
@@ -945,7 +950,10 @@ class _MotherDashboardScreenState extends State<MotherDashboardScreen> {
   }
 
   Widget _buildMyHealthContent() {
-    return SingleChildScrollView(
+    return Center(
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(maxWidth: 880),
+        child: SingleChildScrollView(
       physics: const BouncingScrollPhysics(),
       padding: const EdgeInsets.fromLTRB(20, 16, 20, 100),
       child: Column(
@@ -1393,14 +1401,19 @@ class _MotherDashboardScreenState extends State<MotherDashboardScreen> {
           ),
         ],
       ),
-    );
+    ),
+  ),
+);
   }
 
   // --------------------------------------------------------------------------
   // TAB 3: VISITS SECTION
   // --------------------------------------------------------------------------
   Widget _buildVisitsContent() {
-    return SingleChildScrollView(
+    return Center(
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(maxWidth: 880),
+        child: SingleChildScrollView(
       physics: const BouncingScrollPhysics(),
       padding: const EdgeInsets.fromLTRB(16, 16, 16, 100),
       child: Column(
@@ -1774,7 +1787,9 @@ class _MotherDashboardScreenState extends State<MotherDashboardScreen> {
           ),
         ],
       ),
-    );
+    ),
+  ),
+);
   }
 
   // --------------------------------------------------------------------------
@@ -1946,36 +1961,88 @@ class _MotherDashboardScreenState extends State<MotherDashboardScreen> {
   }
 
   Widget _buildHomeContent() {
-    return SingleChildScrollView(
-      physics: const BouncingScrollPhysics(),
-      padding: const EdgeInsets.fromLTRB(20, 16, 20, 100),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          // Hero Visual Card
-          _buildHeroCard(),
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final isWide = constraints.maxWidth >= 768;
 
-          const SizedBox(height: 16),
+        if (isWide) {
+          // Tablet & Laptop responsive layout: Balanced dual-column dashboard
+          return Center(
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 1120),
+              child: SingleChildScrollView(
+                physics: const BouncingScrollPhysics(),
+                padding: const EdgeInsets.fromLTRB(28, 20, 28, 100),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Left Column (Hero Card + Assigned Midwife + Next Clinic Visit)
+                    Expanded(
+                      flex: 6,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          _buildHeroCard(),
+                          const SizedBox(height: 18),
+                          _buildMidwifeCard(),
+                          const SizedBox(height: 18),
+                          _buildAncVisitCard(),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(width: 24),
+                    // Right Column (Daily Health Metrics + Emergency Triage & Actions)
+                    Expanded(
+                      flex: 5,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          _buildQuickHealthChecks(),
+                          const SizedBox(height: 18),
+                          _buildEmergencyActions(),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          );
+        }
 
-          // Midwife Card
-          _buildMidwifeCard(),
+        // Phone standard layout (vertical stack)
+        return SingleChildScrollView(
+          physics: const BouncingScrollPhysics(),
+          padding: const EdgeInsets.fromLTRB(20, 16, 20, 100),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              // Hero Visual Card
+              _buildHeroCard(),
 
-          const SizedBox(height: 16),
+              const SizedBox(height: 16),
 
-          // 3 Health Metric Cards
-          _buildQuickHealthChecks(),
+              // Midwife Card
+              _buildMidwifeCard(),
 
-          const SizedBox(height: 16),
+              const SizedBox(height: 16),
 
-          // Next ANC Visit Card
-          _buildAncVisitCard(),
+              // 3 Health Metric Cards
+              _buildQuickHealthChecks(),
 
-          const SizedBox(height: 16),
+              const SizedBox(height: 16),
 
-          // Danger signs banner & Emergency call
-          _buildEmergencyActions(),
-        ],
-      ),
+              // Next ANC Visit Card
+              _buildAncVisitCard(),
+
+              const SizedBox(height: 16),
+
+              // Danger signs banner & Emergency call
+              _buildEmergencyActions(),
+            ],
+          ),
+        );
+      },
     );
   }
 
@@ -2728,17 +2795,22 @@ class _MotherDashboardScreenState extends State<MotherDashboardScreen> {
       ),
       child: SafeArea(
         top: false,
-        child: SizedBox(
-          height: 64,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              _buildNavItem(0, Icons.home_rounded, 'Home'),
-              _buildNavItem(1, Icons.monitor_heart_rounded, 'My Health'),
-              _buildNavItem(
-                  2, Icons.health_and_safety_rounded, 'Warning Signs'),
-              _buildNavItem(3, Icons.event_available_rounded, 'Visits'),
-            ],
+        child: Center(
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 720),
+            child: SizedBox(
+              height: 64,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  _buildNavItem(0, Icons.home_rounded, 'Home'),
+                  _buildNavItem(1, Icons.monitor_heart_rounded, 'My Health'),
+                  _buildNavItem(
+                      2, Icons.health_and_safety_rounded, 'Warning Signs'),
+                  _buildNavItem(3, Icons.event_available_rounded, 'Visits'),
+                ],
+              ),
+            ),
           ),
         ),
       ),

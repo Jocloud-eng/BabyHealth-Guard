@@ -1,0 +1,7 @@
+with open('frontend/index.html', 'r', encoding='utf-8') as f:
+    text = f.read()
+
+idx = text.find('const patients =')
+if idx != -1:
+    print(text[idx:idx+1200])
+

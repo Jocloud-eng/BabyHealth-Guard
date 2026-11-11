@@ -4,6 +4,11 @@
 <meta charset="utf-8">
 <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport">
 <meta content="mobile_tab" name="shell-type">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#0e7490">
+<link rel="manifest" href="/manifest.json">
 <title>BabyHealth Guard — My Visits</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&amp;display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet">
@@ -128,33 +133,222 @@ tailwind.config = {
   }
 };
 </script>
+
+  <style id="bhg-dark-mode-styles">
+    /* Universal Dark Mode CSS Overrides */
+    html.dark {
+      color-scheme: dark;
+    }
+    html.dark body {
+      background-color: #090e17 !important;
+      color: #e2e8f0 !important;
+    }
+    html.dark header {
+      background-color: rgba(15, 23, 42, 0.95) !important;
+      border-color: #1e293b !important;
+    }
+    html.dark nav {
+      background-color: rgba(15, 23, 42, 0.95) !important;
+      border-color: #1e293b !important;
+    }
+    html.dark aside {
+      background-color: #0f172a !important;
+      border-color: #1e293b !important;
+    }
+    html.dark main {
+      background-color: #090e17 !important;
+    }
+    html.dark .bg-white {
+      background-color: #0f172a !important;
+      color: #e2e8f0 !important;
+      border-color: #1e293b !important;
+    }
+    html.dark .bg-slate-50,
+    html.dark .bg-surface,
+    html.dark .bg-surface-bright {
+      background-color: #0b1120 !important;
+      color: #cbd5e1 !important;
+      border-color: #1e293b !important;
+    }
+    html.dark .bg-slate-100,
+    html.dark .bg-surface-container-low,
+    html.dark .bg-surface-container {
+      background-color: #1e293b !important;
+      color: #cbd5e1 !important;
+      border-color: #334155 !important;
+    }
+    html.dark .bg-slate-200 {
+      background-color: #334155 !important;
+    }
+    html.dark .text-slate-900,
+    html.dark .text-on-surface {
+      color: #f8fafc !important;
+    }
+    html.dark .text-slate-800 {
+      color: #f1f5f9 !important;
+    }
+    html.dark .text-slate-700,
+    html.dark .text-on-surface-variant {
+      color: #cbd5e1 !important;
+    }
+    html.dark .text-slate-600 {
+      color: #94a3b8 !important;
+    }
+    html.dark .text-slate-500 {
+      color: #64748b !important;
+    }
+    html.dark .text-slate-400 {
+      color: #94a3b8 !important;
+    }
+    html.dark .border-slate-100,
+    html.dark .border-slate-200,
+    html.dark .border-outline-variant {
+      border-color: #1e293b !important;
+    }
+    html.dark table thead th {
+      background-color: #1e293b !important;
+      color: #94a3b8 !important;
+    }
+    html.dark table tbody tr {
+      border-color: #1e293b !important;
+    }
+    html.dark table tbody tr:hover {
+      background-color: #1e293b80 !important;
+    }
+    html.dark input, 
+    html.dark select, 
+    html.dark textarea {
+      background-color: #1e293b !important;
+      color: #f8fafc !important;
+      border-color: #334155 !important;
+    }
+    html.dark .shadow-xs,
+    html.dark .shadow-sm,
+    html.dark .shadow-md,
+    html.dark .shadow-lg,
+    html.dark .shadow-xl {
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.45) !important;
+    }
+    html.dark .bg-cyan-50,
+    html.dark .bg-teal-50,
+    html.dark .bg-emerald-50,
+    html.dark .bg-amber-50,
+    html.dark .bg-red-50,
+    html.dark .bg-indigo-50 {
+      background-color: #1e293b !important;
+    }
+    html.dark #aiSideDrawer,
+    html.dark #flutterwaveModal > div,
+    html.dark #flwReceiptModal,
+    html.dark #danger-signs-modal > div {
+      background-color: #0f172a !important;
+      color: #f8fafc !important;
+      border-color: #334155 !important;
+    }
+  </style>
+  <script>
+    // Immediate Theme Initialization (prevents flash of unstyled content)
+    (function() {
+      try {
+        var saved = localStorage.getItem('bhg_theme');
+        var prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+        if (saved === 'dark' || (!saved && prefersDark)) {
+          document.documentElement.classList.add('dark');
+        } else {
+          document.documentElement.classList.remove('dark');
+        }
+      } catch (e) {}
+    })();
+
+    function toggleTheme() {
+      var isDark = document.documentElement.classList.toggle('dark');
+      try {
+        localStorage.setItem('bhg_theme', isDark ? 'dark' : 'light');
+      } catch (e) {}
+      updateThemeIcons(isDark);
+      if (typeof toast === 'function') {
+        toast(isDark ? '🌙 Dark Mode activated' : '☀️ Light Mode activated');
+      }
+    }
+
+    function updateThemeIcons(isDark) {
+      document.querySelectorAll('.theme-toggle-icon').forEach(function(el) {
+        el.textContent = isDark ? 'light_mode' : 'dark_mode';
+      });
+      document.querySelectorAll('.theme-toggle-btn').forEach(function(el) {
+        el.setAttribute('title', isDark ? 'Switch to Light Mode' : 'Switch to Dark Mode');
+      });
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+      var isDark = document.documentElement.classList.contains('dark');
+      updateThemeIcons(isDark);
+    });
+  </script>
+
 </head>
 <body class="bg-surface font-body-md text-body-md text-on-surface flex flex-col min-h-screen">
 
 <!-- Header -->
-<header class="fixed top-0 w-full z-50 pt-safe bg-surface/90 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)]">
-  <div class="h-20 px-margin flex items-center justify-between gap-space-sm max-w-md mx-auto">
-    <div class="flex flex-col min-w-0 justify-center">
-      <div class="flex items-center gap-space-xs">
-        <span class="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
-        <span id="visits-header-subtext" class="font-label-sm text-label-sm text-secondary truncate uppercase font-semibold">Amina • 28 Wks</span>
-      </div>
-      <h1 class="font-headline-sm text-headline-sm text-on-surface truncate">My Visits</h1>
+<!-- Professional Visits Header with Back, Forward & Screen Switcher -->
+<header class="fixed top-0 inset-x-0 z-40 pt-safe bg-white/95 dark:bg-slate-900/95 backdrop-blur-xl border-b border-slate-200/80 dark:border-slate-800 shadow-xs transition-colors">
+  <div class="px-3 sm:px-4 pt-2.5 pb-2 flex items-center justify-between gap-2 max-w-md md:max-w-3xl lg:max-w-4xl mx-auto">
+    <div class="flex items-center gap-1.5 shrink-0">
+      <button onclick="navigateBack()" aria-label="Go Back" class="w-9 h-9 rounded-full bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 flex items-center justify-center transition-all active:scale-95 shadow-2xs cursor-pointer" title="Go to Previous Page">
+        <span class="material-symbols-outlined text-[20px]">arrow_back</span>
+      </button>
+      <button onclick="navigateForward()" aria-label="Go Forward" class="w-9 h-9 rounded-full bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 flex items-center justify-center transition-all active:scale-95 shadow-2xs cursor-pointer" title="Go to Next Page">
+        <span class="material-symbols-outlined text-[20px]">arrow_forward</span>
+      </button>
     </div>
-    <div class="flex items-center gap-space-sm flex-shrink-0">
-      <a class="min-h-[44px] px-space-sm py-space-xs rounded-xl bg-primary-container text-on-primary font-label-md text-label-md flex items-center gap-space-xs shadow-sm active:bg-primary transition-colors" href="tel:112">
-        <span class="material-symbols-outlined text-[18px]">call</span>
-        <span>Emergency</span>
+    
+    <div class="flex flex-col min-w-0 flex-1">
+      <div class="flex items-center gap-2">
+        <h1 class="text-sm font-bold text-slate-900 dark:text-white truncate">Antenatal Clinic Visits</h1>
+        <span class="px-2 py-0.5 rounded-full bg-teal-50 dark:bg-teal-900/40 text-teal-700 dark:text-teal-300 text-[10px] font-bold">ANC 3 of 4</span>
+      </div>
+      <div class="flex items-center gap-1 text-[11px] text-slate-500 dark:text-slate-400">
+        <a href="/mobile/dashboard_preview.html" class="text-teal-700 dark:text-teal-400 hover:underline">Dashboard</a>
+        <span>›</span>
+        <span>Clinic Schedule</span>
+      </div>
+    </div>
+
+    <div class="flex items-center gap-1.5 shrink-0">
+      <button onclick="toggleTheme()" class="theme-toggle-btn w-9 h-9 rounded-full bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 flex items-center justify-center transition-transform active:scale-95 shadow-2xs cursor-pointer" title="Toggle Dark/Light Mode">
+        <span class="material-symbols-outlined theme-toggle-icon text-[18px]">dark_mode</span>
+      </button>
+      <a href="tel:112" class="px-3 py-1.5 rounded-full bg-red-600 hover:bg-red-700 text-white font-bold text-xs flex items-center gap-1 shadow-xs active:scale-95 transition-all">
+        <span class="material-symbols-outlined text-[16px]">call</span>
+        <span class="hidden sm:inline">Emergency 112</span>
       </a>
-      <a href="dashboard_preview.html" class="w-8 h-8 rounded-full bg-primary flex items-center justify-center text-on-primary hover:opacity-90">
-        <span class="material-symbols-outlined text-[18px]">person</span>
+    </div>
+  </div>
+
+  <!-- Quick Screen Switcher -->
+  <div class="px-3 sm:px-4 py-1.5 bg-slate-50/90 dark:bg-slate-950/90 border-t border-slate-100 dark:border-slate-800 overflow-x-auto no-scrollbar">
+    <div class="flex items-center gap-2 text-xs font-semibold max-w-md md:max-w-3xl lg:max-w-4xl mx-auto whitespace-nowrap">
+      <a href="/mobile/dashboard_preview.html" class="px-3 py-1 rounded-full bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700 hover:border-teal-500 transition-colors flex items-center gap-1 shadow-2xs">
+        <span class="material-symbols-outlined text-[15px] text-teal-600">pregnant_woman</span> Dashboard
+      </a>
+      <a href="/mobile/visits_preview.html" class="px-3 py-1 rounded-full bg-[#0e7490] text-white flex items-center gap-1 shadow-xs">
+        <span class="material-symbols-outlined text-[15px]">calendar_month</span> ANC Visits
+      </a>
+      <a href="/mobile/danger_signs_preview.html" class="px-3 py-1 rounded-full bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700 hover:border-amber-500 transition-colors flex items-center gap-1 shadow-2xs">
+        <span class="material-symbols-outlined text-[15px] text-amber-500">warning</span> Danger Signs
+      </a>
+      <a href="/frontend/index.html" class="px-3 py-1 rounded-full bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700 hover:border-teal-500 transition-colors flex items-center gap-1 shadow-2xs">
+        <span class="material-symbols-outlined text-[15px] text-emerald-600">local_hospital</span> Clinic Workstation
+      </a>
+      <a href="/index.html" class="px-3 py-1 rounded-full bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700 hover:border-teal-500 transition-colors flex items-center gap-1 shadow-2xs">
+        <span class="material-symbols-outlined text-[15px] text-teal-600">home</span> Home
       </a>
     </div>
   </div>
 </header>
 
 <!-- Main Visits Content -->
-<main class="flex flex-col relative w-full px-margin pt-24 pb-28 bg-surface min-h-screen max-w-md mx-auto">
+<main class="flex flex-col relative w-full px-margin pt-24 pb-28 bg-surface min-h-screen max-w-md md:max-w-3xl lg:max-w-4xl mx-auto">
   <div class="flex flex-col w-full gap-space-md">
 
     <!-- Title Section -->
@@ -162,6 +356,21 @@ tailwind.config = {
       <h2 class="font-headline-xl-mobile text-headline-xl-mobile text-on-surface">Clinic Visits &amp; Reminders</h2>
       <p class="font-body-sm text-body-sm text-on-surface-variant">Regular checks protect both you and your baby's safe arrival.</p>
     </section>
+
+    <!-- Maternal Journey Visual Card (Pregnant Mother) -->
+    <div class="rounded-2xl bg-white border border-outline-variant/30 overflow-hidden shadow-sm flex items-center gap-4 p-3.5">
+      <div class="relative w-20 h-20 rounded-xl overflow-hidden shrink-0 border border-primary/20 shadow-xs bg-slate-900">
+        <img src="/assets/images/african_pregnant_mother.jpg"
+             onerror="this.onerror=null; this.src='/assets/images/pregnant_mother.svg';"
+             alt="Pregnant Mother Journey"
+             class="w-full h-full object-cover">
+      </div>
+      <div class="flex flex-col min-w-0">
+        <span class="font-label-sm text-label-sm text-primary font-bold uppercase tracking-wider">Antenatal Care Journey</span>
+        <h3 class="font-headline-sm text-headline-sm text-on-surface font-bold">4 Focused Clinic Checkups</h3>
+        <p class="font-body-sm text-body-sm text-on-surface-variant mt-0.5">Protecting mama and baby from conception through delivery.</p>
+      </div>
+    </div>
 
     <!-- Next ANC Visit Card -->
     <section class="relative rounded-xl bg-surface-container-lowest p-space-md shadow-md overflow-hidden flex flex-col gap-space-md border border-outline-variant/30">
@@ -220,6 +429,12 @@ tailwind.config = {
         <div class="bg-primary h-full rounded-full transition-all duration-500" style="width: 50%;"></div>
       </div>
       <p class="font-body-sm text-body-sm text-on-surface-variant mt-0.5">2 of 4 visits completed • Next check-up is Visit 3</p>
+
+      <!-- WhatsApp Clinic Scheduler Assistance -->
+      <a href="https://wa.me/256778501066?text=Hello%20Clinic%20Team%2C%20I%20want%20to%20confirm%20or%20reschedule%20my%20ANC%20visit." target="_blank" class="w-full mt-3 py-2.5 px-4 rounded-xl bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-200 text-xs font-bold flex items-center justify-center gap-2 transition-all">
+        <svg class="w-3.5 h-3.5 fill-emerald-600" viewBox="0 0 24 24"><path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.711 2.598 2.664-.698c.969.585 1.961.949 2.796.949 3.181 0 5.767-2.586 5.768-5.766.001-3.18-2.585-5.736-5.768-5.736zm0-1.872c4.225 0 7.639 3.414 7.639 7.638 0 4.225-3.414 7.639-7.639 7.639-.995 0-1.95-.194-2.825-.548l-4.706 1.233 1.258-4.597c-.439-.958-.667-2.008-.667-3.727 0-4.224 3.414-7.638 7.639-7.638zm0 0"/></svg>
+        <span>Reschedule or Confirm via WhatsApp (+256 778 501 066)</span>
+      </a>
     </section>
 
   </div>
@@ -227,7 +442,7 @@ tailwind.config = {
 
 <!-- Bottom Navigation Bar -->
 <nav class="fixed bottom-0 w-full z-50 pb-safe bg-surface/90 backdrop-blur-xl shadow-[0_-2px_12px_rgba(0,0,0,0.05)]">
-  <div class="flex justify-around items-center h-20 px-space-xs max-w-md mx-auto">
+  <div class="flex justify-around items-center h-20 px-space-xs max-w-md md:max-w-3xl lg:max-w-4xl mx-auto">
     <a class="flex flex-col items-center justify-center min-w-[64px] min-h-[48px] py-1 px-2 rounded-xl text-on-surface-variant hover:text-on-surface transition-all gap-0.5" data-path="home" href="dashboard_preview.html">
       <span class="material-symbols-outlined text-[24px]">home</span>
       <span class="font-label-sm text-label-sm">Home</span>
@@ -260,6 +475,450 @@ tailwind.config = {
       } catch (e) {}
     }
   });
+</script>
+
+
+<!-- STRICTLY ONE FLOATING AI ASSISTANT BUTTON (MOBILE) -->
+<div class="fixed bottom-20 right-4 z-40">
+  <button onclick="openAiSideDrawer()" aria-label="Open MaamaCare AI Assistant" class="flex items-center gap-2 px-3.5 py-2.5 rounded-full bg-[#0e7490] hover:bg-[#08232c] text-white font-bold text-xs shadow-xl active:scale-95 transition-all border border-white/20 cursor-pointer" title="Open 10 Ugandan Languages Maternal AI Assistant">
+    <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+    <span class="material-symbols-outlined text-[18px]">auto_awesome</span>
+    <span>MaamaCare AI</span>
+  </button>
+</div>
+
+
+<!-- ========================================================================= -->
+<!-- MAAMACARE AI ASSISTANT SIDE DRAWER (10 UGANDAN LOCAL LANGUAGES)           -->
+<!-- ========================================================================= -->
+<div id="aiSideDrawerBackdrop" onclick="closeAiSideDrawer()" class="fixed inset-0 bg-slate-900/50 backdrop-blur-xs z-50 hidden transition-opacity duration-300"></div>
+
+<aside id="aiSideDrawer" class="fixed top-0 right-0 h-full w-full sm:w-[420px] bg-white shadow-2xl z-50 flex flex-col transform translate-x-full transition-transform duration-300 ease-in-out border-l border-slate-200">
+  
+  <!-- Drawer Header -->
+  <div class="bg-gradient-to-r from-[#08232c] to-[#0e7490] p-4 text-white flex items-center justify-between shrink-0 shadow-sm">
+    <div class="flex items-center gap-3">
+      <div class="w-10 h-10 rounded-xl bg-white/15 flex items-center justify-center text-xl">🤱</div>
+      <div>
+        <h3 class="font-extrabold text-sm sm:text-base leading-tight">MaamaCare AI Assistant</h3>
+        <p class="text-[11px] text-cyan-200" id="drawerDialectBadge">Luganda Active • Audio Spoken</p>
+      </div>
+    </div>
+    <button onclick="closeAiSideDrawer()" class="w-8 h-8 rounded-lg bg-white/10 hover:bg-white/20 flex items-center justify-center text-white transition-colors cursor-pointer" title="Close AI Assistant">
+      <span class="material-symbols-outlined text-[20px]">close</span>
+    </button>
+  </div>
+
+  <!-- Language Selector Dropdown in Drawer -->
+  <div class="p-3 bg-slate-50 border-b border-slate-200 flex items-center justify-between text-xs shrink-0">
+    <span class="font-bold text-slate-700">Choose Language:</span>
+    <select onchange="switchLanguage(this.value)" id="drawerLangSelect" class="bg-white text-slate-900 font-bold text-xs rounded-xl px-2.5 py-1.5 border border-slate-300 focus:outline-hidden focus:ring-2 focus:ring-[#0e7490] cursor-pointer">
+      <option value="luganda">🇺🇬 Luganda (Central)</option>
+      <option value="runyankore">🇺🇬 Runyankore (Western)</option>
+      <option value="rukiga">🇺🇬 Rukiga (Kigezi)</option>
+      <option value="lusoga">🇺🇬 Lusoga (Busoga)</option>
+      <option value="acholi">🇺🇬 Acholi (Northern / Luo)</option>
+      <option value="lango">🇺🇬 Lango (Northern)</option>
+      <option value="ateso">🇺🇬 Ateso (Eastern / Teso)</option>
+      <option value="lugbara">🇺🇬 Lugbara (West Nile)</option>
+      <option value="runyoro">🇺🇬 Runyoro-Rutooro (Western)</option>
+      <option value="lumasaba">🇺🇬 Lumasaba (Bugisu)</option>
+      <option value="english">🌐 English (Official)</option>
+      <option value="swahili">🇹🇿 Kiswahili (East Africa)</option>
+    </select>
+  </div>
+
+  <!-- Chat Messages Window -->
+  <div id="drawerChatMessages" class="flex-1 p-4 overflow-y-auto space-y-3.5 bg-slate-50/70 text-xs">
+    <!-- Messages populated by JS -->
+  </div>
+
+  <!-- Quick Question Chips -->
+  <div id="drawerQuickChips" class="px-3.5 py-2.5 bg-white border-t border-slate-100 flex flex-wrap gap-1.5 shrink-0">
+    <!-- Chips populated by JS -->
+  </div>
+
+  <!-- Input Bar -->
+  <div class="p-3 bg-white border-t border-slate-200 shrink-0">
+    <form onsubmit="handleDrawerChatSubmit(event)" class="flex items-center gap-2">
+      <button type="button" onclick="startVoiceInput()" id="drawerMicBtn" title="Speak via microphone" class="w-9 h-9 rounded-xl bg-slate-100 hover:bg-cyan-50 text-slate-700 hover:text-[#0e7490] border border-slate-200 flex items-center justify-center shrink-0 transition-colors cursor-pointer">
+        <span class="material-symbols-outlined text-[18px]">mic</span>
+      </button>
+      <input type="text" id="drawerChatInput" placeholder="Buuza ekibuuzo..." class="flex-1 bg-slate-50 text-xs px-3.5 py-2 rounded-xl border border-slate-200 focus:outline-hidden focus:ring-1 focus:ring-[#0e7490]">
+      <button type="submit" class="px-3.5 py-2 rounded-xl bg-[#0e7490] hover:bg-[#08232c] text-white font-bold text-xs flex items-center justify-center shrink-0 transition-colors cursor-pointer">
+        <span class="material-symbols-outlined text-[16px]">send</span>
+      </button>
+    </form>
+    <div class="mt-2 flex items-center justify-between text-[10px] text-slate-400 px-1">
+      <span>🔊 Tap "Listen" to hear spoken pronunciation</span>
+      <a href="https://wa.me/256778501066" target="_blank" class="text-emerald-600 font-bold hover:underline">WhatsApp Help</a>
+    </div>
+  </div>
+
+</aside>
+
+
+<script>
+// MaamaCare AI Multilingual Knowledge Engine (10 Ugandan Languages)
+const MAAMA_LANGUAGES = {
+  "luganda": {
+    "name": "Luganda (Central)",
+    "greeting": "Oli otya Maama! Nze MaamaCare AI, omuyambi wo ku by'obulamu bwo n'obw'omwana wo. Ndi wano okukuyamba ku bintu byonna ebikwata ku lubuto, okugenda mu ddwaliro, n'obulamu bw'omwana.",
+    "placeholder": "Buuza ekibuuzo ku lubuto oba omwana...",
+    "listenText": "Wuliriza eddoboozi",
+    "quickChips": ["🚨 Obubonero obw'obulabe", "👶 Omwana akuba atya?", "🥗 Eby'okulya n'eddagala lya ayoni", "🏥 Eddwaliro n'okubala emyezi"],
+    "intents": {
+      "danger": { "keywords": ["obulabe", "omusaayi", "omutwe", "amaaso", "omusujja", "kuzimba", "okulumwa", "bleeding", "headache"], "response": "⚠️ OBULABE OBW'AMANGU! Singa ofuna okuvaamu omusaayi, omutwe ogutawona ng'olina ebire mu maaso, omusujja omungi, oba okuzimba ennyo, genda mu ddwaliro amangu ddala! Kuba essimu ku 112 oba 0800 100 200 ku bwereere, oba omusawo wo ku +256 778 501 066." },
+      "kicks": { "keywords": ["kuba", "okukuba", "omwana", "kicks", "move"], "response": "👶 OKUKUBA KW'OMWANA: Omwana asaanidde akube emirundi egitakka wansi wa 10 mu ssaawa bbiri (2) ng'oli mu kuwummula ku lubiriizi olwa kkono. Bw'aleka okukuba, yanguwa ogende mu ddwaliro bakebe omutima gwe." },
+      "nutrition": { "keywords": ["lya", "okulya", "enva", "ayoni", "doodo", "food"], "response": "🥗 EBY'OKULYA: Lya emmere ezimba omusaayi: doodo, nakati, bbugga, ebijanjaalo, amagi, n'amata. Mira buli lunaku ebinini bya Ayoni ne Folic Acid eby'omusaayi." },
+      "visits": { "keywords": ["ddwaliro", "anc", "omusawo", "appointment"], "response": "🏥 OKUGENDA MU DDWALIRO (ANC): Buli maama agende mu ddwaliro emirundi egitakka wansi wa 4. Koona *920# ku ssimu yo okumanya olunaku lwo." }
+    },
+    "default": "Weebale maama! Ekyo ekibuuzo kikulu nnyo. Osobola okumbuuza ku bubonero obw'obulabe, okukuba kw'omwana, eby'okulya, oba okukuba essimu eri omusawo ku +256 778 501 066."
+  },
+  "runyankore": {
+    "name": "Runyankore (Western)",
+    "greeting": "Agandi Maama! Ndi MaamaCare AI, omuyambi waawe w'eby'amagara gaanyu n'omwana waawe ori munda.",
+    "placeholder": "Buuza ekibuuzo aha nda nari omwana...",
+    "listenText": "Huuriza eiraka",
+    "quickChips": ["🚨 Obumanyiso bw'akabi", "👶 Omwana arikutera ata?", "🥗 Eby'okurya n'obujuma", "🏥 Okwija omu ddwaliro"],
+    "intents": {
+      "danger": { "keywords": ["akabi", "omusaayi", "omutwe", "amaisho", "bleeding"], "response": "⚠️ AKABI K'AMAANI! Waareeba omusaayi kuruga omuriiwe, omutwe gw'amaani, nari omusujja, yiruka aha ddwaliro ahonaaho! Nari teera 112 / 0800 100 200, nari midwife aha +256 778 501 066." },
+      "kicks": { "keywords": ["kutera", "omwana", "kicks"], "response": "👶 OKUTERA KW'OMWANA: Omwana ashemereire kutera emirundi ikumi (10) omu shaaha ibiri ohuumwire aha rubaju rwa bumosho. Yaaba atari kutera, yiruka aha ddwaliro." },
+      "nutrition": { "keywords": ["kurya", "ebyokurya", "doodo", "iron"], "response": "🥗 EBY'OKURYA: Rya emboga ziragrikirwe (doodo, ebitakuri), ebihimba, amagi n'amata. Mira obujuma bwa Iron & Folic Acid buri eizooba." }
+    },
+    "default": "Webare maama! Ndi wano kukuyamba. Noobaasa kumbuuza aha kutera kw'omwana, eby'okurya, obumanyiso bw'akabi, nari waateera essimu aha +256 778 501 066."
+  },
+  "rukiga": {
+    "name": "Rukiga (Kigezi)",
+    "greeting": "Oraire ota Maama! Ndi MaamaCare AI, omukuru w'amagara gaanyu n'omwana ori munda omu Kigezi.",
+    "placeholder": "Buuza aha nda n'omwana wo...",
+    "listenText": "Huuriza eiraka",
+    "quickChips": ["🚨 Obumanyiso bw'akabi", "👶 Omwana arikutera ata?", "🥗 Eby'okurya by'omusaayi", "🏥 Okugyenda aha ddwaliro"],
+    "intents": {
+      "danger": { "keywords": ["akabi", "omusaayi", "omutwe", "bleeding"], "response": "⚠️ AKABI K'AMAANI! Waaza omu musaayi kuruga omu nda, omutwe gukurema gwine ebihoho omu maisho, yiruka aha ddwaliro erikukira haihi ahonaaho!" }
+    },
+    "default": "Webare kwebuuza maama! Amagara gaawe n'omwana nigo g'omugasho. Kumbuuza aha by'okurya, okutera kw'omwana, obumanyiso bw'akabi, nari +256 778 501 066."
+  },
+  "lusoga": {
+    "name": "Lusoga (Busoga)",
+    "greeting": "Kodheyo Maama! Nze MaamaCare AI ow'omulala gwo ku by'obulamu bwo n'obw'omwana ori mu nda.",
+    "placeholder": "Buuza ekibuuzo kyo ku nda...",
+    "listenText": "Wuliriza eddoboozi",
+    "quickChips": ["🚨 Obubonero obubi", "👶 Omwana akuba atya?", "🥗 Eby'okulya n'amata", "🏥 Enaku dh'eddwaliro"],
+    "intents": {
+      "danger": { "keywords": ["obulabe", "omusaayi", "omutwe", "bleeding"], "response": "⚠️ AKABANGA AKABI! Singa obona omusaayi gukuvaamu oba omutwe ogukutemye, yanguwa ogende mu ddwaliro lw'amangu ddala! Kuba ku 112 oba 0800 100 200." }
+    },
+    "default": "Webale kwogera nange maama! Buuza ku buli kintu ky'oyagala oba kubira abasawo baffe ku +256 778 501 066."
+  },
+  "acholi": {
+    "name": "Acholi (Northern / Luo)",
+    "greeting": "Kop ango Maama! An aye MaamaCare AI me konyi i kom yotkom meri ki pa litino ma itye kwede i ici.",
+    "placeholder": "Peny lapiny i kom ic...",
+    "listenText": "Winye dwon",
+    "quickChips": ["🚨 Pwony me gemo", "👶 Gayo pa litino", "🥗 Cam me yotkom", "🏥 Cito i ot yat"],
+    "intents": {
+      "danger": { "keywords": ["gemo", "remo", "wic", "bleeding"], "response": "⚠️ PWONY ME GEMO MADIT! Ka ineno remo cwer ki i dyere onyo wic abara madit marac, citi i ot yat ma cok loyo oyotoyot! Go cim 112 onyo 0800 100 200." }
+    },
+    "default": "Apwoyo tutwal maama! Yotkom meri ki pa litino tye gin madit. Peny lapiny mo keken nyo go cim i +256 778 501 066."
+  },
+  "lango": {
+    "name": "Lango (Northern)",
+    "greeting": "Kop ango Maama! Atye kany me konyi i yotkom me ic meri kede me litino ame itye kede.",
+    "placeholder": "Peny lapiny i yotkom...",
+    "listenText": "Winye dwon",
+    "quickChips": ["🚨 Obanga gema", "👶 Kwano gayo pa litino", "🥗 Cam me remo", "🏥 Nino me ot yat"],
+    "intents": {
+      "danger": { "keywords": ["gema", "remo", "wiye", "bleeding"], "response": "⚠️ OBANGA GEMA MALELE! Ka icwec remo onyo wiye obaro atek tutwal, wot i ot yat atotot! Go cim me nono 112 onyo 0800 100 200." }
+    },
+    "default": "Apwoyo matek maama! Peny lapiny i kom yotkom me ic, nino me ot yat, onyo go cim i +256 778 501 066."
+  },
+  "ateso": {
+    "name": "Ateso (Eastern / Teso)",
+    "greeting": "Yoga noi Maama! Eong nesi MaamaCare AI ikepakoni kede aijar kon kede naka ikoku kotoma aberu.",
+    "placeholder": "Ingit aingiset nako ikoku...",
+    "listenText": "Koko eporoto",
+    "quickChips": ["🚨 Agogon naka akalany", "👶 Aikeun naka ikoku", "🥗 Inyamat ka aokot", "🏥 Airot ore eipone"],
+    "intents": {
+      "danger": { "keywords": ["akalany", "aokot", "akou", "bleeding"], "response": "⚠️ AGOGON NAKA AKALANY! Arai ituru aokot arai ekukuni akou noi, kotor ore loka eipone (hospital) atipet! Epedori jo aiyalam simu 112 arai 0800 100 200." }
+    },
+    "default": "Eyalama noi maama! Ingit aingiset kere nako aikeun naka ikoku, inyamat, arai koom simu mama +256 778 501 066."
+  },
+  "lugbara": {
+    "name": "Lugbara (West Nile)",
+    "greeting": "Mi ngoni Maama! Ma mini MaamaCare AI, aza koza mini kpere mva mini dria vule.",
+    "placeholder": "Zi e'yo mva kede ali vule...",
+    "listenText": "Eri o'du",
+    "quickChips": ["🚨 E'yo ndri ka", "👶 Mva saza (Kicks)", "🥗 Enya kede aya ari", "🏥 Muza osipitali sia"],
+    "intents": {
+      "danger": { "keywords": ["ndri", "ari", "dri", "bleeding"], "response": "⚠️ E'YO NDRI KA! Ari ka le'e mi ti vule, dri ka sa nyari-nyari, mu osipitali sia azo amvu! Zaza simu 112 ko 0800 100 200 awu be ku." }
+    },
+    "default": "Awa'difo maama! Yotkom mini be mva mini be nesi e'yo eripi. Zi e'yo azi mini lezuri dria, ko zaza midwife mini i +256 778 501 066."
+  },
+  "runyoro": {
+    "name": "Runyoro-Rutooro (Western)",
+    "greeting": "Oraire ota Maama! Ninyowe MaamaCare AI, omuyambi waawe ow'eby'obwomeezi bwawe n'obw'omwana ori munda.",
+    "placeholder": "Buuza ekibuuzo kyona...",
+    "listenText": "Huuriza iraka",
+    "quickChips": ["🚨 Obulumuna bw'amaani", "👶 Omwana arikutera ata?", "🥗 Eby'okulya eby'omusaayi", "🏥 Ebiro by'okugenda"],
+    "intents": {
+      "danger": { "keywords": ["obulumuna", "omusaayi", "omutwe", "bleeding"], "response": "⚠️ OBULUMUNA BW'AMAANI! Obworaaba oine omusaayi ogurukukwija nari omutwe ogurukukulema, genda ha ddwaliro erikukira haihi ahonaaho!" }
+    },
+    "default": "Webale muno maama! Obwomeezi bwawe n'obw'omwana nigo b'omugaso. Kumbuuza ekiro kyona nari oteere essimu aha +256 778 501 066."
+  },
+  "lumasaba": {
+    "name": "Lumasaba (Bugisu)",
+    "greeting": "Mulembe Maama! Inze MaamaCare AI, omuyambi wo khulwe bulamu bwoosi n'obwo mwana ori munda.",
+    "placeholder": "Buuza khulwe bulamu...",
+    "listenText": "Wulila lilaka",
+    "quickChips": ["🚨 Kamatsai n'obulabe", "👶 Okhukuba khwo mwana", "🥗 By'okhulia n'eddagala", "🏥 Tsikhabado tsyo mu dwalilo"],
+    "intents": {
+      "danger": { "keywords": ["kamatsai", "lilulu", "omutwe", "bleeding"], "response": "⚠️ LUBANGA LULULU! Wakhabona kamatsai kakhuvaamu, omutwe ogukulumina, khenda mu dwalilo mangu mangu! Khuba lisiimu ku 112 naye 0800 100 200." }
+    },
+    "default": "Wanyala naabi maama! Obulamu bwo n'obwo mwana bwebufuna imbeli. Buuza khuri kyosi ky'oyenda kuteera lisiimu ku +256 778 501 066."
+  },
+  "english": {
+    "name": "English (Official)",
+    "greeting": "Hello Mama! I am MaamaCare AI, your maternal and newborn health assistant. How can I help you today with pregnancy signs, fetal kicks, or clinic visits?",
+    "placeholder": "Ask any maternal or baby question...",
+    "listenText": "Listen to Voice",
+    "quickChips": ["🚨 Danger signs in pregnancy", "👶 How to count baby kicks", "🥗 Nutrition & Iron pills", "🏥 Next clinic visit date"],
+    "intents": {
+      "danger": { "keywords": ["danger", "bleeding", "headache", "vision", "fever", "pain"], "response": "⚠️ CRITICAL EMERGENCY: If you experience vaginal bleeding, severe unyielding headache with blurred vision, or high fever, proceed to the nearest health facility immediately! Dial toll-free 112 or 0800 100 200, or call +256 778 501 066." },
+      "kicks": { "keywords": ["kicks", "kick", "movement", "move"], "response": "👶 BABY KICKS: Rest on your left side after a meal. You should feel at least 10 distinct movements within 2 hours. If movement decreases noticeably, visit your clinic right away." },
+      "nutrition": { "keywords": ["food", "nutrition", "eat", "iron", "greens"], "response": "🥗 NUTRITION: Eat green vegetables (doodo, nakati), beans, eggs, and take your daily Iron & Folic Acid supplements to build strong maternal blood and support baby development." },
+      "visits": { "keywords": ["visit", "anc", "clinic", "hospital", "appointment"], "response": "🏥 CLINIC VISITS: The Ministry of Health recommends at least 4 ANC visits. BabyHealth Guard automatically sends SMS reminders, or dial *920# on any phone to check your dates." }
+    },
+    "default": "Thank you Mama! Your health and baby's care are our priority. Ask me about danger signs, counting kicks, or reach our midwife team at +256 778 501 066."
+  },
+  "swahili": {
+    "name": "Kiswahili (East Africa)",
+    "greeting": "Jambo Mama! Mimi ni MaamaCare AI, msaidizi wako wa afya ya uzazi na mtoto. Una swali lolote kuhusu ujauzito au mtoto leo?",
+    "placeholder": "Uliza swali kuhusu ujauzito au mtoto...",
+    "listenText": "Sikiliza sauti",
+    "quickChips": ["🚨 Dalili za hatari", "👶 Mateke ya mtoto", "🥗 Lishe na vidonge vya damu", "🏥 Tarehe ya kliniki"],
+    "intents": {
+      "danger": { "keywords": ["hatari", "damu", "kichwa", "macho", "homa", "bleeding"], "response": "⚠️ TAHADHARI YA HATARI! Ukiona damu inatoka, maumivu makali ya kichwa na kutoona vizuri, fika hospitalini haraka! Piga simu ya bure 112 au 0800 100 200, au piga +256 778 501 066." }
+    },
+    "default": "Asante sana mama! Afya yako ndiyo kipaumbele chetu. Uliza kuhusu dalili za hatari, mateke ya mtoto, au piga simu kwa +256 778 501 066."
+  }
+};
+
+let currentMaamaLang = 'luganda';
+
+function openAiSideDrawer() {
+  const drawer = document.getElementById('aiSideDrawer');
+  const backdrop = document.getElementById('aiSideDrawerBackdrop');
+  if (!drawer || !backdrop) return;
+  initMaamaDrawerChat();
+  backdrop.classList.remove('hidden');
+  setTimeout(() => drawer.classList.remove('translate-x-full'), 10);
+}
+
+function closeAiSideDrawer() {
+  const drawer = document.getElementById('aiSideDrawer');
+  const backdrop = document.getElementById('aiSideDrawerBackdrop');
+  if (!drawer || !backdrop) return;
+  drawer.classList.add('translate-x-full');
+  setTimeout(() => backdrop.classList.add('hidden'), 300);
+  if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+}
+
+function switchLanguage(langKey) {
+  if (!MAAMA_LANGUAGES[langKey]) return;
+  currentMaamaLang = langKey;
+  
+  const langData = MAAMA_LANGUAGES[langKey];
+  const badge = document.getElementById('drawerDialectBadge');
+  const input = document.getElementById('drawerChatInput');
+  const select = document.getElementById('drawerLangSelect');
+  
+  if (badge) badge.textContent = `${langData.name} Active • Audio Spoken`;
+  if (input) input.placeholder = langData.placeholder;
+  if (select) select.value = langKey;
+
+  initMaamaDrawerChat();
+}
+
+function initMaamaDrawerChat() {
+  const langData = MAAMA_LANGUAGES[currentMaamaLang];
+  const container = document.getElementById('drawerChatMessages');
+  if (!container) return;
+  
+  container.innerHTML = `
+    <div class="flex items-start gap-2.5">
+      <div class="w-7 h-7 rounded-lg bg-gradient-to-tr from-cyan-600 to-teal-500 text-white flex items-center justify-center text-xs shrink-0 shadow-xs">
+        🤱
+      </div>
+      <div class="bg-white rounded-2xl rounded-tl-none p-3 shadow-xs border border-slate-200 text-xs text-slate-800 leading-relaxed max-w-[85%]">
+        <span class="font-bold text-[#0e7490] block mb-1">${langData.name}</span>
+        <p>${langData.greeting}</p>
+        <div class="mt-2.5 pt-1.5 border-t border-slate-100 flex items-center justify-between text-[11px]">
+          <button type="button" onclick="speakMaamaText('${escapeMaamaQuotes(langData.greeting)}', '${currentMaamaLang}')" class="inline-flex items-center gap-1 font-bold text-[#0e7490] hover:text-cyan-800 cursor-pointer">
+            <span class="material-symbols-outlined text-[15px]">volume_up</span>
+            <span>${langData.listenText}</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  `;
+
+  const chipsBox = document.getElementById('drawerQuickChips');
+  if (chipsBox) {
+    chipsBox.innerHTML = '';
+    langData.quickChips.forEach(chip => {
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'px-2.5 py-1 rounded-full bg-slate-100 hover:bg-cyan-50 hover:text-[#0e7490] text-slate-700 text-[11px] font-medium border border-slate-200 transition-colors cursor-pointer';
+      btn.textContent = chip;
+      btn.onclick = () => {
+        const inp = document.getElementById('drawerChatInput');
+        if (inp) inp.value = chip;
+        processMaamaDrawerMessage(chip);
+      };
+      chipsBox.appendChild(btn);
+    });
+  }
+}
+
+function handleDrawerChatSubmit(e) {
+  e.preventDefault();
+  const input = document.getElementById('drawerChatInput');
+  if (!input) return;
+  const text = input.value.trim();
+  if (!text) return;
+  processMaamaDrawerMessage(text);
+  input.value = '';
+}
+
+function processMaamaDrawerMessage(text) {
+  const container = document.getElementById('drawerChatMessages');
+  if (!container) return;
+  
+  // User bubble
+  container.insertAdjacentHTML('beforeend', `
+    <div class="flex items-start justify-end gap-2">
+      <div class="bg-[#0e7490] text-white rounded-2xl rounded-tr-none p-3 shadow-xs text-xs leading-relaxed max-w-[85%]">
+        <p>${text}</p>
+      </div>
+      <div class="w-7 h-7 rounded-lg bg-slate-800 text-white flex items-center justify-center text-xs shrink-0">
+        👤
+      </div>
+    </div>
+  `);
+  container.scrollTop = container.scrollHeight;
+
+  // AI Response
+  setTimeout(() => {
+    const langData = MAAMA_LANGUAGES[currentMaamaLang];
+    let responseText = langData.default;
+    const q = text.toLowerCase();
+    if (langData.intents) {
+      for (const [key, val] of Object.entries(langData.intents)) {
+        if (val.keywords.some(k => q.includes(k.toLowerCase()))) {
+          responseText = val.response;
+          break;
+        }
+      }
+    }
+    
+    container.insertAdjacentHTML('beforeend', `
+      <div class="flex items-start gap-2.5">
+        <div class="w-7 h-7 rounded-lg bg-gradient-to-tr from-cyan-600 to-teal-500 text-white flex items-center justify-center text-xs shrink-0 shadow-xs">
+          🤱
+        </div>
+        <div class="bg-white rounded-2xl rounded-tl-none p-3 shadow-xs border border-slate-200 text-xs text-slate-800 leading-relaxed max-w-[85%]">
+          <span class="font-bold text-[#0e7490] block mb-1">${langData.name}</span>
+          <p>${responseText}</p>
+          <div class="mt-2.5 pt-1.5 border-t border-slate-100 flex items-center justify-between text-[11px]">
+            <button type="button" onclick="speakMaamaText('${escapeMaamaQuotes(responseText)}', '${currentMaamaLang}')" class="inline-flex items-center gap-1 font-bold text-[#0e7490] hover:text-cyan-800 cursor-pointer">
+              <span class="material-symbols-outlined text-[15px]">volume_up</span>
+              <span>${langData.listenText}</span>
+            </button>
+            <a href="https://wa.me/256778501066?text=${encodeURIComponent('MaamaCare AI: ' + text)}" target="_blank" class="text-[10px] font-bold text-emerald-600 hover:underline">
+              Midwife WhatsApp →
+            </a>
+          </div>
+        </div>
+      </div>
+    `);
+    container.scrollTop = container.scrollHeight;
+
+    speakMaamaText(responseText, currentMaamaLang);
+  }, 350);
+}
+
+function speakMaamaText(text, langKey) {
+  if (!('speechSynthesis' in window)) return;
+  window.speechSynthesis.cancel();
+  
+  const cleanText = text.replace(/⚠️|👶|🥗|🏥|🤱|●|🚨/g, '').trim();
+  const utterance = new SpeechSynthesisUtterance(cleanText);
+  
+  const voices = window.speechSynthesis.getVoices();
+  const preferred = voices.find(v => v.lang.startsWith('sw') || v.lang.includes('ZA') || v.lang.includes('KE') || v.lang.includes('NG')) 
+                 || voices.find(v => v.lang.startsWith('en')) 
+                 || voices[0];
+  if (preferred) utterance.voice = preferred;
+  utterance.rate = 0.93;
+  utterance.pitch = 1.04;
+  window.speechSynthesis.speak(utterance);
+}
+
+function startVoiceInput() {
+  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (!SpeechRecognition) {
+    alert("Voice speech recognition is not supported in this browser. Please type your question.");
+    return;
+  }
+  const micBtn = document.getElementById('drawerMicBtn');
+  if (micBtn) micBtn.classList.add('bg-rose-100', 'text-rose-600', 'animate-pulse');
+  
+  const recognition = new SpeechRecognition();
+  recognition.lang = 'en-UG';
+  recognition.continuous = false;
+  recognition.interimResults = false;
+
+  recognition.onresult = function(event) {
+    const transcript = event.results[0][0].transcript;
+    const inp = document.getElementById('drawerChatInput');
+    if (inp) inp.value = transcript;
+    processMaamaDrawerMessage(transcript);
+  };
+
+  recognition.onerror = function() {
+    if (micBtn) micBtn.classList.remove('bg-rose-100', 'text-rose-600', 'animate-pulse');
+  };
+
+  recognition.onend = function() {
+    if (micBtn) micBtn.classList.remove('bg-rose-100', 'text-rose-600', 'animate-pulse');
+  };
+
+  recognition.start();
+}
+
+function escapeMaamaQuotes(str) {
+  return str.replace(/'/g, "\\'").replace(/"/g, '&quot;').replace(/\n/g, ' ');
+}
+</script>
+
+
+<script>
+// Universal Back / Forward / View Navigation Logic
+function navigateBack() {
+  if (window.history.length > 1) {
+    window.history.back();
+  } else {
+    window.location.href = '/index.html';
+  }
+}
+
+function navigateForward() {
+  window.history.forward();
+}
+
+function quickNavigate(path) {
+  window.location.href = path;
+}
 </script>
 
 </body>
