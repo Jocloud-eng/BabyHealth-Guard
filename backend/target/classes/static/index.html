@@ -4,6 +4,11 @@
 <meta charset="utf-8">
 <meta content="width=device-width, initial-scale=1.0" name="viewport">
 <meta content="web_dashboard" name="shell-type">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#0e7490">
+<link rel="manifest" href="/manifest.json">
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
@@ -108,33 +113,196 @@ tailwind.config={
   }
 };
 </script>
+  <script src="https://checkout.flutterwave.com/v3.js"></script>
+
+  <style id="bhg-dark-mode-styles">
+    /* Universal Dark Mode CSS Overrides */
+    html.dark {
+      color-scheme: dark;
+    }
+    html.dark body {
+      background-color: #090e17 !important;
+      color: #e2e8f0 !important;
+    }
+    html.dark header {
+      background-color: rgba(15, 23, 42, 0.95) !important;
+      border-color: #1e293b !important;
+    }
+    html.dark nav {
+      background-color: rgba(15, 23, 42, 0.95) !important;
+      border-color: #1e293b !important;
+    }
+    html.dark aside {
+      background-color: #0f172a !important;
+      border-color: #1e293b !important;
+    }
+    html.dark main {
+      background-color: #090e17 !important;
+    }
+    html.dark .bg-white {
+      background-color: #0f172a !important;
+      color: #e2e8f0 !important;
+      border-color: #1e293b !important;
+    }
+    html.dark .bg-slate-50,
+    html.dark .bg-surface,
+    html.dark .bg-surface-bright {
+      background-color: #0b1120 !important;
+      color: #cbd5e1 !important;
+      border-color: #1e293b !important;
+    }
+    html.dark .bg-slate-100,
+    html.dark .bg-surface-container-low,
+    html.dark .bg-surface-container {
+      background-color: #1e293b !important;
+      color: #cbd5e1 !important;
+      border-color: #334155 !important;
+    }
+    html.dark .bg-slate-200 {
+      background-color: #334155 !important;
+    }
+    html.dark .text-slate-900,
+    html.dark .text-on-surface {
+      color: #f8fafc !important;
+    }
+    html.dark .text-slate-800 {
+      color: #f1f5f9 !important;
+    }
+    html.dark .text-slate-700,
+    html.dark .text-on-surface-variant {
+      color: #cbd5e1 !important;
+    }
+    html.dark .text-slate-600 {
+      color: #94a3b8 !important;
+    }
+    html.dark .text-slate-500 {
+      color: #64748b !important;
+    }
+    html.dark .text-slate-400 {
+      color: #94a3b8 !important;
+    }
+    html.dark .border-slate-100,
+    html.dark .border-slate-200,
+    html.dark .border-outline-variant {
+      border-color: #1e293b !important;
+    }
+    html.dark table thead th {
+      background-color: #1e293b !important;
+      color: #94a3b8 !important;
+    }
+    html.dark table tbody tr {
+      border-color: #1e293b !important;
+    }
+    html.dark table tbody tr:hover {
+      background-color: #1e293b80 !important;
+    }
+    html.dark input, 
+    html.dark select, 
+    html.dark textarea {
+      background-color: #1e293b !important;
+      color: #f8fafc !important;
+      border-color: #334155 !important;
+    }
+    html.dark .shadow-xs,
+    html.dark .shadow-sm,
+    html.dark .shadow-md,
+    html.dark .shadow-lg,
+    html.dark .shadow-xl {
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.45) !important;
+    }
+    html.dark .bg-cyan-50,
+    html.dark .bg-teal-50,
+    html.dark .bg-emerald-50,
+    html.dark .bg-amber-50,
+    html.dark .bg-red-50,
+    html.dark .bg-indigo-50 {
+      background-color: #1e293b !important;
+    }
+    html.dark #aiSideDrawer,
+    html.dark #flutterwaveModal > div,
+    html.dark #flwReceiptModal,
+    html.dark #danger-signs-modal > div {
+      background-color: #0f172a !important;
+      color: #f8fafc !important;
+      border-color: #334155 !important;
+    }
+  </style>
+  <script>
+    // Immediate Theme Initialization (prevents flash of unstyled content)
+    (function() {
+      try {
+        var saved = localStorage.getItem('bhg_theme');
+        var prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+        if (saved === 'dark' || (!saved && prefersDark)) {
+          document.documentElement.classList.add('dark');
+        } else {
+          document.documentElement.classList.remove('dark');
+        }
+      } catch (e) {}
+    })();
+
+    function toggleTheme() {
+      var isDark = document.documentElement.classList.toggle('dark');
+      try {
+        localStorage.setItem('bhg_theme', isDark ? 'dark' : 'light');
+      } catch (e) {}
+      updateThemeIcons(isDark);
+      if (typeof toast === 'function') {
+        toast(isDark ? '🌙 Dark Mode activated' : '☀️ Light Mode activated');
+      }
+    }
+
+    function updateThemeIcons(isDark) {
+      document.querySelectorAll('.theme-toggle-icon').forEach(function(el) {
+        el.textContent = isDark ? 'light_mode' : 'dark_mode';
+      });
+      document.querySelectorAll('.theme-toggle-btn').forEach(function(el) {
+        el.setAttribute('title', isDark ? 'Switch to Light Mode' : 'Switch to Dark Mode');
+      });
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+      var isDark = document.documentElement.classList.contains('dark');
+      updateThemeIcons(isDark);
+    });
+  </script>
+
 </head>
 <body class="bg-slate-50 font-body-md text-slate-800 antialiased">
 
 <!-- Sidebar Navigation -->
-<aside class="fixed left-0 top-0 h-full w-64 bg-[#0b313d] text-white border-r border-[#0f3d4c] shadow-lg z-50 flex flex-col justify-between">
+<div id="sidebarBackdrop" class="fixed inset-0 bg-black/50 z-40 hidden lg:hidden transition-opacity" onclick="toggleMobileSidebar(false)"></div>
+<aside id="mainSidebar" class="fixed left-0 top-0 h-full w-64 bg-[#0b313d] text-white border-r border-[#0f3d4c] shadow-xl z-50 flex flex-col justify-between -translate-x-full lg:translate-x-0 transition-transform duration-300 ease-in-out">
   <div class="flex flex-col">
-    <!-- CARE MENU Header -->
-    <div class="px-5 py-6 border-b border-[#144758]/50">
-      <div class="text-xs uppercase tracking-wider text-cyan-300/80 font-bold">CARE MENU</div>
+    <!-- CARE MENU Header with Back Button -->
+    <div class="px-4 py-4 border-b border-[#144758]/50 space-y-2.5">
+      <a href="/index.html" class="flex items-center gap-2 px-3 py-2 rounded-lg bg-white/10 hover:bg-white/20 text-cyan-100 hover:text-white transition-colors text-xs font-bold">
+        <span class="material-symbols-outlined text-[18px]">arrow_back</span>
+        <span>Back to Home Page</span>
+      </a>
+      <div class="text-[10px] uppercase tracking-wider text-cyan-300/80 font-bold px-1">CARE MENU</div>
     </div>
     <!-- Navigation Links -->
     <nav class="px-3 py-4 space-y-1.5" id="mainSidebarNav">
-      <a class="nav-btn flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-slate-200 hover:bg-white/10 hover:text-white transition-colors duration-150 cursor-pointer" data-view="maternal-care" onclick="switchNavView('maternal-care')">
-        <span class="material-symbols-outlined text-[20px] text-cyan-300">pregnant_woman</span>
+      <a class="nav-btn flex items-center gap-3 px-3.5 py-2.5 rounded-lg bg-[#0e7490] text-white font-semibold shadow-sm transition-all cursor-pointer" data-view="maternal-care" onclick="switchNavView('maternal-care')">
+        <span class="material-symbols-outlined text-[20px] text-white">pregnant_woman</span>
         <span class="font-label-lg text-[14px]">Pregnant Mothers</span>
       </a>
       <a class="nav-btn flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-slate-200 hover:bg-white/10 hover:text-white transition-colors duration-150 cursor-pointer" data-view="newborn-care" onclick="switchNavView('newborn-care')">
         <span class="material-symbols-outlined text-[20px] text-cyan-300">child_care</span>
         <span class="font-label-lg text-[14px]">Baby Checks</span>
       </a>
-      <a class="nav-btn flex items-center gap-3 px-3.5 py-2.5 rounded-lg bg-[#0e7490] text-white font-semibold shadow-sm transition-all cursor-pointer" data-view="appointments" onclick="switchNavView('appointments')">
+      <a class="nav-btn flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-slate-200 hover:bg-white/10 hover:text-white transition-colors duration-150 cursor-pointer" data-view="appointments" onclick="switchNavView('appointments')">
         <span class="material-symbols-outlined text-[20px] text-white">event_available</span>
         <span class="font-label-lg text-[14px]">Visits &amp; Reminders</span>
       </a>
       <a class="nav-btn flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-slate-200 hover:bg-white/10 hover:text-white transition-colors duration-150 cursor-pointer" data-view="referrals" onclick="switchNavView('referrals')">
         <span class="material-symbols-outlined text-[20px] text-cyan-300">local_hospital</span>
         <span class="font-label-lg text-[14px]">Hospital Transfers</span>
+      </a>
+      <a class="nav-btn flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-slate-200 hover:bg-white/10 hover:text-white transition-colors duration-150 cursor-pointer" data-view="sms-ussd" onclick="switchNavView('sms-ussd')">
+        <span class="material-symbols-outlined text-[20px] text-amber-300">cell_tower</span>
+        <span class="font-label-lg text-[14px]">SMS &amp; USSD (*920#)</span>
       </a>
     </nav>
   </div>
@@ -145,6 +313,14 @@ tailwind.config={
       <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span> System Online</span>
       <span class="text-[11px]">v2.4 Simple Care</span>
     </div>
+    <div class="pt-1.5 text-[11px] text-cyan-200/80 space-y-1 border-t border-[#144758]/40">
+      <a href="https://wa.me/256778501066" target="_blank" class="flex items-center gap-1 hover:text-white">
+        <span class="text-emerald-400 font-bold">WhatsApp:</span> +256 778 501 066
+      </a>
+      <a href="mailto:infor@babyguard.org" class="flex items-center gap-1 hover:text-white truncate">
+        <span class="text-cyan-300 font-bold">Email:</span> infor@babyguard.org
+      </a>
+    </div>
     <div class="pt-1 flex gap-2">
       <button onclick="openWorkerAccountModal('create')" class="flex-1 flex items-center justify-center gap-1.5 py-2 px-2 rounded-lg bg-cyan-900/60 hover:bg-cyan-800 text-cyan-100 text-[11px] font-semibold border border-cyan-700/50 transition-all cursor-pointer">
         <span class="material-symbols-outlined text-[15px]">person_add</span> New Staff
@@ -153,14 +329,30 @@ tailwind.config={
         <span class="material-symbols-outlined text-[15px]">swap_horiz</span> Switch
       </button>
     </div>
+    <div class="pt-1">
+      <button onclick="handleSignOut()" class="w-full flex items-center justify-center gap-2 py-2 px-3 rounded-lg bg-rose-950/50 hover:bg-rose-900 text-rose-200 text-xs font-bold border border-rose-800/50 transition-colors cursor-pointer">
+        <span class="material-symbols-outlined text-[16px]">logout</span>
+        <span>Sign Out Account</span>
+      </button>
+    </div>
   </div>
 </aside>
 
 <!-- Main Wrapper with Left Margin for Fixed Sidebar -->
-<div class="pl-64">
+<div class="lg:pl-64 pl-0 transition-all duration-300">
   <!-- Top Fixed Header -->
-  <header class="fixed top-0 left-64 right-0 h-16 bg-white border-b border-slate-200 shadow-xs z-40">
+  <header class="fixed top-0 lg:left-64 left-0 right-0 h-16 bg-white border-b border-slate-200 shadow-xs z-30 transition-all duration-300">
     <div class="h-16 w-full px-6 flex items-center justify-between gap-4">
+      <!-- Hamburger Menu for Mobile & Tablet -->
+      <button type="button" onclick="toggleMobileSidebar()" class="lg:hidden p-2 rounded-lg text-slate-700 hover:bg-slate-100 flex items-center justify-center cursor-pointer mr-1" aria-label="Toggle Menu">
+        <span class="material-symbols-outlined text-[24px]">menu</span>
+      </button>
+      <!-- Back to Home Navigation Button -->
+      <a href="/index.html" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 hover:text-slate-900 font-bold text-xs transition-colors shrink-0 mr-1" title="Back to Home Page">
+        <span class="material-symbols-outlined text-[18px]">arrow_back</span>
+        <span class="hidden sm:inline">Back to Home</span>
+      </a>
+
       <!-- App Branding -->
       <div class="flex items-center gap-3 cursor-pointer" onclick="switchNavView('maternal-care')">
         <div class="w-9 h-9 rounded-lg bg-[#0e7490] text-white flex items-center justify-center shadow-xs">
@@ -181,10 +373,15 @@ tailwind.config={
       </div>
 
       <!-- Right Header Profile & Notifications -->
-      <div class="flex items-center gap-4 shrink-0">
-        <button onclick="toggleNotifications()" class="p-2 text-slate-500 hover:text-[#0e7490] hover:bg-slate-100 rounded-lg transition-colors relative cursor-pointer" title="Notifications">
+      <div class="flex items-center gap-3 shrink-0">
+        <!-- Direct WhatsApp Clinical Support -->
+        <a href="https://wa.me/256778501066?text=Hello%20BabyHealth%20Guard%20Clinical%20Support%2C%20health%20worker%20inquiry." target="_blank" title="WhatsApp Support (+256 778 501 066)" class="hidden md:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-emerald-50 hover:bg-emerald-100 text-emerald-800 text-xs font-semibold border border-emerald-200 transition-colors">
+          <svg class="w-3.5 h-3.5 fill-emerald-600" viewBox="0 0 24 24"><path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.711 2.598 2.664-.698c.969.585 1.961.949 2.796.949 3.181 0 5.767-2.586 5.768-5.766.001-3.18-2.585-5.736-5.768-5.736zm0-1.872c4.225 0 7.639 3.414 7.639 7.638 0 4.225-3.414 7.639-7.639 7.639-.995 0-1.95-.194-2.825-.548l-4.706 1.233 1.258-4.597c-.439-.958-.667-2.008-.667-3.727 0-4.224 3.414-7.638 7.639-7.638zm0 0"/></svg>
+          <span>WhatsApp Help</span>
+        </a>
+        <button onclick="toggleNotifications()" class="p-2 text-slate-500 hover:text-[#0e7490] hover:bg-slate-100 rounded-lg transition-colors relative cursor-pointer" title="Clinical & SMS Notifications">
           <span class="material-symbols-outlined text-[20px]">notifications</span>
-          <span class="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-[#0e7490]"></span>
+          <span id="topNotificationBadge" class="absolute -top-0.5 -right-0.5 px-1.5 min-w-[18px] h-[18px] rounded-full bg-rose-600 text-white text-[10px] font-bold flex items-center justify-center shadow-xs">2</span>
         </button>
 
         <div class="h-6 w-px bg-slate-200"></div>
@@ -198,6 +395,12 @@ tailwind.config={
             SO
           </div>
         </div>
+
+        <!-- Prominent Sign Out Button -->
+        <button onclick="handleSignOut()" class="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-rose-50 hover:bg-rose-100 text-rose-700 hover:text-rose-800 text-xs font-bold border border-rose-200 transition-colors shadow-2xs active:scale-95 cursor-pointer ml-1" title="Sign Out of Clinical Account">
+          <span class="material-symbols-outlined text-[16px]">logout</span>
+          <span class="hidden md:inline">Sign Out</span>
+        </button>
       </div>
     </div>
   </header>
@@ -205,22 +408,105 @@ tailwind.config={
   <!-- Main Content Body -->
   <main class="w-full pt-16 bg-slate-50">
     <!-- View 1: Pregnant Mothers (Maternal Health Tracker) -->
-    <div id="view-maternal-care" class="hidden flex flex-col w-full">
+    <div id="view-maternal-care" class="flex flex-col w-full">
       <div class="p-8 max-w-[1720px] mx-auto w-full space-y-6">
         
-        <!-- Top Registry Context Bar & Global Quick Actions -->
-        <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
-          <div class="space-y-1">
-            <h1 class="font-headline-xl text-headline-xl text-slate-900 tracking-tight">Maternal Health &amp; Pregnancy Care Tracker</h1>
-            <p class="text-xs text-slate-500">Antenatal care registry, vital signs monitoring, and longitudinal patient inspections.</p>
+        <!-- Top Registry Context Bar & Visual Card -->
+        <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-xs flex flex-col md:flex-row items-center justify-between gap-6">
+          <div class="flex items-center gap-4">
+            <div class="w-20 h-20 rounded-2xl overflow-hidden shrink-0 border-2 border-cyan-500/30 shadow-md">
+              <img src="/assets/images/african_pregnant_mother.jpg" 
+                   onerror="this.onerror=null; this.src='/assets/images/pregnant_mother.svg';" 
+                   alt="Pregnant Mother Registry" 
+                   class="w-full h-full object-cover">
+            </div>
+            <div class="space-y-1">
+              <div class="flex items-center gap-2">
+                <span class="px-2.5 py-0.5 rounded-full bg-cyan-100 text-[#0e7490] font-bold text-[10px] uppercase">Antenatal Care</span>
+                <span class="text-xs text-slate-400">• Bwera Health Centre III</span>
+              </div>
+              <h1 class="font-bold text-lg text-slate-900 tracking-tight">Pregnant Mothers &amp; Antenatal Registry</h1>
+              <p class="text-xs text-slate-500">Longitudinal gestation tracking, blood pressure triage, and fetal kicks monitoring.</p>
+            </div>
           </div>
           <div class="flex items-center flex-wrap gap-2.5">
+            <button onclick="downloadMaternalRegistryCSV()" class="inline-flex items-center gap-2 px-3.5 py-2.5 rounded-lg border border-slate-200 bg-white text-slate-700 text-[13px] font-semibold hover:bg-slate-50 transition-all shadow-xs cursor-pointer" title="Download Maternal Health Registry as CSV file">
+              <span class="material-symbols-outlined text-[18px]">download</span>
+              <span>Download CSV</span>
+            </button>
+            <button onclick="openFacilityReportModal()" class="inline-flex items-center gap-2 px-3.5 py-2.5 rounded-lg bg-emerald-700 hover:bg-emerald-800 text-white text-[13px] font-semibold transition-all shadow-xs cursor-pointer" title="Generate Ministry of Health FR12 Facility Report">
+              <span class="material-symbols-outlined text-[18px]">summarize</span>
+              <span>Monthly Report (FR12)</span>
+            </button>
             <button onclick="openRegisterMotherModal()" class="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg bg-[#0e7490] text-white text-[13px] font-semibold hover:bg-[#0c627a] transition-all shadow-xs cursor-pointer">
               <span class="material-symbols-outlined text-[18px]">add_circle</span>
               <span>Register Expectant Mother</span>
             </button>
           </div>
         </div>
+
+                <!-- Maternal Clinical Overview KPI Cards Ribbon -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+          <!-- KPI 1: Active Expectant Mothers -->
+          <div class="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200/90 dark:border-slate-800 shadow-xs flex flex-col justify-between hover:border-cyan-400 transition-all">
+            <div class="flex items-center justify-between">
+              <span class="text-[11px] font-bold tracking-wider text-slate-500 dark:text-slate-400 uppercase">MOTHERS MONITORED</span>
+              <div class="w-9 h-9 rounded-xl bg-cyan-50 dark:bg-cyan-950/60 text-[#0e7490] dark:text-cyan-400 flex items-center justify-center">
+                <span class="material-symbols-outlined text-[20px]">pregnant_woman</span>
+              </div>
+            </div>
+            <div class="mt-3">
+              <div class="text-[26px] font-extrabold text-slate-900 dark:text-white leading-none">142</div>
+              <div class="mt-2 text-xs text-teal-700 dark:text-teal-400 font-semibold flex items-center gap-1">
+                <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                <span>16 active in clinic today</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- KPI 2: High Risk Triage -->
+          <div class="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200/90 dark:border-slate-800 shadow-xs flex flex-col justify-between hover:border-amber-400 transition-all">
+            <div class="flex items-center justify-between">
+              <span class="text-[11px] font-bold tracking-wider text-slate-500 dark:text-slate-400 uppercase">HIGH-RISK ALERTS</span>
+              <div class="w-9 h-9 rounded-xl bg-amber-50 dark:bg-amber-950/60 text-amber-600 dark:text-amber-400 flex items-center justify-center">
+                <span class="material-symbols-outlined text-[20px]">warning</span>
+              </div>
+            </div>
+            <div class="mt-3">
+              <div class="text-[26px] font-extrabold text-amber-600 dark:text-amber-400 leading-none">8</div>
+              <div class="mt-2 text-xs text-slate-600 dark:text-slate-400 font-medium">Pre-eclampsia &amp; severe anemia Hb &lt; 9.0</div>
+            </div>
+          </div>
+
+          <!-- KPI 3: WHO 8-Contact ANC Coverage -->
+          <div class="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200/90 dark:border-slate-800 shadow-xs flex flex-col justify-between hover:border-emerald-400 transition-all">
+            <div class="flex items-center justify-between">
+              <span class="text-[11px] font-bold tracking-wider text-slate-500 dark:text-slate-400 uppercase">ANC 4+ ATTENDANCE</span>
+              <div class="w-9 h-9 rounded-xl bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 flex items-center justify-center">
+                <span class="material-symbols-outlined text-[20px]">verified</span>
+              </div>
+            </div>
+            <div class="mt-3">
+              <div class="text-[26px] font-extrabold text-slate-900 dark:text-white leading-none">92.4%</div>
+              <div class="mt-2 text-xs text-emerald-700 dark:text-emerald-400 font-semibold">+4.2% MoH Target achieved</div>
+            </div>
+          </div>
+
+          <!-- KPI 4: Upcoming Deliveries -->
+          <div class="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200/90 dark:border-slate-800 shadow-xs flex flex-col justify-between hover:border-teal-400 transition-all">
+            <div class="flex items-center justify-between">
+              <span class="text-[11px] font-bold tracking-wider text-slate-500 dark:text-slate-400 uppercase">DUE IN 14 DAYS</span>
+              <div class="w-9 h-9 rounded-xl bg-teal-50 dark:bg-teal-950/60 text-[#0e7490] dark:text-teal-400 flex items-center justify-center">
+                <span class="material-symbols-outlined text-[20px]">calendar_today</span>
+              </div>
+            </div>
+            <div class="mt-3">
+              <div class="text-[26px] font-extrabold text-slate-900 dark:text-white leading-none">7</div>
+              <div class="mt-2 text-xs text-slate-600 dark:text-slate-400 font-medium">Mama Kits &amp; Boda vouchers verified</div>
+            </div>
+          </div>
+        </div>
+
 
         <!-- Filter & Stratification Console -->
         <div class="bg-white rounded-xl p-4 shadow-xs border border-slate-200 space-y-3">
@@ -331,6 +617,30 @@ tailwind.config={
               </div>
             </div>
 
+            
+              <!-- Maternal Voucher & Flutterwave Delivery Fund Status -->
+              <div class="bg-amber-50/60 p-3.5 rounded-xl border border-amber-200/80 space-y-2">
+                <div class="flex items-center justify-between text-xs">
+                  <span class="font-bold text-amber-900 flex items-center gap-1">
+                    <span class="material-symbols-outlined text-[16px] text-amber-600">payments</span>
+                    Flutterwave Delivery Fund
+                  </span>
+                  <span class="px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 font-bold text-[10px]">MTN MoMo Verified</span>
+                </div>
+                <div class="flex items-center justify-between text-xs text-slate-700">
+                  <span>Mama Kit Voucher:</span>
+                  <strong class="text-emerald-700 font-bold">25,000 UGX (Claimed)</strong>
+                </div>
+                <div class="flex items-center justify-between text-xs text-slate-700">
+                  <span>Boda Emergency Fund:</span>
+                  <strong class="text-slate-900 font-bold">10,000 UGX (Active)</strong>
+                </div>
+                <button onclick="openFlutterwaveModal(15000, 'Antenatal Ultrasound Scan Voucher')" class="w-full mt-1 py-1.5 rounded-lg bg-amber-500 hover:bg-amber-600 text-white font-bold text-[11px] transition-all cursor-pointer">
+                  + Issue New Voucher via Flutterwave
+                </button>
+              </div>
+
+
             <!-- 3 Clinical Stat Cards -->
             <div class="grid grid-cols-3 gap-3">
               <div class="bg-slate-50 p-3 rounded-xl border border-slate-100 text-center">
@@ -350,6 +660,43 @@ tailwind.config={
               </div>
             </div>
 
+                        <!-- WHO 8-Contact Antenatal Clinical Care Protocol Checklist -->
+            <div class="bg-slate-50 dark:bg-slate-800/60 p-4 rounded-xl border border-slate-200/80 dark:border-slate-700/80 space-y-2.5">
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-bold text-slate-900 dark:text-white uppercase tracking-wider flex items-center gap-1.5">
+                  <span class="material-symbols-outlined text-[16px] text-teal-600">checklist</span>
+                  WHO ANC Quality Checklist
+                </span>
+                <span class="px-2 py-0.5 rounded-full bg-emerald-100 dark:bg-emerald-950/60 text-emerald-800 dark:text-emerald-400 font-bold text-[10px]">5 of 6 Done</span>
+              </div>
+              <div class="grid grid-cols-2 gap-2 text-[11px] text-slate-700 dark:text-slate-300 pt-1">
+                <div class="flex items-center gap-1.5 text-emerald-700 dark:text-emerald-400 font-medium">
+                  <span class="material-symbols-outlined text-[15px]">check_circle</span>
+                  <span>Ultrasound Verified</span>
+                </div>
+                <div class="flex items-center gap-1.5 text-emerald-700 dark:text-emerald-400 font-medium">
+                  <span class="material-symbols-outlined text-[15px]">check_circle</span>
+                  <span>Iron / Folic 90d</span>
+                </div>
+                <div class="flex items-center gap-1.5 text-emerald-700 dark:text-emerald-400 font-medium">
+                  <span class="material-symbols-outlined text-[15px]">check_circle</span>
+                  <span>Tetanus TT2+</span>
+                </div>
+                <div class="flex items-center gap-1.5 text-emerald-700 dark:text-emerald-400 font-medium">
+                  <span class="material-symbols-outlined text-[15px]">check_circle</span>
+                  <span>Malaria IPTp-SP</span>
+                </div>
+                <div class="flex items-center gap-1.5 text-emerald-700 dark:text-emerald-400 font-medium">
+                  <span class="material-symbols-outlined text-[15px]">check_circle</span>
+                  <span>Bednet (LLIN) Issued</span>
+                </div>
+                <div class="flex items-center gap-1.5 text-teal-700 dark:text-teal-400 font-semibold">
+                  <span class="material-symbols-outlined text-[15px]">pending</span>
+                  <span>Mama Kit Prepared</span>
+                </div>
+              </div>
+            </div>
+
             <!-- Clinical Summary & Notes -->
             <div class="bg-slate-50 p-4 rounded-xl border border-slate-100 space-y-2">
               <span class="text-xs font-bold text-slate-900 block uppercase tracking-wider">Clinical Summary &amp; Notes</span>
@@ -363,16 +710,40 @@ tailwind.config={
 
             <!-- Clinical Actions -->
             <div class="flex items-center gap-2 pt-2">
-              <button onclick="openScheduleApptModal()" class="flex-1 py-2.5 rounded-lg bg-[#0e7490] text-white text-xs font-semibold hover:bg-[#0c627a] transition-all shadow-xs flex items-center justify-center gap-1.5 cursor-pointer">
-                <span class="material-symbols-outlined text-[16px]">calendar_month</span>
-                <span>Schedule Appt</span>
+              <button onclick="openScheduleApptModal()" class="flex-1 py-2 rounded-lg bg-[#0e7490] text-white text-xs font-semibold hover:bg-[#0c627a] transition-all shadow-xs flex items-center justify-center gap-1 cursor-pointer">
+                <span class="material-symbols-outlined text-[15px]">calendar_month</span>
+                <span>Schedule</span>
               </button>
-              <button onclick="openRecordCheckupModal()" class="flex-1 py-2.5 rounded-lg bg-teal-50 border border-teal-200 text-[#0e7490] text-xs font-semibold hover:bg-teal-100 transition-all shadow-xs cursor-pointer">
-                Record Checkup
+              <button onclick="openRecordCheckupModal()" class="flex-1 py-2 rounded-lg bg-teal-50 border border-teal-200 text-[#0e7490] text-xs font-semibold hover:bg-teal-100 transition-all shadow-xs cursor-pointer">
+                Checkup
               </button>
-              <button onclick="openReferralSlipModal()" class="flex-1 py-2.5 rounded-lg bg-slate-100 text-slate-800 text-xs font-semibold hover:bg-slate-200 transition-colors cursor-pointer">
-                Referral Slip
+              <button onclick="openSmsConversationForCurrentMother()" class="flex-1 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold transition-all shadow-xs flex items-center justify-center gap-1 cursor-pointer" title="Send SMS & View Replies">
+                <span class="material-symbols-outlined text-[15px]">chat</span>
+                <span>SMS Mother</span>
               </button>
+            </div>
+
+            <!-- Two-Way Mother SMS & Live Reply Drawer Card -->
+            <div class="bg-teal-50/60 dark:bg-slate-800/60 p-3.5 rounded-xl border border-teal-200/80 dark:border-teal-900/50 space-y-2.5">
+              <div class="flex items-center justify-between text-xs">
+                <span class="font-bold text-[#0e7490] dark:text-cyan-400 flex items-center gap-1.5">
+                  <span class="material-symbols-outlined text-[16px]">sms</span>
+                  <span>Two-Way SMS Thread</span>
+                </span>
+                <span class="px-2 py-0.5 rounded-full bg-emerald-100 dark:bg-emerald-950/60 text-emerald-800 dark:text-emerald-300 font-bold text-[10px]">
+                  0 UGX • Sandbox Free
+                </span>
+              </div>
+              <div id="drawerSmsRecentThread" class="space-y-1.5 max-h-36 overflow-y-auto text-[11px] pr-1">
+                <!-- Rendered dynamically -->
+              </div>
+              <div class="flex items-center gap-1.5 pt-1">
+                <input id="drawerQuickSmsInput" type="text" placeholder="Type quick SMS to mother..." class="flex-1 h-8 px-2.5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg text-xs text-slate-800 dark:text-slate-200 focus:outline-none focus:border-[#0e7490]" onkeydown="if(event.key==='Enter') sendQuickSmsFromDrawer();">
+                <button onclick="sendQuickSmsFromDrawer()" class="h-8 px-3 bg-[#0e7490] hover:bg-[#0c627a] text-white rounded-lg text-xs font-bold transition-all shrink-0 flex items-center gap-1 cursor-pointer">
+                  <span class="material-symbols-outlined text-[14px]">send</span>
+                  <span>Send</span>
+                </button>
+              </div>
             </div>
           </div>
 
@@ -436,6 +807,66 @@ tailwind.config={
           </div>
         </div>
 
+        <!-- Maternal Continuum: Newborn Baby & Lactating Mother Visual Guides -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <!-- Card 1: HEALTHY NEWBORN BABY CARE -->
+          <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-xs flex flex-col sm:flex-row items-center gap-5 hover:border-teal-300 transition-all">
+            <div class="relative w-24 h-24 sm:w-28 sm:h-28 rounded-2xl overflow-hidden shrink-0 border-2 border-teal-500/30 shadow-md bg-slate-900">
+              <img src="/assets/images/african_healthy_baby.jpg"
+                   onerror="this.onerror=null; this.src='/assets/images/healthy_baby.svg';"
+                   alt="Healthy Newborn Baby Care"
+                   class="w-full h-full object-cover">
+              <span class="absolute top-2 left-2 px-2 py-0.5 rounded-full bg-teal-800 text-white font-bold text-[9px] uppercase tracking-wider">
+                Infant
+              </span>
+            </div>
+            <div class="space-y-1.5 flex-1">
+              <div class="flex items-center gap-2">
+                <span class="px-2 py-0.5 rounded-full bg-teal-50 text-teal-800 font-bold text-[10px] uppercase border border-teal-200">Day 1, 3, 7 &amp; 28 Checks</span>
+                <span class="text-xs text-slate-400 font-medium">• Infant Protocol</span>
+              </div>
+              <h3 class="font-bold text-[15px] text-slate-900 tracking-tight">Newborn Health &amp; Immunization</h3>
+              <p class="text-xs text-slate-600 leading-relaxed">
+                Vital signs assessment (temperature, respiration rate), umbilical cord antiseptic care, and routine BCG / Polio 0 vaccines.
+              </p>
+              <div class="pt-1 flex items-center gap-3 text-[11px] text-slate-500">
+                <span class="flex items-center gap-1 font-semibold text-emerald-700">
+                  <span class="w-2 h-2 rounded-full bg-emerald-500"></span> 98.4% Normal Temp
+                </span>
+                <span>•</span>
+                <span>Target: &gt; 2.5 kg weight</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 2: LACTATING MOTHER & KMC -->
+          <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-xs flex flex-col sm:flex-row items-center gap-5 hover:border-emerald-300 transition-all">
+            <div class="relative w-24 h-24 sm:w-28 sm:h-28 rounded-2xl overflow-hidden shrink-0 border-2 border-emerald-500/30 shadow-md bg-slate-900">
+              <img src="/assets/images/african_lactating_mother_nursing.jpg" onerror="this.onerror=null; this.src='/assets/images/lactating_mother.svg';" alt="Ugandan African Lactating Mother Breastfeeding Baby" class="w-full h-full object-cover">
+              <span class="absolute top-2 left-2 px-2 py-0.5 rounded-full bg-emerald-800 text-white font-bold text-[9px] uppercase tracking-wider">
+                Postnatal
+              </span>
+            </div>
+            <div class="space-y-1.5 flex-1">
+              <div class="flex items-center gap-2">
+                <span class="px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-800 font-bold text-[10px] uppercase border border-emerald-200">KMC &amp; Lactation Support</span>
+                <span class="text-xs text-slate-400 font-medium">• 100% EBF Target</span>
+              </div>
+              <h3 class="font-bold text-[15px] text-slate-900 tracking-tight">Lactating Mother &amp; Kangaroo Care</h3>
+              <p class="text-xs text-slate-600 leading-relaxed">
+                Promoting skin-to-skin Kangaroo Mother Care for low birth weight infants, latch support, colostrum feeding, and maternal nutrition.
+              </p>
+              <div class="pt-1 flex items-center gap-3 text-[11px] text-slate-500">
+                <span class="flex items-center gap-1 font-semibold text-teal-700">
+                  <span class="w-2 h-2 rounded-full bg-teal-500"></span> 18 hrs/day KMC goal
+                </span>
+                <span>•</span>
+                <span>Exclusive Breastfeeding</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <!-- Main Registry Table & Detail Panel -->
         <div class="grid grid-cols-1 xl:grid-cols-12 gap-6 items-start">
           <!-- Detailed Table (8 Cols) -->
@@ -451,12 +882,17 @@ tailwind.config={
                   <button id="babyFilterAttention" onclick="filterBabyTable('ATTENTION')" class="px-3 py-1 text-slate-600 hover:text-slate-900 cursor-pointer">Needs Quick Attention (5)</button>
                   <button id="babyFilterDoingWell" onclick="filterBabyTable('NORMAL')" class="px-3 py-1 text-slate-600 hover:text-slate-900 cursor-pointer">Doing Well (307)</button>
                 </div>
-                <button onclick="toast('Exporting baby registry to CSV...')" class="p-2 bg-slate-100 text-slate-600 rounded-lg hover:bg-slate-200 hover:text-[#0e7490] transition-colors cursor-pointer" title="Download List">
+                <button onclick="downloadBabyRegistryCSV()" class="p-2 bg-slate-100 text-slate-600 rounded-lg hover:bg-slate-200 hover:text-[#0e7490] transition-colors cursor-pointer" title="Download List">
                   <span class="material-symbols-outlined text-[18px]">download</span>
                 </button>
               </div>
             </div>
-            <div class="overflow-x-auto w-full">
+            <!-- Baby Photo Cards Gallery Grid (Toggled via setBabyDisplayMode) -->
+            <div id="babyPhotoCardsContainer" class="hidden p-4 grid grid-cols-1 sm:grid-cols-2 gap-4 w-full">
+              <!-- Dynamically populated baby photo cards -->
+            </div>
+
+            <div id="babyTableScrollContainer" class="overflow-x-auto w-full">
               <table class="w-full text-left text-xs text-slate-800">
                 <thead class="bg-slate-50 text-slate-500 uppercase tracking-wider font-semibold border-b border-slate-200">
                   <tr>
@@ -597,7 +1033,11 @@ tailwind.config={
           <div class="xl:col-span-4 bg-white rounded-xl shadow-xs border border-slate-200 p-6 flex flex-col space-y-6 relative">
             <div class="flex items-start justify-between pb-4 border-b border-slate-100">
               <div class="flex items-center gap-3">
-                <div id="panel-baby-avatar" class="w-10 h-10 rounded-full bg-teal-100 text-[#0e7490] flex items-center justify-center font-bold text-sm">MO</div>
+                <div class="relative w-12 h-12 rounded-full overflow-hidden shrink-0 border-2 border-teal-500 shadow-xs bg-slate-100">
+                  <img id="panel-baby-avatar-img" src="/assets/images/african_healthy_baby.jpg"
+                       onerror="this.onerror=null; this.src='/assets/images/healthy_baby.svg';"
+                       alt="Baby avatar" class="w-full h-full object-cover">
+                </div>
                 <div>
                   <div class="flex items-center gap-2">
                     <h3 class="text-[15px] font-bold text-slate-900" id="panel-baby-name">Baby of Mary Osei</h3>
@@ -630,17 +1070,69 @@ tailwind.config={
               </div>
             </div>
 
-            <!-- Kangaroo Mother Care (KMC) Skin-to-Skin progress block -->
-            <div class="bg-slate-50 p-3.5 rounded-lg border border-slate-100 space-y-1.5">
-              <div class="flex items-center justify-between text-[11px]">
-                <span class="text-slate-500 font-bold uppercase tracking-wider">KMC SKIN-TO-SKIN CARE</span>
-                <span class="font-bold text-[#0e7490]" id="panel-kmc-pct">54%</span>
+            <!-- Uganda UNEPI Newborn Immunization & Cord Care Matrix -->
+            <div class="bg-slate-50 dark:bg-slate-800/60 p-4 rounded-xl border border-slate-200/80 dark:border-slate-700/80 space-y-2.5">
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-bold text-slate-900 dark:text-white uppercase tracking-wider flex items-center gap-1.5">
+                  <span class="material-symbols-outlined text-[16px] text-teal-600">vaccines</span>
+                  UNEPI Newborn Immunization
+                </span>
+                <span class="px-2 py-0.5 rounded-full bg-emerald-100 dark:bg-emerald-950/60 text-emerald-800 dark:text-emerald-400 font-bold text-[10px]">Birth Doses Given</span>
               </div>
-              <div class="w-full bg-slate-200 h-2 rounded-full overflow-hidden">
-                <div id="panel-kmc-bar" class="bg-[#0e7490] h-2 rounded-full transition-all duration-300" style="width: 54%"></div>
+              <div class="grid grid-cols-2 gap-2 text-[11px] pt-1">
+                <div class="p-2 rounded-lg bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 flex items-center justify-between">
+                  <div>
+                    <span class="font-bold text-slate-900 dark:text-white block">BCG Vaccine</span>
+                    <span class="text-[10px] text-slate-400">Tuberculosis</span>
+                  </div>
+                  <span class="material-symbols-outlined text-[16px] text-emerald-600">check_circle</span>
+                </div>
+                <div class="p-2 rounded-lg bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 flex items-center justify-between">
+                  <div>
+                    <span class="font-bold text-slate-900 dark:text-white block">OPV 0 Vaccine</span>
+                    <span class="text-[10px] text-slate-400">Oral Polio</span>
+                  </div>
+                  <span class="material-symbols-outlined text-[16px] text-emerald-600">check_circle</span>
+                </div>
+                <div class="p-2 rounded-lg bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 flex items-center justify-between">
+                  <div>
+                    <span class="font-bold text-slate-900 dark:text-white block">Chlorhexidine</span>
+                    <span class="text-[10px] text-slate-400">7.1% Cord Gel</span>
+                  </div>
+                  <span class="material-symbols-outlined text-[16px] text-emerald-600">check_circle</span>
+                </div>
+                <div class="p-2 rounded-lg bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 flex items-center justify-between">
+                  <div>
+                    <span class="font-bold text-slate-900 dark:text-white block">Vitamin K1</span>
+                    <span class="text-[10px] text-slate-400">Bleeding Prophylaxis</span>
+                  </div>
+                  <span class="material-symbols-outlined text-[16px] text-emerald-600">check_circle</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Kangaroo Mother Care (KMC) Skin-to-Skin progress block -->
+            <div class="bg-slate-50 p-3.5 rounded-lg border border-slate-100 space-y-2">
+              <div class="flex items-center gap-3">
+                <div class="w-12 h-12 rounded-xl overflow-hidden shrink-0 border border-teal-500 shadow-2xs">
+                  <img src="/assets/images/african_mother_kangaroo_care.jpg" 
+                       onerror="this.onerror=null; this.src='/assets/images/healthy_baby.svg';" 
+                       alt="Mother Doing Kangaroo Care" 
+                       class="w-full h-full object-cover">
+                </div>
+                <div class="flex-1">
+                  <div class="flex items-center justify-between text-[11px]">
+                    <span class="text-slate-500 font-bold uppercase tracking-wider">KMC SKIN-TO-SKIN CARE</span>
+                    <span class="font-bold text-[#0e7490]" id="panel-kmc-pct">54%</span>
+                  </div>
+                  <div class="w-full bg-slate-200 h-2 rounded-full overflow-hidden mt-1">
+                    <div id="panel-kmc-bar" class="bg-[#0e7490] h-2 rounded-full transition-all duration-300" style="width: 54%"></div>
+                  </div>
+                </div>
               </div>
               <p class="text-[11px] text-slate-500 leading-tight" id="panel-kmc-text">Mother holding baby skin-to-skin: 9 of 18 hours done today (54%).</p>
             </div>
+
 
             <!-- Action Buttons -->
             <div class="space-y-3 pt-2">
@@ -656,6 +1148,10 @@ tailwind.config={
                 <span class="material-symbols-outlined text-[18px]">local_hospital</span>
                 <span>Transfer to Hospital</span>
               </button>
+              <button class="w-full bg-teal-50 dark:bg-teal-950/40 text-[#0e7490] dark:text-teal-300 border border-teal-200 dark:border-teal-800 py-2.5 px-4 rounded-lg text-xs font-semibold hover:bg-teal-100 transition-colors flex items-center justify-center gap-2 shadow-xs cursor-pointer" onclick="openSmsForCurrentBaby()">
+                <span class="material-symbols-outlined text-[18px]">sms</span>
+                <span>SMS Mother (KMC & Immunization Guidance)</span>
+              </button>
             </div>
           </div>
         </div>
@@ -663,7 +1159,7 @@ tailwind.config={
     </div>
 
     <!-- View 3: Visits & Reminders (Appointment Calendar & SMS Reminders) -->
-    <div id="view-appointments" class="flex flex-col w-full p-8 max-w-[1720px] mx-auto space-y-6">
+    <div id="view-appointments" class="hidden flex flex-col w-full p-8 max-w-[1720px] mx-auto space-y-6">
       <!-- Top Banner / Header Area with Filter Tabs and Book New Visit Action -->
       <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-space-md">
         <div class="flex flex-col gap-space-xs">
@@ -678,7 +1174,7 @@ tailwind.config={
           </p>
         </div>
         <div class="flex items-center gap-space-sm">
-          <button onclick="toast('Downloading today\'s schedule export (CSV/PDF)...')" class="inline-flex items-center gap-space-xs px-space-md py-space-sm rounded-lg bg-surface-container hover:bg-surface-container-high text-on-surface font-label-md text-label-md transition-colors shadow-sm cursor-pointer" type="button">
+          <button onclick="downloadClinicScheduleCSV()" class="inline-flex items-center gap-space-xs px-space-md py-space-sm rounded-lg bg-surface-container hover:bg-surface-container-high text-on-surface font-label-md text-label-md transition-colors shadow-sm cursor-pointer" type="button">
             <span class="material-symbols-outlined text-[18px]">download</span>
             <span>Download Today's Schedule</span>
           </button>
@@ -1141,7 +1637,463 @@ tailwind.config={
         </div>
       </div>
     </div>
+
+    <!-- ========================================================================= -->
+    <!-- VIEW 5: SMS & USSD GATEWAY (*920#) — TELECOM GSM FIRST (NO FIREBASE)      -->
+    <!-- ========================================================================= -->
+    <div id="view-sms-ussd" class="hidden flex flex-col w-full p-6 lg:p-8 max-w-[1720px] mx-auto space-y-6">
+      
+      <!-- Hub Header & Status Bar -->
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-200 dark:border-slate-800">
+        <div>
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-50 dark:bg-emerald-950/60 border border-emerald-300 dark:border-emerald-800 text-emerald-800 dark:text-emerald-300 text-xs font-bold mb-1.5">
+            <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+            <span>2G GSM Telecom Network Active • No Firebase Dependency</span>
+          </div>
+          <h2 class="text-2xl font-extrabold text-slate-900 dark:text-white tracking-tight">
+            SMS &amp; USSD Gateway <span class="font-mono text-[#0e7490] dark:text-cyan-400">(*920#)</span>
+          </h2>
+          <p class="text-xs text-slate-500 dark:text-slate-400">
+            Uganda MoH Rural Communication Hub: Zero-data USSD session triage and automated two-way SMS across MTN and Airtel Uganda networks.
+          </p>
+        </div>
+
+        <div class="flex items-center gap-3">
+          <button onclick="broadcastClinicalAnc()" class="px-4 py-2.5 rounded-xl bg-[#0e7490] hover:bg-[#0c627a] text-white font-bold text-xs shadow-sm transition-all active:scale-95 flex items-center gap-1.5 cursor-pointer">
+            <span class="material-symbols-outlined text-[18px]">send_to_mobile</span>
+            <span>Broadcast Clinic Reminders</span>
+          </button>
+          <button onclick="refreshClinicalSmsLogs()" class="px-3.5 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-200 font-bold text-xs transition-colors flex items-center gap-1.5 cursor-pointer">
+            <span class="material-symbols-outlined text-[18px]">refresh</span>
+            <span>Refresh</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- 4 KPI Metrics -->
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div class="bg-white dark:bg-slate-900 p-4 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-xs">
+          <span class="text-[11px] font-bold uppercase text-slate-400 block">USSD Gateway Code</span>
+          <div class="flex items-baseline gap-2 mt-1">
+            <span class="text-2xl font-mono font-extrabold text-[#0e7490] dark:text-cyan-400">*920#</span>
+            <span class="text-[10px] font-bold text-emerald-600 bg-emerald-50 dark:bg-emerald-950/40 px-1.5 py-0.2 rounded">0 UGX • Toll-Free</span>
+          </div>
+          <span class="text-[11px] text-slate-500 mt-1 block">Interactive 2G GSM Menu</span>
+        </div>
+
+        <div class="bg-white dark:bg-slate-900 p-4 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-xs">
+          <span class="text-[11px] font-bold uppercase text-slate-400 block">Outbound Dispatched</span>
+          <div class="flex items-baseline gap-2 mt-1">
+            <span id="kpiSmsCount" class="text-2xl font-extrabold text-slate-900 dark:text-white">1,485</span>
+            <span class="text-[10px] font-bold text-teal-600 bg-teal-50 dark:bg-teal-950/40 px-1.5 py-0.2 rounded">100% Free Sandbox</span>
+          </div>
+          <span class="text-[11px] text-slate-500 mt-1 block">Reminders, KMC & BP alerts</span>
+        </div>
+
+        <div class="bg-white dark:bg-slate-900 p-4 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-xs">
+          <span class="text-[11px] font-bold uppercase text-slate-400 block">Inbound Mother Replies</span>
+          <div class="flex items-baseline gap-2 mt-1">
+            <span id="kpiRepliesCount" class="text-2xl font-extrabold text-emerald-600">3 Replies</span>
+            <span class="text-[10px] font-bold text-emerald-600 bg-emerald-50 dark:bg-emerald-950/40 px-1.5 py-0.2 rounded">Live 2-Way</span>
+          </div>
+          <span class="text-[11px] text-slate-500 mt-1 block">Confirmations, queries & triage</span>
+        </div>
+
+        <div class="bg-white dark:bg-slate-900 p-4 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-xs">
+          <span class="text-[11px] font-bold uppercase text-slate-400 block">Emergency Alerts</span>
+          <div class="flex items-baseline gap-2 mt-1">
+            <span id="kpiEmergencyCount" class="text-2xl font-extrabold text-rose-600">1 Critical</span>
+            <span class="text-[10px] font-bold text-rose-600 bg-rose-50 dark:bg-rose-950/40 px-1.5 py-0.2 rounded">Instant VHT Dispatch</span>
+          </div>
+          <span class="text-[11px] text-slate-500 mt-1 block">Bleeding & BP alerts triaged</span>
+        </div>
+      </div>
+
+      <!-- Main Two-Column Clinical Workbench -->
+      <div class="grid grid-cols-1 xl:grid-cols-12 gap-8 items-start">
+        
+        <!-- Left: Interactive 2G Phone Simulator & Quick SMS Composer -->
+        <div class="xl:col-span-5 space-y-6">
+          
+          <!-- Direct Patient SMS Dispatcher Box -->
+          <div class="bg-white dark:bg-slate-900 rounded-2xl p-5 border border-slate-200 dark:border-slate-800 shadow-xs space-y-4">
+            <div class="flex items-center justify-between pb-2 border-b border-slate-100 dark:border-slate-800">
+              <div class="flex items-center gap-2">
+                <span class="material-symbols-outlined text-[#0e7490] text-[20px]">chat</span>
+                <h3 class="text-sm font-bold text-slate-900 dark:text-white">Direct Mother SMS Dispatcher</h3>
+              </div>
+              <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300 font-bold">0 UGX • Sandbox Free</span>
+            </div>
+
+            <!-- Recipient Selection -->
+            <div>
+              <div class="flex items-center justify-between mb-1">
+                <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300">Select Mother / Recipient</label>
+                <span class="text-[10px] text-slate-400">All Registered Mothers</span>
+              </div>
+              <select id="clinicalSmsRecipient" onchange="handleRecipientChange(this.value)" class="w-full h-10 px-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs text-slate-800 dark:text-slate-200 font-medium focus:ring-2 focus:ring-[#0e7490]">
+                <option value="+256 778 501 066">Amina Brenda (+256 778 501 066) - Kagando Village [ANC 3]</option>
+                <option value="+256 702 334 455">Halima Kadogo (+256 702 334 455) - Kayanja Landing [High BP Alert]</option>
+                <option value="+256 755 667 788">Grace Mwangi (+256 755 667 788) - Kasese Central [ANC 2]</option>
+                <option value="+256 782 445 566">Zainab Bello (+256 782 445 566) - Kilembe Valley [KMC Infant Care]</option>
+              </select>
+            </div>
+
+            <!-- Message Input & Quick Templates -->
+            <div>
+              <div class="flex items-center justify-between mb-1">
+                <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300">SMS Text Content</label>
+                <span id="smsCharCounter" class="text-[10px] text-slate-400 font-mono">132 / 160 chars (1 SMS • Free)</span>
+              </div>
+              <textarea id="clinicalSmsMessage" rows="3" oninput="updateSmsCharCounter(this.value)" class="w-full p-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs text-slate-800 dark:text-slate-200 focus:ring-2 focus:ring-[#0e7490] leading-relaxed">Habari Amina! This is Sr. Sarah Omondi from Kagando Hospital. Your ANC Visit 3 is scheduled for Thursday 24 Oct, 9:00 AM. Free Mama Kit will be issued. Please reply to confirm.</textarea>
+            </div>
+
+            <!-- Preset Pills -->
+            <div class="flex flex-wrap gap-1.5 pt-1">
+              <button type="button" onclick="setClinicalTemplate('ANC')" class="px-2.5 py-1 rounded-lg bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300 text-[11px] font-medium transition-colors cursor-pointer">
+                + ANC Visit
+              </button>
+              <button type="button" onclick="setClinicalTemplate('KMC')" class="px-2.5 py-1 rounded-lg bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300 text-[11px] font-medium transition-colors cursor-pointer">
+                + 8h Kangaroo Care
+              </button>
+              <button type="button" onclick="setClinicalTemplate('BP')" class="px-2.5 py-1 rounded-lg bg-amber-50 hover:bg-amber-100 dark:bg-amber-950/40 text-amber-800 dark:text-amber-300 text-[11px] font-medium transition-colors cursor-pointer">
+                + BP Warning Check
+              </button>
+              <button type="button" onclick="setClinicalTemplate('MAMAKIT')" class="px-2.5 py-1 rounded-lg bg-emerald-50 hover:bg-emerald-100 dark:bg-emerald-950/40 text-emerald-800 dark:text-emerald-300 text-[11px] font-medium transition-colors cursor-pointer">
+                + Mama Kit Ready
+              </button>
+              <button type="button" onclick="setClinicalTemplate('VACCINE')" class="px-2.5 py-1 rounded-lg bg-cyan-50 hover:bg-cyan-100 dark:bg-cyan-950/40 text-cyan-800 dark:text-cyan-300 text-[11px] font-medium transition-colors cursor-pointer">
+                + UNEPI Vaccines
+              </button>
+            </div>
+
+            <!-- Send Button -->
+            <button type="button" onclick="sendClinicalSms()" class="w-full py-2.5 px-4 bg-[#0e7490] hover:bg-[#0c627a] text-white rounded-xl font-bold text-xs flex items-center justify-center gap-2 shadow-sm transition-all active:scale-98 cursor-pointer">
+              <span class="material-symbols-outlined text-[16px]">send</span>
+              <span>Send Free SMS to Patient via Telecom Gateway</span>
+            </button>
+          </div>
+
+          <!-- 2G Feature Phone Simulator Box (DUAL-MODE: USSD *920# & MOTHER'S SMS/REPLY) -->
+          <div class="bg-white dark:bg-slate-900 rounded-2xl p-5 border border-slate-200 dark:border-slate-800 shadow-xs flex flex-col items-center">
+            
+            <div class="w-full flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800 mb-3">
+              <div class="flex items-center gap-2">
+                <span class="material-symbols-outlined text-amber-500 text-[20px]">phone_android</span>
+                <h3 class="text-sm font-bold text-slate-900 dark:text-white">2G Phone Simulator (Rural Mother)</h3>
+              </div>
+              <span class="text-[10px] px-2 py-0.5 rounded bg-emerald-50 text-emerald-700 font-bold">2-Way Active</span>
+            </div>
+
+            <!-- Phone Mode Switcher Tabs -->
+            <div class="w-full max-w-[320px] flex items-center p-1 bg-slate-100 dark:bg-slate-800 rounded-xl mb-3 gap-1">
+              <button id="phoneModeBtnUssd" type="button" onclick="switchPhoneSimulatorMode('ussd')" class="flex-1 py-1.5 px-2.5 rounded-lg text-xs font-bold bg-[#0e7490] text-white transition-all flex items-center justify-center gap-1 cursor-pointer">
+                <span class="material-symbols-outlined text-[15px]">dialpad</span>
+                <span>USSD *920#</span>
+              </button>
+              <button id="phoneModeBtnSms" type="button" onclick="switchPhoneSimulatorMode('sms')" class="flex-1 py-1.5 px-2.5 rounded-lg text-xs font-bold text-slate-600 dark:text-slate-300 hover:text-slate-900 transition-all flex items-center justify-center gap-1 cursor-pointer">
+                <span class="material-symbols-outlined text-[15px]">chat</span>
+                <span>Mother's SMS</span>
+                <span id="phoneSmsUnreadDot" class="w-2 h-2 rounded-full bg-rose-500 animate-pulse"></span>
+              </button>
+            </div>
+
+            <!-- Simulator Body (Nokia Retro 2G Phone) -->
+            <div class="w-full max-w-[320px] bg-slate-800 rounded-[36px] p-4 shadow-xl border-4 border-slate-700 relative">
+              
+              <!-- Earpiece Speaker -->
+              <div class="w-12 h-1 bg-slate-600 rounded-full mx-auto mb-2.5"></div>
+
+              <!-- SCREEN 1: 2G USSD (*920#) LCD DISPLAY -->
+              <div id="phoneScreenUssd" class="space-y-3">
+                <div class="bg-[#c8e6c9] dark:bg-[#1f3d2b] text-slate-900 dark:text-emerald-100 rounded-xl p-3.5 font-mono shadow-inner border border-emerald-900/30 min-h-[190px] flex flex-col justify-between">
+                  <div class="flex items-center justify-between text-[9px] pb-1 border-b border-emerald-900/20 font-bold">
+                    <span>MTN UG</span>
+                    <span>*920# (2G GSM)</span>
+                    <span>100%</span>
+                  </div>
+                  <div id="clinicalUssdLcdText" class="py-2 text-[10.5px] leading-relaxed whitespace-pre-wrap flex-1 select-text">
+Welcome to BabyHealth Guard (*920#)
+1. Register Pregnancy (Maama)
+2. Next ANC Clinic Visit
+3. Report Danger Signs (🚨)
+4. Newborn &amp; KMC Care
+5. Mama Kit Voucher
+6. Change Language
+                  </div>
+                  <div class="pt-1.5 border-t border-emerald-900/20 flex items-center gap-1">
+                    <span class="text-xs font-bold">&gt;</span>
+                    <input id="clinicalUssdInput" type="text" placeholder="Type option..." class="w-full bg-transparent border-0 text-slate-900 dark:text-emerald-100 text-[11px] font-mono font-bold focus:outline-none placeholder:text-emerald-900/40" onkeydown="if(event.key==='Enter') sendClinicalUssd();">
+                  </div>
+                </div>
+
+                <!-- Dial Buttons -->
+                <div class="grid grid-cols-2 gap-2">
+                  <button type="button" onclick="sendClinicalUssd()" class="py-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg font-bold text-xs flex items-center justify-center gap-1 active:scale-95 transition-all cursor-pointer">
+                    <span class="material-symbols-outlined text-[15px]">call</span>
+                    <span>DIAL / SEND</span>
+                  </button>
+                  <button type="button" onclick="resetClinicalUssd()" class="py-2 bg-rose-600 hover:bg-rose-500 text-white rounded-lg font-bold text-xs flex items-center justify-center gap-1 active:scale-95 transition-all cursor-pointer">
+                    <span class="material-symbols-outlined text-[15px]">call_end</span>
+                    <span>CLEAR</span>
+                  </button>
+                </div>
+
+                <!-- Keypad -->
+                <div class="grid grid-cols-3 gap-1.5 text-center">
+                  <button type="button" onclick="appendClinicalKey('1')" class="py-1.5 bg-slate-700 hover:bg-slate-600 text-white rounded-lg font-mono text-xs font-bold">1</button>
+                  <button type="button" onclick="appendClinicalKey('2')" class="py-1.5 bg-slate-700 hover:bg-slate-600 text-white rounded-lg font-mono text-xs font-bold">2</button>
+                  <button type="button" onclick="appendClinicalKey('3')" class="py-1.5 bg-slate-700 hover:bg-slate-600 text-white rounded-lg font-mono text-xs font-bold">3</button>
+                  <button type="button" onclick="appendClinicalKey('4')" class="py-1.5 bg-slate-700 hover:bg-slate-600 text-white rounded-lg font-mono text-xs font-bold">4</button>
+                  <button type="button" onclick="appendClinicalKey('5')" class="py-1.5 bg-slate-700 hover:bg-slate-600 text-white rounded-lg font-mono text-xs font-bold">5</button>
+                  <button type="button" onclick="appendClinicalKey('6')" class="py-1.5 bg-slate-700 hover:bg-slate-600 text-white rounded-lg font-mono text-xs font-bold">6</button>
+                  <button type="button" onclick="appendClinicalKey('7')" class="py-1.5 bg-slate-700 hover:bg-slate-600 text-white rounded-lg font-mono text-xs font-bold">7</button>
+                  <button type="button" onclick="appendClinicalKey('8')" class="py-1.5 bg-slate-700 hover:bg-slate-600 text-white rounded-lg font-mono text-xs font-bold">8</button>
+                  <button type="button" onclick="appendClinicalKey('9')" class="py-1.5 bg-slate-700 hover:bg-slate-600 text-white rounded-lg font-mono text-xs font-bold">9</button>
+                  <button type="button" onclick="appendClinicalKey('*')" class="py-1.5 bg-slate-700 hover:bg-slate-600 text-amber-300 rounded-lg font-mono text-xs font-bold">*</button>
+                  <button type="button" onclick="appendClinicalKey('0')" class="py-1.5 bg-slate-700 hover:bg-slate-600 text-white rounded-lg font-mono text-xs font-bold">0</button>
+                  <button type="button" onclick="appendClinicalKey('#')" class="py-1.5 bg-slate-700 hover:bg-slate-600 text-amber-300 rounded-lg font-mono text-xs font-bold">#</button>
+                </div>
+
+                <!-- Shortcut Presets -->
+                <div class="pt-2 border-t border-slate-700 flex flex-wrap gap-1 justify-center">
+                  <button type="button" onclick="triggerClinicalPresetUssd('')" class="px-2 py-0.5 bg-slate-700 hover:bg-slate-600 text-cyan-200 text-[9.5px] font-bold rounded">
+                    *920# Menu
+                  </button>
+                  <button type="button" onclick="triggerClinicalPresetUssd('2')" class="px-2 py-0.5 bg-slate-700 hover:bg-slate-600 text-emerald-300 text-[9.5px] font-bold rounded">
+                    2. ANC Date
+                  </button>
+                  <button type="button" onclick="triggerClinicalPresetUssd('3*1')" class="px-2 py-0.5 bg-slate-700 hover:bg-slate-600 text-rose-300 text-[9.5px] font-bold rounded">
+                    3. Bleeding 🚨
+                  </button>
+                  <button type="button" onclick="triggerClinicalPresetUssd('4*1*8')" class="px-2 py-0.5 bg-slate-700 hover:bg-slate-600 text-teal-300 text-[9.5px] font-bold rounded">
+                    4. KMC
+                  </button>
+                  <button type="button" onclick="triggerClinicalPresetUssd('5')" class="px-2 py-0.5 bg-slate-700 hover:bg-slate-600 text-amber-300 text-[9.5px] font-bold rounded">
+                    5. Mama Kit
+                  </button>
+                </div>
+              </div>
+
+              <!-- SCREEN 2: MOTHER'S SMS INBOX & TWO-WAY REPLY SCREEN -->
+              <div id="phoneScreenSms" class="hidden space-y-3">
+                <div class="bg-slate-900 text-slate-100 rounded-xl p-3 font-sans border border-slate-600 min-h-[220px] flex flex-col justify-between">
+                  <div class="flex items-center justify-between pb-1.5 border-b border-slate-700 text-[10px]">
+                    <div class="flex items-center gap-1 text-teal-300 font-bold">
+                      <span class="material-symbols-outlined text-[13px]">sms</span>
+                      <span id="phoneSimMotherHeader">Amina Brenda</span>
+                    </div>
+                    <span class="text-[9px] text-slate-400">Toll-Free SMS</span>
+                  </div>
+
+                  <!-- Mother's Messages View -->
+                  <div id="phoneSimSmsThread" class="py-2 space-y-2 max-h-[170px] overflow-y-auto text-[11px] pr-1">
+                    <!-- Populated dynamically -->
+                  </div>
+
+                  <!-- Mother's Reply Composer inside phone -->
+                  <div class="pt-2 border-t border-slate-700 space-y-1.5">
+                    <div class="flex items-center gap-1">
+                      <input id="phoneMotherReplyInput" type="text" placeholder="Type reply as Mother..." class="flex-1 h-8 px-2.5 bg-slate-800 border border-slate-600 rounded-lg text-xs text-white placeholder:text-slate-400 focus:outline-none focus:border-teal-400" onkeydown="if(event.key==='Enter') sendReplyFromSimulatedPhone();">
+                      <button type="button" onclick="sendReplyFromSimulatedPhone()" class="h-8 px-2.5 bg-teal-600 hover:bg-teal-500 text-white rounded-lg text-xs font-bold transition-all flex items-center justify-center shrink-0 cursor-pointer">
+                        <span class="material-symbols-outlined text-[14px]">send</span>
+                      </button>
+                    </div>
+                    
+                    <!-- Quick Mother Reply Chips -->
+                    <div class="flex flex-wrap gap-1">
+                      <button type="button" onclick="setPhoneQuickReply('I will attend on Thursday at 9 AM')" class="px-1.5 py-0.5 rounded bg-slate-800 hover:bg-slate-700 text-teal-200 text-[9.5px]">
+                        "I will attend"
+                      </button>
+                      <button type="button" onclick="setPhoneQuickReply('Help! Severe headache and fever 🚨')" class="px-1.5 py-0.5 rounded bg-rose-950/70 hover:bg-rose-900 text-rose-300 text-[9.5px]">
+                        "Emergency 🚨"
+                      </button>
+                      <button type="button" onclick="setPhoneQuickReply('Baby kicked 12 times this morning')" class="px-1.5 py-0.5 rounded bg-slate-800 hover:bg-slate-700 text-emerald-300 text-[9.5px]">
+                        "Kicks 12+"
+                      </button>
+                      <button type="button" onclick="setPhoneQuickReply('Baby is nursing well, 8hr KMC done')" class="px-1.5 py-0.5 rounded bg-slate-800 hover:bg-slate-700 text-cyan-200 text-[9.5px]">
+                        "KMC Done"
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="text-[10px] text-center text-slate-400">
+                  <span>Simulating Mother's Phone • 0 UGX Billed</span>
+                </div>
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+
+        <!-- Right: Real-time SMS Outbox & Inbound Reply Feed -->
+        <div class="xl:col-span-7 bg-white dark:bg-slate-900 rounded-2xl p-6 border border-slate-200 dark:border-slate-800 shadow-xs space-y-4">
+          
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-slate-100 dark:border-slate-800">
+            <div>
+              <h3 class="text-base font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                <span class="material-symbols-outlined text-emerald-600 text-[20px]">mark_email_read</span>
+                <span>Two-Way SMS Outbox &amp; Inbound Replies</span>
+              </h3>
+              <p class="text-xs text-slate-500">Real-time audit log of SMS sent to mothers and incoming village responses. 100% Zero-Money Sandbox.</p>
+            </div>
+
+            <div class="flex items-center gap-2">
+              <button type="button" onclick="refreshClinicalSmsLogs()" class="px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-200 text-xs font-bold flex items-center gap-1 cursor-pointer">
+                <span class="material-symbols-outlined text-[15px]">refresh</span>
+                <span>Refresh</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- 4-Tab Filter Bar -->
+          <div class="flex flex-wrap items-center gap-1.5 p-1 bg-slate-100 dark:bg-slate-800/70 rounded-xl">
+            <button id="tabSmsAll" type="button" onclick="setSmsFilter('ALL')" class="px-3 py-1.5 rounded-lg text-xs font-bold bg-white dark:bg-slate-900 text-slate-900 dark:text-white shadow-2xs transition-all cursor-pointer">
+              All Messages
+            </button>
+            <button id="tabSmsInbound" type="button" onclick="setSmsFilter('INBOUND')" class="px-3 py-1.5 rounded-lg text-xs font-bold text-slate-600 dark:text-slate-300 hover:text-slate-900 transition-all flex items-center gap-1 cursor-pointer">
+              <span>Inbound Replies</span>
+              <span id="tabInboundCount" class="px-1.5 py-0.2 rounded-full bg-emerald-100 dark:bg-emerald-950 text-emerald-700 text-[10px] font-bold">2</span>
+            </button>
+            <button id="tabSmsOutbound" type="button" onclick="setSmsFilter('OUTBOUND')" class="px-3 py-1.5 rounded-lg text-xs font-bold text-slate-600 dark:text-slate-300 hover:text-slate-900 transition-all cursor-pointer">
+              Outbound Sent
+            </button>
+            <button id="tabSmsEmergency" type="button" onclick="setSmsFilter('EMERGENCY')" class="px-3 py-1.5 rounded-lg text-xs font-bold text-rose-600 hover:text-rose-700 transition-all flex items-center gap-1 cursor-pointer">
+              <span>🚨 Danger Triage</span>
+              <span id="tabEmergencyCount" class="w-2 h-2 rounded-full bg-rose-500 animate-pulse"></span>
+            </button>
+          </div>
+
+          <!-- Inbound Mother Reply Simulator Bar -->
+          <div class="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-800/40 border border-slate-200 dark:border-slate-800 space-y-2">
+            <div class="flex items-center justify-between text-xs">
+              <span class="font-bold text-slate-800 dark:text-slate-200 flex items-center gap-1.5">
+                <span class="material-symbols-outlined text-amber-500 text-[16px]">outgoing_mail</span>
+                <span>Simulate Inbound Mother Reply (Rural Button Phone)</span>
+              </span>
+              <span class="text-[10px] text-slate-400">Zero Cost Telco Hook</span>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-12 gap-2">
+              <div class="sm:col-span-4">
+                <select id="simInboundMotherSelect" class="w-full h-8 px-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg text-xs text-slate-800 dark:text-slate-200">
+                  <option value="+256 778 501 066">Amina Brenda</option>
+                  <option value="+256 702 334 455">Halima Kadogo (High BP)</option>
+                  <option value="+256 755 667 788">Grace Mwangi</option>
+                  <option value="+256 782 445 566">Zainab Bello (KMC)</option>
+                </select>
+              </div>
+              <div class="sm:col-span-8 flex gap-1.5">
+                <input id="simInboundTextInput" type="text" placeholder="Type reply from mother (e.g. 'I will come tomorrow 10am')..." class="flex-1 h-8 px-2.5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg text-xs text-slate-800 dark:text-slate-200 focus:outline-none focus:border-[#0e7490]" onkeydown="if(event.key==='Enter') triggerSimulatedInbound();">
+                <button type="button" onclick="triggerSimulatedInbound()" class="h-8 px-3 bg-[#0e7490] hover:bg-[#0c627a] text-white rounded-lg text-xs font-bold transition-all shrink-0 cursor-pointer">
+                  Send Reply
+                </button>
+              </div>
+            </div>
+
+            <!-- Quick Preset Chips for Simulator -->
+            <div class="flex flex-wrap gap-1 pt-1">
+              <span class="text-[10px] text-slate-400 self-center">Quick tests:</span>
+              <button type="button" onclick="setSimInboundText('HELP SEVERE BLEEDING 🚨')" class="px-2 py-0.5 rounded-lg bg-rose-50 dark:bg-rose-950/60 hover:bg-rose-100 text-rose-700 dark:text-rose-300 text-[11px] font-bold border border-rose-200 dark:border-rose-800 transition-colors cursor-pointer">
+                "HELP BLEEDING 🚨"
+              </button>
+              <button type="button" onclick="setSimInboundText('YES, I will attend clinic on Thursday')" class="px-2 py-0.5 rounded-lg bg-emerald-50 dark:bg-emerald-950/60 hover:bg-emerald-100 text-emerald-700 dark:text-emerald-300 text-[11px] font-bold border border-emerald-200 dark:border-emerald-800 transition-colors cursor-pointer">
+                "YES CONFIRM"
+              </button>
+              <button type="button" onclick="setSimInboundText('Baby kicked 12 times this morning')" class="px-2 py-0.5 rounded-lg bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 text-slate-700 dark:text-slate-200 text-[11px] font-semibold transition-colors cursor-pointer">
+                "KICKS 10+"
+              </button>
+              <button type="button" onclick="setSimInboundText('Please reschedule my visit to next week')" class="px-2 py-0.5 rounded-lg bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 text-slate-700 dark:text-slate-200 text-[11px] font-semibold transition-colors cursor-pointer">
+                "RESCHEDULE"
+              </button>
+            </div>
+          </div>
+
+          <!-- SMS Messages Table List -->
+          <div id="clinicalSmsTableContainer" class="space-y-2.5 max-h-[580px] overflow-y-auto pr-1">
+            <!-- Rendered by JS -->
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
   </main>
+</div>
+
+<!-- ========================================== -->
+<!-- MODAL: TWO-WAY SMS CONVERSATION WITH MOTHER -->
+<!-- ========================================== -->
+<div id="smsConversationModal" class="fixed inset-0 bg-[#0b313d]/70 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+  <div class="bg-white dark:bg-slate-900 rounded-2xl shadow-2xl max-w-xl w-full overflow-hidden border border-slate-200 dark:border-slate-800 animate-in fade-in zoom-in duration-150 flex flex-col max-h-[85vh]">
+    <!-- Modal Header -->
+    <div class="px-5 py-4 bg-[#0b313d] text-white flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div id="convModalAvatar" class="w-10 h-10 rounded-full bg-[#0e7490] flex items-center justify-center text-white font-bold text-sm shadow-xs">
+          AB
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <h3 id="convModalMotherName" class="font-bold text-base text-white">Amina Brenda</h3>
+            <span id="convModalRiskBadge" class="px-2 py-0.2 rounded-full text-[10px] font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-400/30">ANC 3</span>
+          </div>
+          <p id="convModalSubMeta" class="text-xs text-cyan-200/80">+256 778 501 066 • Kagando Village • 0 UGX Free Route</p>
+        </div>
+      </div>
+      <button onclick="closeSmsConversationModal()" class="text-white/70 hover:text-white rounded-lg p-1.5 transition-colors cursor-pointer">
+        <span class="material-symbols-outlined text-[22px]">close</span>
+      </button>
+    </div>
+
+    <!-- Zero-Cost Status Notice -->
+    <div class="px-5 py-2 bg-emerald-50 dark:bg-emerald-950/60 border-b border-emerald-200/60 dark:border-emerald-900/60 flex items-center justify-between text-[11px] text-emerald-800 dark:text-emerald-300">
+      <span class="flex items-center gap-1.5 font-medium">
+        <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+        <span>Two-Way SMS Active (MTN & Airtel UG) • Zero Airtime Charged</span>
+      </span>
+      <span class="font-mono text-[10px] uppercase font-bold">MoH Toll-Free</span>
+    </div>
+
+    <!-- Chat Messages Scroll Area -->
+    <div id="convModalMessagesList" class="flex-1 p-4 space-y-3 overflow-y-auto bg-slate-50 dark:bg-slate-950/50">
+      <!-- Populated dynamically -->
+    </div>
+
+    <!-- Quick Templates Bar -->
+    <div class="px-4 py-2 bg-slate-100 dark:bg-slate-800/80 border-t border-slate-200 dark:border-slate-800 flex flex-wrap gap-1">
+      <button type="button" onclick="setModalSmsTemplate('ANC')" class="px-2 py-0.5 rounded-lg bg-white dark:bg-slate-700 text-slate-700 dark:text-slate-200 text-[10.5px] font-semibold border border-slate-200 dark:border-slate-600 transition-colors">
+        + ANC Reminder
+      </button>
+      <button type="button" onclick="setModalSmsTemplate('BP')" class="px-2 py-0.5 rounded-lg bg-white dark:bg-slate-700 text-slate-700 dark:text-slate-200 text-[10.5px] font-semibold border border-slate-200 dark:border-slate-600 transition-colors">
+        + BP Check
+      </button>
+      <button type="button" onclick="setModalSmsTemplate('KMC')" class="px-2 py-0.5 rounded-lg bg-white dark:bg-slate-700 text-slate-700 dark:text-slate-200 text-[10.5px] font-semibold border border-slate-200 dark:border-slate-600 transition-colors">
+        + 8h KMC
+      </button>
+      <button type="button" onclick="setModalSmsTemplate('MAMAKIT')" class="px-2 py-0.5 rounded-lg bg-white dark:bg-slate-700 text-slate-700 dark:text-slate-200 text-[10.5px] font-semibold border border-slate-200 dark:border-slate-600 transition-colors">
+        + Mama Kit
+      </button>
+    </div>
+
+    <!-- Reply Input Box -->
+    <div class="p-4 bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 space-y-2">
+      <div class="flex items-center gap-2">
+        <textarea id="convModalInput" rows="2" placeholder="Type SMS to mother (e.g. 'Habari Amina, we noted your reply. Please report tomorrow...')..." class="flex-1 p-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs text-slate-800 dark:text-slate-200 focus:outline-none focus:border-[#0e7490] leading-relaxed"></textarea>
+        <button type="button" onclick="sendModalSmsReply()" class="h-10 px-4 bg-[#0e7490] hover:bg-[#0c627a] text-white rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-1.5 shrink-0 shadow-sm cursor-pointer">
+          <span class="material-symbols-outlined text-[16px]">send</span>
+          <span>Send Free</span>
+        </button>
+      </div>
+      <div class="flex items-center justify-between text-[10px] text-slate-400">
+        <span>Press Send to dispatch instant GSM SMS • Mother receives on 2G phone</span>
+        <span>Cost: 0 UGX (Unlimited)</span>
+      </div>
+    </div>
+  </div>
 </div>
 
 <!-- ========================================== -->
@@ -2220,6 +3172,10 @@ function selectPatient(patientId) {
   document.getElementById('drawerNotes').textContent = p.notes;
   document.getElementById('drawerAssignedCHW').textContent = p.assignedWorker;
 
+  if (typeof updateDrawerSmsThread === 'function') {
+    updateDrawerSmsThread();
+  }
+
   renderPatientsTable();
 }
 
@@ -2269,20 +3225,36 @@ function renderPatientsTable() {
       ? 'px-3.5 py-1.5 rounded-lg bg-[#0e7490] text-white text-xs font-semibold hover:bg-[#0c627a] transition-all shadow-xs'
       : 'px-3.5 py-1.5 rounded-lg bg-slate-100 text-slate-700 hover:bg-[#0e7490] hover:text-white text-xs font-semibold transition-colors';
 
+        const gestWeekNum = parseInt(p.week) || 28;
+    const gestPct = Math.min(100, Math.round((gestWeekNum / 40) * 100));
+
     tr.innerHTML = `
-      <td class="py-4 px-6 align-middle">
-        <div class="text-sm ${isSelected ? 'font-bold' : 'font-semibold'} text-slate-900">${p.name}</div>
-        <div class="text-slate-400 text-[11px] font-normal">ID: ${p.id}</div>
+      <td class="py-3.5 px-6 align-middle">
+        <div class="flex items-center gap-3">
+          <div class="relative w-10 h-10 rounded-full overflow-hidden shrink-0 border-2 border-cyan-500/70 shadow-2xs bg-slate-100">
+            <img src="/assets/images/african_pregnant_mother.jpg" alt="${p.name}" class="w-full h-full object-cover">
+          </div>
+          <div>
+            <div class="text-sm ${isSelected ? 'font-bold text-[#0e7490]' : 'font-semibold text-slate-900'} group-hover:text-[#0e7490] transition-colors">${p.name}</div>
+            <div class="text-slate-400 text-[11px] font-medium">ID: ${p.id} • ${p.age} • ${p.facility || 'Bwera'}</div>
+          </div>
+        </div>
       </td>
-      <td class="py-4 px-5 align-middle">
-        <div class="font-semibold text-slate-800 text-[13px]">${p.week}</div>
-        <div class="text-slate-500 text-[11px]">${p.dueDate}</div>
+      <td class="py-3.5 px-5 align-middle">
+        <div class="font-bold text-slate-800 text-[13px] flex items-center gap-1.5">
+          <span>${p.week}</span>
+          <span class="text-[10px] px-1.5 py-0.2 rounded bg-cyan-50 text-[#0e7490] font-semibold">${gestPct}%</span>
+        </div>
+        <div class="w-20 bg-slate-100 h-1.5 rounded-full overflow-hidden mt-1">
+          <div class="bg-[#0e7490] h-full rounded-full" style="width: ${gestPct}%"></div>
+        </div>
+        <div class="text-slate-500 text-[11px] mt-0.5">${p.dueDate}</div>
       </td>
-      <td class="py-4 px-5 align-middle">
-        <div class="font-medium text-slate-800 text-[13px]">${p.bp}</div>
+      <td class="py-3.5 px-5 align-middle">
+        <div class="font-bold ${p.bpRaw && parseInt(p.bpRaw) >= 140 ? 'text-amber-600' : 'text-slate-800'} text-[13px]">${p.bp}</div>
         <div class="text-slate-500 text-[11px]">${p.hb}</div>
       </td>
-      <td class="py-4 px-5 align-middle">
+      <td class="py-3.5 px-5 align-middle">
         <span class="${riskBadgeClass}">${p.risk}</span>
       </td>
       <td class="py-4 px-5 align-middle">
@@ -2290,7 +3262,13 @@ function renderPatientsTable() {
         <div class="text-slate-500 text-[11px]">${p.facility}</div>
       </td>
       <td class="py-4 px-6 text-right align-middle">
-        <button class="${actionBtnClass}">View</button>
+        <div class="flex items-center justify-end gap-1.5">
+          <button type="button" onclick="event.stopPropagation(); openSmsConversationForMother('${p.name}', '${p.id}', '${p.phone || '+256 778 501 066'}')" class="px-2 py-1 rounded-lg bg-teal-50 dark:bg-teal-950/60 hover:bg-teal-100 text-[#0e7490] dark:text-cyan-300 font-semibold text-xs flex items-center gap-1 border border-teal-200 dark:border-teal-800 transition-colors cursor-pointer" title="Send SMS / View Replies">
+            <span class="material-symbols-outlined text-[15px]">chat</span>
+            <span>SMS</span>
+          </button>
+          <button class="${actionBtnClass}">View</button>
+        </div>
       </td>
     `;
     tbody.appendChild(tr);
@@ -2445,10 +3423,55 @@ function triggerAction(patient, action) {
   alert(action + ' selected for ' + patient + '. Care record updated.');
 }
 
+
+// Dynamic Baby Display Mode & Photo Cards Renderer
+let babyDisplayMode = 'table'; // 'table' or 'cards'
+
+function setBabyDisplayMode(mode) {
+  babyDisplayMode = mode;
+  const tableContainer = document.getElementById('babyTableScrollContainer');
+  const cardsContainer = document.getElementById('babyPhotoCardsContainer');
+  const btnTable = document.getElementById('btnBabyViewTable');
+  const btnCards = document.getElementById('btnBabyViewCards');
+
+  if (mode === 'cards') {
+    if (tableContainer) tableContainer.classList.add('hidden');
+    if (cardsContainer) cardsContainer.classList.remove('hidden');
+    if (btnCards) btnCards.className = 'px-2.5 py-1 rounded bg-white dark:bg-slate-700 text-[#0e7490] dark:text-cyan-400 shadow-xs flex items-center gap-1';
+    if (btnTable) btnTable.className = 'px-2.5 py-1 rounded text-slate-600 dark:text-slate-300 hover:text-slate-900 flex items-center gap-1';
+  } else {
+    if (tableContainer) tableContainer.classList.remove('hidden');
+    if (cardsContainer) cardsContainer.classList.add('hidden');
+    if (btnTable) btnTable.className = 'px-2.5 py-1 rounded bg-white dark:bg-slate-700 text-[#0e7490] dark:text-cyan-400 shadow-xs flex items-center gap-1';
+    if (btnCards) btnCards.className = 'px-2.5 py-1 rounded text-slate-600 dark:text-slate-300 hover:text-slate-900 flex items-center gap-1';
+  }
+  renderBabyTable();
+}
+
+// Enhance Baby Data with Photos & Clinical Indicators
+if (typeof babyData === 'object') {
+  const babyPhotoList = [
+    '/assets/images/african_healthy_baby.jpg',
+    '/assets/images/african_mother_kangaroo_care.jpg',
+    '/assets/images/african_healthy_baby.jpg',
+    '/assets/images/african_mother_kangaroo_care.jpg',
+    '/assets/images/african_healthy_baby.jpg'
+  ];
+  let idx = 0;
+  for (let k in babyData) {
+    babyData[k].photo = babyPhotoList[idx % babyPhotoList.length];
+    babyData[k].gender = (idx % 2 === 0) ? 'Male' : 'Female';
+    babyData[k].apgar = '9/10';
+    idx++;
+  }
+}
+
+
 function renderBabyTable() {
   const tbody = document.getElementById('babyTableBody');
-  if (!tbody) return;
-  tbody.innerHTML = '';
+  const cardsContainer = document.getElementById('babyPhotoCardsContainer');
+  if (tbody) tbody.innerHTML = '';
+  if (cardsContainer) cardsContainer.innerHTML = '';
 
   const allBabies = Object.values(babyData);
   const filtered = allBabies.filter(b => {
@@ -2467,54 +3490,81 @@ function renderBabyTable() {
 
   pageItems.forEach(b => {
     const isSelected = b.key === selectedBabyKey;
-    const tr = document.createElement('tr');
-    tr.className = isSelected 
-      ? 'bg-teal-50/40 hover:bg-teal-50/70 transition-colors cursor-pointer group' 
-      : 'hover:bg-slate-50 transition-colors cursor-pointer group';
-    tr.onclick = () => selectBaby(b.key);
+    const babyImg = b.photo || '/assets/images/african_healthy_baby.jpg';
 
-    let statusBadge = '';
-    if (b.careStatus.includes('Urgent')) {
-      statusBadge = '<span class="bg-teal-100/80 text-[#0e7490] px-3 py-1 rounded-full text-[11px] font-bold uppercase">Needs Urgent Care</span>';
-    } else if (b.careStatus.includes('Attention')) {
-      statusBadge = '<span class="bg-slate-100 text-slate-700 px-3 py-1 rounded-full text-[11px] font-bold uppercase">Needs Attention</span>';
-    } else {
-      statusBadge = '<span class="bg-emerald-50 text-emerald-700 border border-emerald-200 px-3 py-1 rounded-full text-[11px] font-semibold uppercase">Healthy &amp; Normal</span>';
+    // 1. Table Row Rendering (with Baby Photo!)
+    if (tbody) {
+      const tr = document.createElement('tr');
+      tr.className = isSelected 
+        ? 'bg-teal-50/50 dark:bg-teal-950/40 hover:bg-teal-50/80 transition-colors cursor-pointer group' 
+        : 'hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors cursor-pointer group';
+      tr.onclick = () => selectBaby(b.key);
+
+      let statusBadge = '';
+      if (b.careStatus.includes('Urgent')) {
+        statusBadge = '<span class="bg-rose-100 dark:bg-rose-950/80 text-rose-700 dark:text-rose-300 border border-rose-200 px-3 py-1 rounded-full text-[11px] font-bold uppercase">Needs Urgent Care</span>';
+      } else if (b.careStatus.includes('Attention')) {
+        statusBadge = '<span class="bg-amber-100 dark:bg-amber-950/80 text-amber-800 dark:text-amber-300 border border-amber-200 px-3 py-1 rounded-full text-[11px] font-bold uppercase">Check Required</span>';
+      } else {
+        statusBadge = '<span class="bg-emerald-100 dark:bg-emerald-950/80 text-emerald-800 dark:text-emerald-300 border border-emerald-200 px-3 py-1 rounded-full text-[11px] font-bold uppercase">Normal &amp; Healthy</span>';
+      }
+
+      tr.innerHTML = `
+        <td class="py-3.5 px-5">
+          <div class="flex items-center gap-3">
+            <div class="relative w-10 h-10 rounded-full overflow-hidden shrink-0 border-2 border-teal-500 shadow-2xs bg-slate-100">
+              <img src="${babyImg}" alt="${b.name}" class="w-full h-full object-cover">
+            </div>
+            <div>
+              <div class="text-[14px] font-bold text-slate-900 dark:text-white group-hover:text-[#0e7490] transition-colors">${b.name}</div>
+              <div class="text-slate-400 font-medium text-[11px]">${b.meta} • ${b.gender || 'Infant'}</div>
+            </div>
+          </div>
+        </td>
+        <td class="py-3.5 px-4">
+          <div class="font-bold text-slate-800 dark:text-slate-200">${b.age}</div>
+          <div class="text-slate-500">${b.weight}</div>
+        </td>
+        <td class="py-3.5 px-4">
+          <div>Temp: <span class="font-bold ${b.tempStatus.includes('Cold') ? 'text-cyan-600' : b.tempStatus.includes('Fever') ? 'text-amber-600' : 'text-slate-800 dark:text-slate-200'}">${b.temp}</span></div>
+          <div class="text-slate-500">Breath: ${b.breath}</div>
+        </td>
+        <td class="py-3.5 px-5 text-right">
+          ${statusBadge}
+        </td>
+      `;
+      tbody.appendChild(tr);
     }
 
-    const dotClass = b.dotClass || (b.careStatus.includes('Urgent') ? 'bg-[#0e7490]' : (b.careStatus.includes('Attention') ? 'bg-slate-300' : 'bg-emerald-400'));
-
-    tr.innerHTML = `
-      <td class="py-4 px-5">
-        <div class="flex items-center gap-3">
-          <div class="w-2.5 h-2.5 rounded-full ${dotClass} shrink-0"></div>
-          <div>
-            <div class="text-[14px] font-bold text-slate-900 group-hover:text-[#0e7490] transition-colors">${b.name}</div>
-            <div class="text-slate-400 font-medium text-[11px]">${b.meta}</div>
+    // 2. Photo Cards Rendering (Visual Gallery!)
+    if (cardsContainer) {
+      const card = document.createElement('div');
+      card.className = `p-4 rounded-2xl border transition-all cursor-pointer ${isSelected ? 'border-teal-500 bg-teal-50/30 shadow-md ring-2 ring-teal-500/20' : 'border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 hover:border-teal-400 shadow-xs'}`;
+      card.onclick = () => selectBaby(b.key);
+      card.innerHTML = `
+        <div class="flex items-center gap-3.5">
+          <div class="relative w-16 h-16 rounded-2xl overflow-hidden shrink-0 border-2 border-teal-500 shadow-sm bg-slate-100">
+            <img src="${babyImg}" alt="${b.name}" class="w-full h-full object-cover">
+          </div>
+          <div class="flex-1 min-w-0">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-bold text-slate-900 dark:text-white truncate">${b.name}</span>
+              <span class="text-[10px] font-bold px-2 py-0.5 rounded-full ${b.careStatus.includes('Urgent') ? 'bg-rose-100 text-rose-700' : 'bg-emerald-100 text-emerald-700'}">${b.tag || 'Checkup'}</span>
+            </div>
+            <div class="text-[11px] text-slate-500 mt-0.5">${b.meta} • ${b.gender || 'Infant'}</div>
+            <div class="mt-2 flex items-center gap-2 text-[11px]">
+              <span class="px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-800 font-semibold text-slate-800 dark:text-slate-200">${b.weight}</span>
+              <span class="px-2 py-0.5 rounded ${b.tempStatus.includes('Cold') ? 'bg-cyan-100 text-cyan-800' : 'bg-emerald-100 text-emerald-800'} font-semibold">${b.temp}</span>
+              <span class="text-[10px] text-teal-700 dark:text-teal-400 font-semibold">KMC ${b.kmcPct}</span>
+            </div>
           </div>
         </div>
-      </td>
-      <td class="py-4 px-4">
-        <div class="font-bold text-slate-800">${b.age}</div>
-        <div class="text-slate-500">${b.weight}</div>
-      </td>
-      <td class="py-4 px-4">
-        <div>Temp: <span class="${b.tempStatus.includes('Cold') || b.tempStatus.includes('Fever') ? 'font-bold text-slate-800' : 'text-slate-800'}">${b.temp}</span></div>
-        <div class="text-slate-500">Breath: ${b.breath}</div>
-      </td>
-      <td class="py-4 px-5 text-right">
-        ${statusBadge}
-      </td>
-    `;
-    tbody.appendChild(tr);
+      `;
+      cardsContainer.appendChild(card);
+    }
   });
 
-  const infoEl = document.getElementById('babyPaginationInfo');
-  if (infoEl) {
-    infoEl.innerHTML = `Showing <strong class="text-slate-900">${filtered.length > 0 ? (startIndex + 1) + '-' + endIndex : '0'} of 312</strong> registered babies • <span class="text-[#0e7490] font-semibold">5 babies need quick attention</span>`;
-  }
-
-  renderBabyPaginationControls(totalPages, currentBabyPage);
+  renderBabyPagination(totalPages, currentBabyPage);
 }
 
 function renderBabyPaginationControls(totalPages, current) {
@@ -2573,38 +3623,993 @@ function filterBabyTable(mode) {
 }
 
 // Sidebar Navigation switching
+
+function toggleMobileSidebar(force) {
+  const sb = document.getElementById('mainSidebar');
+  const bd = document.getElementById('sidebarBackdrop');
+  if (!sb || !bd) return;
+  const isOpen = !sb.classList.contains('-translate-x-full');
+  const shouldOpen = force !== undefined ? force : !isOpen;
+  if (shouldOpen) {
+    sb.classList.remove('-translate-x-full');
+    bd.classList.remove('hidden');
+  } else {
+    sb.classList.add('-translate-x-full');
+    bd.classList.add('hidden');
+  }
+}
+
 function switchNavView(viewName) {
+  toggleMobileSidebar(false);
   document.querySelectorAll('.nav-btn').forEach(btn => {
     if (btn.dataset.view === viewName) {
       btn.className = 'nav-btn flex items-center gap-3 px-3.5 py-2.5 rounded-lg bg-[#0e7490] text-white font-semibold shadow-sm transition-all cursor-pointer';
-      btn.querySelector('.material-symbols-outlined').className = 'material-symbols-outlined text-[20px] text-white';
+      const icon = btn.querySelector('.material-symbols-outlined');
+      if (icon) icon.className = 'material-symbols-outlined text-[20px] text-white';
     } else {
       btn.className = 'nav-btn flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-slate-200 hover:bg-white/10 hover:text-white transition-colors duration-150 cursor-pointer';
-      btn.querySelector('.material-symbols-outlined').className = 'material-symbols-outlined text-[20px] text-cyan-300';
+      const icon = btn.querySelector('.material-symbols-outlined');
+      if (icon) icon.className = 'material-symbols-outlined text-[20px] text-cyan-300';
     }
   });
 
-  const views = ['maternal-care', 'newborn-care', 'appointments', 'referrals'];
+  const views = ['maternal-care', 'newborn-care', 'appointments', 'referrals', 'sms-ussd'];
   views.forEach(v => {
     const el = document.getElementById('view-' + v);
     if (el) {
-      if (v === viewName) el.classList.remove('hidden');
-      else el.classList.add('hidden');
+      if (v === viewName) {
+        el.classList.remove('hidden');
+        el.style.display = 'flex';
+      } else {
+        el.classList.add('hidden');
+        el.style.display = 'none';
+      }
     }
   });
 
-  if (viewName === 'appointments') {
-    renderAppointmentsList('ALL');
+  // Explicitly render and select the active view data
+  if (viewName === 'maternal-care') {
+    renderPatientsTable();
+    if (typeof selectedPatientId !== 'undefined' && selectedPatientId) {
+      selectPatient(selectedPatientId);
+    } else {
+      selectPatient('M-01');
+    }
   } else if (viewName === 'newborn-care') {
     renderBabyTable();
-    selectBaby(selectedBabyKey);
+    if (typeof selectedBabyKey !== 'undefined' && selectedBabyKey) {
+      selectBaby(selectedBabyKey);
+    } else {
+      selectBaby('mary_osei');
+    }
+  } else if (viewName === 'appointments') {
+    renderAppointmentsList('ALL');
   } else if (viewName === 'referrals') {
     renderTransfersTable();
-    selectTransfer(selectedTransferKey);
+    if (typeof selectedTransferKey !== 'undefined' && selectedTransferKey) {
+      selectTransfer(selectedTransferKey);
+    }
+  } else if (viewName === 'sms-ussd') {
+    renderClinicalSmsUssdView();
   }
 
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
+
+// =========================================================================
+// CLINICAL SMS & USSD GATEWAY (*920#) JAVASCRIPT ENGINE
+// =========================================================================
+let clinicalUssdSessionText = "";
+
+function appendClinicalKey(key) {
+  const inp = document.getElementById('clinicalUssdInput');
+  if (inp) {
+    inp.value += key;
+    inp.focus();
+  }
+}
+
+function resetClinicalUssd() {
+  clinicalUssdSessionText = "";
+  const lcd = document.getElementById('clinicalUssdLcdText');
+  const inp = document.getElementById('clinicalUssdInput');
+  if (inp) inp.value = '';
+  if (lcd) {
+    lcd.textContent = `Welcome to BabyHealth Guard (*920#)\n1. Register Pregnancy (Maama)\n2. Next ANC Clinic Visit\n3. Report Danger Signs (\ud83d\udea8)\n4. Newborn & KMC Care\n5. Mama Kit Voucher\n6. Change Language`;
+  }
+}
+
+async function sendClinicalUssd() {
+  const inp = document.getElementById('clinicalUssdInput');
+  const lcd = document.getElementById('clinicalUssdLcdText');
+  const sel = document.getElementById('clinicalSmsRecipient');
+  const phone = sel ? sel.value : '+256 778 501 066';
+  const val = inp ? inp.value.trim() : '';
+
+  let newSessionText = clinicalUssdSessionText;
+  if (!newSessionText) {
+    if (val === '*920#' || val === '' || val === '920') {
+      newSessionText = '';
+    } else {
+      newSessionText = val;
+    }
+  } else {
+    if (val) {
+      newSessionText = newSessionText + '*' + val;
+    }
+  }
+
+  if (inp) inp.value = '';
+
+  try {
+    const res = await fetch('/api/ussd', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        phoneNumber: phone,
+        sessionId: 'sim-' + Date.now(),
+        serviceCode: '*920#',
+        text: newSessionText
+      })
+    });
+    const reply = await res.text();
+    if (reply.startsWith('CON ')) {
+      clinicalUssdSessionText = newSessionText;
+      if (lcd) lcd.textContent = reply.replace('CON ', '');
+    } else if (reply.startsWith('END ')) {
+      clinicalUssdSessionText = '';
+      if (lcd) lcd.textContent = reply.replace('END ', '');
+      await refreshClinicalSmsLogs();
+    } else {
+      if (lcd) lcd.textContent = reply;
+    }
+  } catch (e) {
+    // Client-side fallback simulation if offline or file:///
+    const parts = newSessionText ? newSessionText.split('*') : [];
+    if (!parts.length || !newSessionText) {
+      if (lcd) lcd.textContent = `Welcome to BabyHealth Guard (*920#)\n1. Register Pregnancy (Maama)\n2. Next ANC Clinic Visit\n3. Report Danger Signs (\ud83d\udea8)\n4. Newborn & KMC Care\n5. Mama Kit Voucher\n6. Change Language`;
+    } else if (parts[0] === '1') {
+      if (parts.length === 1) {
+        clinicalUssdSessionText = '1';
+        if (lcd) lcd.textContent = `CON Enter Mother's Full Name:`;
+      } else if (parts.length === 2) {
+        clinicalUssdSessionText = `1*${parts[1]}`;
+        if (lcd) lcd.textContent = `CON Gestational age in weeks (1-42):`;
+      } else {
+        clinicalUssdSessionText = '';
+        if (lcd) lcd.textContent = `END Thank you ${parts[1]}! Registered for ANC reminders at Kagando Hospital. Dial *920# anytime. (Free 0 UGX)`;
+      }
+    } else if (parts[0] === '2') {
+      clinicalUssdSessionText = '';
+      if (lcd) lcd.textContent = `END Next ANC Appointment:\nMother: Amina Brenda\nVisit: ANC 3\nDate: Thursday 9:00 AM\nFacility: Kagando Hospital\nFree SMS reminder sent.`;
+    } else if (parts[0] === '3') {
+      if (parts.length === 1) {
+        clinicalUssdSessionText = '3';
+        if (lcd) lcd.textContent = `CON \ud83d\udea8 REPORT DANGER SIGN:\n1. Severe Bleeding\n2. High Fever / Convulsions\n3. Severe Headache / Blurry Vision\n4. Baby Stopped Moving\n5. Water Broke Early`;
+      } else {
+        clinicalUssdSessionText = '';
+        if (lcd) lcd.textContent = `END \ud83d\udea8 EMERGENCY ALERT SENT!\nMidwife Sr. Sarah notified.\nProceed immediately to nearest Health Centre.\nEmergency Dispatch: 0800-200-033 (Toll Free).`;
+        playClinicalChime('emergency');
+      }
+    } else if (parts[0] === '4') {
+      clinicalUssdSessionText = '';
+      if (lcd) lcd.textContent = `END \ud83d\udc76 Kangaroo Mother Care (KMC):\nFor low birth weight (<2.5kg):\n1. Continuous skin-to-skin contact\n2. Exclusive breastfeeding every 2-3 hrs\n3. Keep baby warm 24/7`;
+    } else if (parts[0] === '5') {
+      clinicalUssdSessionText = '';
+      if (lcd) lcd.textContent = `END \ud83d\udce6 Mama Kit Voucher: APPROVED\nClean delivery pack available at Kagando Hospital Pharmacy.\nTransport Voucher: 10,000 UGX Boda Subsidy.`;
+    } else if (parts[0] === '6') {
+      clinicalUssdSessionText = '';
+      if (lcd) lcd.textContent = `END Olulimi lukyusiddwa mu Luganda.\nDial *920# again. Webale!`;
+    } else {
+      clinicalUssdSessionText = '';
+      if (lcd) lcd.textContent = `END Invalid option. Dial *920# to try again.`;
+    }
+  }
+}
+
+async function renderClinicalSmsUssdView() {
+  await refreshClinicalSmsLogs();
+  try {
+    const res = await fetch('/api/mothers');
+    const mothers = await res.json();
+    const countEl = document.getElementById('kpiMothersRegistered');
+    if (countEl && mothers) {
+      countEl.textContent = `${mothers.length} Mothers`;
+    }
+  } catch (e) {}
+}
+
+let currentSmsFilter = 'ALL';
+let clinicalSmsLogsCache = [
+  {
+    id: "sms-1005",
+    to: "BABYGUARD",
+    from: "+256 778 501 066",
+    motherName: "Amina Brenda",
+    direction: "INBOUND",
+    message: "Thank you Sr. Sarah! I will come on Thursday at 9:00 AM for ANC 3. Baby kicked 12 times this morning.",
+    type: "APPOINTMENT_CONFIRMED",
+    status: "RECEIVED",
+    unread: false,
+    costUgx: 0,
+    timestamp: "2026-11-11 10:15:30"
+  },
+  {
+    id: "sms-1004",
+    to: "+256 778 501 066",
+    from: "BABYGUARD",
+    motherName: "Amina Brenda",
+    sender: "Sr. Sarah Omondi (Midwife)",
+    direction: "OUTBOUND",
+    message: "Habari Amina! This is Sr. Sarah at Kagando Hospital. Your ANC Visit 3 is scheduled for Thursday 24 Oct, 9:00 AM. Free Mama Kit will be issued. Please confirm attendance.",
+    type: "ANC_REMINDER",
+    status: "DELIVERED",
+    costUgx: 0,
+    timestamp: "2026-11-11 09:45:10"
+  },
+  {
+    id: "sms-1003",
+    to: "BABYGUARD",
+    from: "+256 702 334 455",
+    motherName: "Halima Kadogo",
+    direction: "INBOUND",
+    message: "Midwife, my head aches severely and vision is slightly blurry. Should I come to Bwera HC right away?",
+    type: "EMERGENCY_REPLY",
+    status: "RECEIVED",
+    unread: true,
+    costUgx: 0,
+    timestamp: "2026-11-11 09:25:00"
+  },
+  {
+    id: "sms-1002",
+    to: "+256 702 334 455",
+    from: "BABYGUARD",
+    motherName: "Halima Kadogo",
+    sender: "Sr. Sarah Omondi (Midwife)",
+    direction: "OUTBOUND",
+    message: "🚨 URGENT: Halima, stay resting. We received your report of severe headache. Sr. Sarah flagged your profile as High BP triage. Midwife & VHT boda dispatched.",
+    type: "EMERGENCY_DISPATCH",
+    status: "DELIVERED",
+    costUgx: 0,
+    timestamp: "2026-11-11 09:26:15"
+  },
+  {
+    id: "sms-1001",
+    to: "+256 782 445 566",
+    from: "BABYGUARD",
+    motherName: "Zainab Bello",
+    sender: "Sr. Sarah Omondi (Midwife)",
+    direction: "OUTBOUND",
+    message: "Habari Zainab! Kangaroo Mother Care reminder: Practice skin-to-skin warmth for 8+ continuous hours daily to prevent infant hypothermia.",
+    type: "KMC_GUIDANCE",
+    status: "DELIVERED",
+    costUgx: 0,
+    timestamp: "2026-11-11 08:30:15"
+  }
+];
+let activeConvPhone = '+256 778 501 066';
+let activeConvMotherName = 'Amina Brenda';
+let lastKnownInboundCount = 0;
+
+// Web Audio API Synthetic Chime (Zero External Files Required)
+function playClinicalChime(type = 'reply') {
+  try {
+    const AudioContext = window.AudioContext || window.webkitAudioContext;
+    if (!AudioContext) return;
+    const ctx = new AudioContext();
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+
+    if (type === 'reply') {
+      // Pleasant rising medical alert chime: 880Hz -> 1175Hz
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(880, ctx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(1174.66, ctx.currentTime + 0.16);
+      gain.gain.setValueAtTime(0.18, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.38);
+      osc.start(ctx.currentTime);
+      osc.stop(ctx.currentTime + 0.38);
+    } else if (type === 'emergency') {
+      // Urgent double beep for acute danger signs
+      osc.type = 'triangle';
+      osc.frequency.setValueAtTime(659.25, ctx.currentTime);
+      osc.frequency.setValueAtTime(880, ctx.currentTime + 0.12);
+      osc.frequency.setValueAtTime(659.25, ctx.currentTime + 0.24);
+      gain.gain.setValueAtTime(0.25, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.5);
+      osc.start(ctx.currentTime);
+      osc.stop(ctx.currentTime + 0.5);
+    } else {
+      // Outbound sent soft blip
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(523.25, ctx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(783.99, ctx.currentTime + 0.12);
+      gain.gain.setValueAtTime(0.12, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.26);
+      osc.start(ctx.currentTime);
+      osc.stop(ctx.currentTime + 0.26);
+    }
+  } catch (e) {}
+}
+
+async function renderClinicalSmsUssdView() {
+  await refreshClinicalSmsLogs();
+  try {
+    const res = await fetch('/api/mothers');
+    const mothers = await res.json();
+    const countEl = document.getElementById('kpiMothersRegistered');
+    if (countEl && mothers) {
+      countEl.textContent = `${mothers.length} Mothers`;
+    }
+    // Update recipient dropdown with all registered mothers
+    populateRecipientDropdown(mothers);
+  } catch (e) {}
+}
+
+function populateRecipientDropdown(mothers) {
+  const sel = document.getElementById('clinicalSmsRecipient');
+  const simSel = document.getElementById('simInboundMotherSelect');
+  if (!sel || !mothers) return;
+  const currentVal = sel.value;
+  sel.innerHTML = '';
+  mothers.forEach(m => {
+    const opt = new Option(`${m.fullName} (${m.phoneNumber}) - ${m.village || m.facilityId} [${m.ancStatus || 'Registered'}]`, m.phoneNumber);
+    sel.add(opt);
+  });
+  if (currentVal) sel.value = currentVal;
+
+  if (simSel) {
+    const simVal = simSel.value;
+    simSel.innerHTML = '';
+    mothers.forEach(m => {
+      const opt = new Option(`${m.fullName} (${m.village || 'Village'})`, m.phoneNumber);
+      simSel.add(opt);
+    });
+    if (simVal) simSel.value = simVal;
+  }
+}
+
+function setSmsFilter(filter) {
+  currentSmsFilter = filter;
+  ['ALL', 'INBOUND', 'OUTBOUND', 'EMERGENCY'].forEach(f => {
+    const btn = document.getElementById('tabSms' + (f === 'ALL' ? 'All' : (f === 'INBOUND' ? 'Inbound' : (f === 'OUTBOUND' ? 'Outbound' : 'Emergency'))));
+    if (btn) {
+      if (f === filter) {
+        btn.className = 'px-3 py-1.5 rounded-lg text-xs font-bold bg-white dark:bg-slate-900 text-slate-900 dark:text-white shadow-2xs transition-all cursor-pointer';
+      } else {
+        btn.className = 'px-3 py-1.5 rounded-lg text-xs font-bold text-slate-600 dark:text-slate-300 hover:text-slate-900 transition-all cursor-pointer';
+      }
+    }
+  });
+  renderSmsLogsList();
+}
+
+async function refreshClinicalSmsLogs() {
+  const container = document.getElementById('clinicalSmsTableContainer');
+  try {
+    const res = await fetch('/api/sms/logs');
+    clinicalSmsLogsCache = await res.json();
+
+    const outboundCount = clinicalSmsLogsCache.filter(s => s.direction === 'OUTBOUND').length;
+    const inboundReplies = clinicalSmsLogsCache.filter(s => s.direction === 'INBOUND');
+    const emergencyCount = clinicalSmsLogsCache.filter(s => s.type === 'EMERGENCY_REPLY' || s.type === 'EMERGENCY_DISPATCH' || s.type === 'MIDWIFE_ALERT').length;
+
+    // Update KPI counters
+    const kpiSms = document.getElementById('kpiSmsCount');
+    if (kpiSms) kpiSms.textContent = (1480 + outboundCount).toLocaleString();
+
+    const kpiReplies = document.getElementById('kpiRepliesCount');
+    if (kpiReplies) kpiReplies.textContent = `${inboundReplies.length} Replies`;
+
+    const kpiEmergency = document.getElementById('kpiEmergencyCount');
+    if (kpiEmergency) kpiEmergency.textContent = `${emergencyCount} Alerts`;
+
+    const tabCount = document.getElementById('tabInboundCount');
+    if (tabCount) tabCount.textContent = inboundReplies.length;
+
+    // Check if new unread inbound messages arrived
+    const unreadReplies = inboundReplies.filter(s => s.unread);
+    const topBadge = document.getElementById('topNotificationBadge');
+    if (topBadge) {
+      if (unreadReplies.length > 0) {
+        topBadge.textContent = unreadReplies.length;
+        topBadge.classList.remove('hidden');
+      } else {
+        topBadge.classList.add('hidden');
+      }
+    }
+
+    // Play chime if new reply arrived
+    if (inboundReplies.length > lastKnownInboundCount && lastKnownInboundCount > 0) {
+      const latest = inboundReplies[0];
+      const isEmerg = latest.type === 'EMERGENCY_REPLY' || latest.type === 'EMERGENCY_DISPATCH';
+      playClinicalChime(isEmerg ? 'emergency' : 'reply');
+      toast(`💬 New Reply from ${latest.motherName || latest.from}: "${latest.message.slice(0, 45)}..."`);
+    }
+    lastKnownInboundCount = inboundReplies.length;
+
+    renderSmsLogsList();
+    updatePhoneSimThread();
+    updateDrawerSmsThread();
+    updateNotificationsPanelContent(inboundReplies);
+  } catch (e) {
+    console.warn("SMS log refresh failed", e);
+    renderSmsLogsList();
+    updatePhoneSimThread();
+    updateDrawerSmsThread();
+  }
+}
+
+function renderSmsLogsList() {
+  const container = document.getElementById('clinicalSmsTableContainer');
+  if (!container) return;
+
+  let filtered = clinicalSmsLogsCache;
+  if (currentSmsFilter === 'INBOUND') {
+    filtered = clinicalSmsLogsCache.filter(s => s.direction === 'INBOUND');
+  } else if (currentSmsFilter === 'OUTBOUND') {
+    filtered = clinicalSmsLogsCache.filter(s => s.direction === 'OUTBOUND');
+  } else if (currentSmsFilter === 'EMERGENCY') {
+    filtered = clinicalSmsLogsCache.filter(s => s.type === 'EMERGENCY_REPLY' || s.type === 'EMERGENCY_DISPATCH' || s.type === 'MIDWIFE_ALERT');
+  }
+
+  if (!filtered || !filtered.length) {
+    container.innerHTML = '<div class="text-xs text-slate-400 py-8 text-center bg-slate-50 dark:bg-slate-800/30 rounded-xl border border-dashed border-slate-200 dark:border-slate-700">No SMS transactions recorded in this filter.</div>';
+    return;
+  }
+
+  container.innerHTML = filtered.map(s => {
+    const isOut = s.direction === 'OUTBOUND';
+    const isEmergency = s.type === 'EMERGENCY_REPLY' || s.type === 'EMERGENCY_DISPATCH' || s.type === 'MIDWIFE_ALERT';
+    const isInboundReply = !isOut;
+
+    const borderClass = isEmergency 
+      ? 'border-rose-300 dark:border-rose-900 bg-rose-50/50 dark:bg-rose-950/40' 
+      : (isOut ? 'border-slate-200 dark:border-slate-800 bg-slate-50/70 dark:bg-slate-800/40' : 'border-emerald-300 dark:border-emerald-900 bg-emerald-50/40 dark:bg-emerald-950/30');
+    
+    const badgeClass = isEmergency 
+      ? 'bg-rose-600 text-white' 
+      : (isOut ? 'bg-[#0e7490] text-white' : 'bg-emerald-600 text-white');
+
+    const phone = isOut ? s.to : s.from;
+    const motherName = s.motherName || (isOut ? 'Expectant Mother' : 'Rural Mother');
+
+    return `
+      <div class="p-3.5 rounded-xl border ${borderClass} flex flex-col gap-2 transition-all hover:shadow-xs">
+        <div class="flex items-center justify-between text-xs">
+          <div class="flex items-center gap-2">
+            <span class="px-2 py-0.5 rounded text-[10px] uppercase font-bold tracking-wider ${badgeClass}">
+              ${isInboundReply ? '↩ INBOUND REPLY' : '📤 OUTBOUND SMS'}
+            </span>
+            <span class="font-bold text-slate-900 dark:text-white">
+              ${isOut ? 'To: ' + motherName + ' (' + phone + ')' : 'From: ' + motherName + ' (' + phone + ')'}
+            </span>
+            ${s.unread ? '<span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" title="Unread Reply"></span>' : ''}
+          </div>
+          <span class="text-slate-400 text-[11px] font-mono">${s.timestamp || 'Just now'}</span>
+        </div>
+
+        <p class="text-xs text-slate-800 dark:text-slate-200 leading-relaxed font-normal">${s.message}</p>
+
+        <div class="flex flex-wrap items-center justify-between gap-2 text-[11px] text-slate-500 dark:text-slate-400 pt-2 border-t border-slate-200/60 dark:border-slate-700/60">
+          <div class="flex items-center gap-3">
+            <span>Category: <strong class="text-slate-700 dark:text-slate-200">${s.type}</strong></span>
+            <span class="text-emerald-600 dark:text-emerald-400 font-bold flex items-center gap-1">
+              <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> ${s.status || 'DELIVERED'} • 0 UGX (Free)
+            </span>
+          </div>
+
+          <div class="flex items-center gap-1.5">
+            ${isInboundReply ? `
+              <button type="button" onclick="quickReplyToMessage('${phone}', '${motherName}')" class="px-2.5 py-1 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs transition-colors flex items-center gap-1 cursor-pointer">
+                <span class="material-symbols-outlined text-[13px]">reply</span>
+                <span>Reply</span>
+              </button>
+            ` : ''}
+            <button type="button" onclick="openSmsConversationForMother('${motherName}', '${s.motherId || ''}', '${phone}')" class="px-2.5 py-1 rounded-lg bg-slate-200 hover:bg-slate-300 dark:bg-slate-700 dark:hover:bg-slate-600 text-slate-800 dark:text-slate-100 font-semibold text-xs transition-colors flex items-center gap-1 cursor-pointer">
+              <span class="material-symbols-outlined text-[13px]">forum</span>
+              <span>View Thread</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+// Quick reply pre-loader
+function quickReplyToMessage(phone, motherName) {
+  const sel = document.getElementById('clinicalSmsRecipient');
+  if (sel) {
+    let found = false;
+    for (let i = 0; i < sel.options.length; i++) {
+      if (sel.options[i].value.replace(/\s+/g, '') === phone.replace(/\s+/g, '')) {
+        sel.selectedIndex = i;
+        found = true;
+        break;
+      }
+    }
+    if (!found) {
+      const opt = new Option(`${motherName} (${phone})`, phone);
+      sel.add(opt);
+      sel.value = phone;
+    }
+  }
+  const msgInput = document.getElementById('clinicalSmsMessage');
+  if (msgInput) {
+    msgInput.value = `Habari ${motherName}! This is Sr. Sarah Omondi from Kagando Hospital. Regarding your message: `;
+    msgInput.focus();
+    updateSmsCharCounter(msgInput.value);
+  }
+  toast(`Ready to reply to ${motherName} (${phone}). 0 UGX Free Route.`);
+}
+
+// Dual-mode phone simulator
+function switchPhoneSimulatorMode(mode) {
+  const ussdScreen = document.getElementById('phoneScreenUssd');
+  const smsScreen = document.getElementById('phoneScreenSms');
+  const btnUssd = document.getElementById('phoneModeBtnUssd');
+  const btnSms = document.getElementById('phoneModeBtnSms');
+  const dot = document.getElementById('phoneSmsUnreadDot');
+
+  if (mode === 'sms') {
+    ussdScreen.classList.add('hidden');
+    smsScreen.classList.remove('hidden');
+    btnUssd.className = 'flex-1 py-1.5 px-2.5 rounded-lg text-xs font-bold text-slate-600 dark:text-slate-300 hover:text-slate-900 transition-all flex items-center justify-center gap-1 cursor-pointer';
+    btnSms.className = 'flex-1 py-1.5 px-2.5 rounded-lg text-xs font-bold bg-[#0e7490] text-white transition-all flex items-center justify-center gap-1 cursor-pointer';
+    if (dot) dot.classList.add('hidden');
+    updatePhoneSimThread();
+  } else {
+    smsScreen.classList.add('hidden');
+    ussdScreen.classList.remove('hidden');
+    btnSms.className = 'flex-1 py-1.5 px-2.5 rounded-lg text-xs font-bold text-slate-600 dark:text-slate-300 hover:text-slate-900 transition-all flex items-center justify-center gap-1 cursor-pointer';
+    btnUssd.className = 'flex-1 py-1.5 px-2.5 rounded-lg text-xs font-bold bg-[#0e7490] text-white transition-all flex items-center justify-center gap-1 cursor-pointer';
+  }
+}
+
+function updatePhoneSimThread() {
+  const threadBox = document.getElementById('phoneSimSmsThread');
+  if (!threadBox) return;
+
+  const currentPhone = document.getElementById('clinicalSmsRecipient')?.value || '+256 778 501 066';
+  const cleanPhone = currentPhone.replace(/\s+/g, '');
+  const motherMsgs = clinicalSmsLogsCache.filter(s => {
+    return (s.to && s.to.replace(/\s+/g, '') === cleanPhone) || (s.from && s.from.replace(/\s+/g, '') === cleanPhone);
+  }).slice(0, 8).reverse();
+
+  if (!motherMsgs.length) {
+    threadBox.innerHTML = '<div class="text-[10px] text-slate-400 text-center py-4">No messages on this phone yet. Tap "Send SMS" above to test.</div>';
+    return;
+  }
+
+  threadBox.innerHTML = motherMsgs.map(m => {
+    const isOutFromClinic = m.direction === 'OUTBOUND';
+    if (isOutFromClinic) {
+      // Bubble from clinic to mother
+      return `
+        <div class="flex flex-col items-start max-w-[88%]">
+          <span class="text-[9px] text-teal-300 font-bold mb-0.5">Sr. Sarah (Kagando)</span>
+          <div class="bg-slate-800 text-white rounded-xl rounded-tl-xs p-2 text-[10.5px] leading-relaxed border border-slate-700 shadow-2xs">
+            ${m.message}
+          </div>
+          <span class="text-[8.5px] text-slate-500 mt-0.5">${m.timestamp ? m.timestamp.slice(11, 16) : 'Now'}</span>
+        </div>
+      `;
+    } else {
+      // Bubble from mother to clinic
+      return `
+        <div class="flex flex-col items-end max-w-[88%] ml-auto">
+          <span class="text-[9px] text-emerald-400 font-bold mb-0.5">You (Mama)</span>
+          <div class="bg-teal-600 text-white rounded-xl rounded-tr-xs p-2 text-[10.5px] leading-relaxed shadow-2xs">
+            ${m.message}
+          </div>
+          <span class="text-[8.5px] text-slate-400 mt-0.5">${m.timestamp ? m.timestamp.slice(11, 16) : 'Now'} • Sent ✓✓</span>
+        </div>
+      `;
+    }
+  }).join('');
+
+  threadBox.scrollTop = threadBox.scrollHeight;
+}
+
+function setPhoneQuickReply(text) {
+  const inp = document.getElementById('phoneMotherReplyInput');
+  if (inp) {
+    inp.value = text;
+    inp.focus();
+  }
+}
+
+async function sendReplyFromSimulatedPhone() {
+  const inp = document.getElementById('phoneMotherReplyInput');
+  if (!inp || !inp.value.trim()) return;
+  const text = inp.value.trim();
+  const phone = document.getElementById('clinicalSmsRecipient')?.value || '+256 778 501 066';
+
+  try {
+    const res = await fetch('/api/sms/inbound', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ from: phone, message: text })
+    });
+    const data = await res.json();
+    inp.value = '';
+    toast(`Mother replied: "${text.slice(0, 35)}..." (0 UGX Billed)`);
+    playClinicalChime(data.isEmergency ? 'emergency' : 'reply');
+    await refreshClinicalSmsLogs();
+  } catch (e) {
+    const isEmerg = /bleed|help|fever|headache|pain|convuls/i.test(text);
+    const mockReply = {
+      id: "sms-" + Date.now(),
+      to: "BABYGUARD",
+      from: phone,
+      motherName: "Amina Brenda",
+      direction: "INBOUND",
+      message: text,
+      type: isEmerg ? "EMERGENCY_REPLY" : "QUERY_INBOUND",
+      status: "RECEIVED",
+      unread: true,
+      costUgx: 0,
+      timestamp: new Date().toISOString().replace('T', ' ').slice(0, 19)
+    };
+    clinicalSmsLogsCache.unshift(mockReply);
+    inp.value = '';
+    toast(`Mother replied: "${text.slice(0, 35)}..." (Simulated 0 UGX)`);
+    playClinicalChime(isEmerg ? 'emergency' : 'reply');
+    renderSmsLogsList();
+    updatePhoneSimThread();
+    updateDrawerSmsThread();
+  }
+}
+
+function setSimInboundText(text) {
+  const inp = document.getElementById('simInboundTextInput');
+  if (inp) {
+    inp.value = text;
+    inp.focus();
+  }
+}
+
+async function triggerSimulatedInbound() {
+  const phone = document.getElementById('simInboundMotherSelect')?.value || '+256 778 501 066';
+  const text = (document.getElementById('simInboundTextInput')?.value || '').trim() || 'Habari midwife, I will attend clinic on Thursday.';
+
+  try {
+    const res = await fetch('/api/sms/inbound', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ from: phone, message: text })
+    });
+    const data = await res.json();
+    document.getElementById('simInboundTextInput').value = '';
+    toast(`Inbound reply from ${data.motherName || phone}: "${text.slice(0, 35)}..."`);
+    playClinicalChime(data.isEmergency ? 'emergency' : 'reply');
+    await refreshClinicalSmsLogs();
+  } catch (e) {
+    const isEmerg = /bleed|help|fever|headache|pain|convuls/i.test(text);
+    const mockReply = {
+      id: "sms-" + Date.now(),
+      to: "BABYGUARD",
+      from: phone,
+      motherName: "Amina Brenda",
+      direction: "INBOUND",
+      message: text,
+      type: isEmerg ? "EMERGENCY_REPLY" : "QUERY_INBOUND",
+      status: "RECEIVED",
+      unread: true,
+      costUgx: 0,
+      timestamp: new Date().toISOString().replace('T', ' ').slice(0, 19)
+    };
+    clinicalSmsLogsCache.unshift(mockReply);
+    document.getElementById('simInboundTextInput').value = '';
+    toast(`Inbound reply from ${phone}: "${text.slice(0, 35)}..." (Simulated 0 UGX)`);
+    playClinicalChime(isEmerg ? 'emergency' : 'reply');
+    renderSmsLogsList();
+    updatePhoneSimThread();
+    updateDrawerSmsThread();
+  }
+}
+
+function updateSmsCharCounter(text) {
+  const counter = document.getElementById('smsCharCounter');
+  if (!counter) return;
+  const len = (text || '').length;
+  const parts = Math.max(1, Math.ceil(len / 160));
+  counter.textContent = `${len} / 160 chars (${parts} SMS • Free 0 UGX)`;
+}
+
+async function sendClinicalSms() {
+  const to = document.getElementById('clinicalSmsRecipient').value;
+  const msg = document.getElementById('clinicalSmsMessage').value.trim();
+  if (!msg) {
+    alert("Please enter message text.");
+    return;
+  }
+
+  try {
+    const res = await fetch('/api/sms/send', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ 
+        to: to, 
+        message: msg, 
+        type: 'CLINICAL_DISPATCH',
+        workerName: typeof currentWorker !== 'undefined' && currentWorker ? currentWorker.fullName : 'Sr. Sarah Omondi (Midwife)'
+      })
+    });
+    const data = await res.json();
+    playClinicalChime('sent');
+    toast(`SMS dispatched to ${data.motherName || to}! 100% Free Sandbox (0 UGX)`);
+    await refreshClinicalSmsLogs();
+  } catch (e) {
+    const mockOut = {
+      id: "sms-" + Date.now(),
+      to: to,
+      from: "BABYGUARD",
+      motherName: "Amina Brenda",
+      direction: "OUTBOUND",
+      sender: typeof currentWorker !== 'undefined' && currentWorker ? currentWorker.fullName : 'Sr. Sarah Omondi (Midwife)',
+      message: msg,
+      type: 'CLINICAL_DISPATCH',
+      status: 'DELIVERED',
+      unread: false,
+      costUgx: 0,
+      timestamp: new Date().toISOString().replace('T', ' ').slice(0, 19)
+    };
+    clinicalSmsLogsCache.unshift(mockOut);
+    playClinicalChime('sent');
+    toast(`SMS delivered to ${to} (Simulated Free 0 UGX)`);
+    renderSmsLogsList();
+    updatePhoneSimThread();
+    updateDrawerSmsThread();
+  }
+}
+
+// Maternal Drawer Two-Way SMS Thread Integration
+function updateDrawerSmsThread() {
+  const box = document.getElementById('drawerSmsRecentThread');
+  if (!box) return;
+
+  const currentPatient = patients.find(p => p.id === selectedPatientId) || patients[0];
+  const pName = (currentPatient ? currentPatient.name : '').toLowerCase();
+  
+  const relatedMsgs = clinicalSmsLogsCache.filter(s => {
+    return (s.motherName && s.motherName.toLowerCase().includes(pName)) ||
+           (s.to && currentPatient && s.to.replace(/\s+/g, '') === (currentPatient.phone || '').replace(/\s+/g, '')) ||
+           (s.from && currentPatient && s.from.replace(/\s+/g, '') === (currentPatient.phone || '').replace(/\s+/g, ''));
+  }).slice(0, 4);
+
+  if (!relatedMsgs.length) {
+    box.innerHTML = '<div class="text-[10px] text-slate-400 py-2 text-center">No SMS exchanged with this mother yet. Type below to send first free SMS.</div>';
+    return;
+  }
+
+  box.innerHTML = relatedMsgs.map(m => {
+    const isOut = m.direction === 'OUTBOUND';
+    return `
+      <div class="p-2 rounded-lg ${isOut ? 'bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700' : 'bg-emerald-50 dark:bg-emerald-950/50 border border-emerald-200 dark:border-emerald-800'} space-y-0.5">
+        <div class="flex items-center justify-between text-[10px]">
+          <span class="font-bold ${isOut ? 'text-[#0e7490] dark:text-cyan-400' : 'text-emerald-700 dark:text-emerald-300'}">
+            ${isOut ? 'Sr. Sarah (Outbound)' : 'Mother Reply (Inbound)'}
+          </span>
+          <span class="text-slate-400 font-mono text-[9px]">${m.timestamp ? m.timestamp.slice(11, 16) : 'Now'}</span>
+        </div>
+        <p class="text-[11px] text-slate-800 dark:text-slate-200 leading-tight">${m.message}</p>
+      </div>
+    `;
+  }).join('');
+}
+
+async function sendQuickSmsFromDrawer() {
+  const inp = document.getElementById('drawerQuickSmsInput');
+  if (!inp || !inp.value.trim()) return;
+  const text = inp.value.trim();
+  const currentPatient = patients.find(p => p.id === selectedPatientId) || patients[0];
+  const targetPhone = currentPatient.phone || '+256 778 501 066';
+
+  try {
+    const res = await fetch('/api/sms/send', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        to: targetPhone,
+        message: text,
+        type: 'PATIENT_CHAT',
+        workerName: currentWorker ? currentWorker.fullName : 'Sr. Sarah Omondi (Midwife)'
+      })
+    });
+    inp.value = '';
+    playClinicalChime('sent');
+    toast(`SMS dispatched to ${currentPatient.name}! 0 UGX Toll-Free Route.`);
+    await refreshClinicalSmsLogs();
+  } catch (e) {
+    toast(`SMS sent (Simulated Free)`);
+  }
+}
+
+function openSmsConversationForCurrentMother() {
+  const currentPatient = patients.find(p => p.id === selectedPatientId) || patients[0];
+  openSmsConversationForMother(currentPatient.name, currentPatient.id, currentPatient.phone || '+256 778 501 066');
+}
+
+function openSmsForCurrentBaby() {
+  const babyName = document.getElementById('panel-baby-name')?.innerText || 'Newborn Baby';
+  switchNavView('sms-ussd');
+  setClinicalTemplate('KMC');
+  toast(`Prepared Kangaroo Care & Immunization SMS for mother of ${babyName}.`);
+}
+
+// Full Two-Way SMS Dialogue Modal
+async function openSmsConversationForMother(name, id, phone) {
+  activeConvPhone = phone || '+256 778 501 066';
+  activeConvMotherName = name || 'Expectant Mother';
+
+  const modal = document.getElementById('smsConversationModal');
+  if (!modal) return;
+
+  document.getElementById('convModalMotherName').textContent = activeConvMotherName;
+  document.getElementById('convModalSubMeta').textContent = `${activeConvPhone} • Toll-Free 2G MoH Shortcode • 0 UGX Billed`;
+  document.getElementById('convModalAvatar').textContent = computeInitials(activeConvMotherName);
+
+  modal.classList.remove('hidden');
+
+  await renderModalConversationThread();
+}
+
+function closeSmsConversationModal() {
+  const modal = document.getElementById('smsConversationModal');
+  if (modal) modal.classList.add('hidden');
+}
+
+async function renderModalConversationThread() {
+  const box = document.getElementById('convModalMessagesList');
+  if (!box) return;
+
+  try {
+    const res = await fetch(`/api/sms/conversation?phone=${encodeURIComponent(activeConvPhone)}`);
+    const data = await res.json();
+    const msgs = data.messages || [];
+
+    if (!msgs.length) {
+      box.innerHTML = '<div class="text-xs text-slate-400 py-10 text-center">No SMS messages found with this patient yet. Use the composer below to dispatch the first zero-cost SMS.</div>';
+      return;
+    }
+
+    box.innerHTML = msgs.map(m => {
+      const isOut = m.direction === 'OUTBOUND';
+      const isEmerg = m.type === 'EMERGENCY_REPLY' || m.type === 'EMERGENCY_DISPATCH';
+      
+      if (isOut) {
+        return `
+          <div class="flex flex-col items-end max-w-[85%] ml-auto space-y-1">
+            <div class="flex items-center gap-1.5 text-[10px] text-slate-400">
+              <span class="font-bold text-[#0e7490] dark:text-cyan-400">${m.sender || 'Sr. Sarah Omondi'}</span>
+              <span>• ${m.timestamp || 'Today'}</span>
+            </div>
+            <div class="p-3 rounded-2xl rounded-tr-xs bg-[#0e7490] text-white text-xs leading-relaxed shadow-xs">
+              ${m.message}
+            </div>
+            <div class="text-[10px] text-emerald-600 dark:text-emerald-400 font-semibold flex items-center gap-1">
+              <span>Delivered ✓✓</span>
+              <span>• 0 UGX (Free)</span>
+            </div>
+          </div>
+        `;
+      } else {
+        return `
+          <div class="flex flex-col items-start max-w-[85%] space-y-1">
+            <div class="flex items-center gap-1.5 text-[10px] text-slate-400">
+              <span class="font-bold text-emerald-700 dark:text-emerald-300">${m.motherName || 'Mother'}</span>
+              <span>• ${m.timestamp || 'Today'}</span>
+              ${isEmerg ? '<span class="px-1.5 py-0.2 rounded bg-rose-600 text-white font-bold text-[9px]">EMERGENCY 🚨</span>' : ''}
+            </div>
+            <div class="p-3 rounded-2xl rounded-tl-xs ${isEmerg ? 'bg-rose-100 dark:bg-rose-950 border border-rose-300 text-rose-950 dark:text-rose-100 font-medium' : 'bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 border border-slate-200 dark:border-slate-700'} text-xs leading-relaxed shadow-xs">
+              ${m.message}
+            </div>
+            <span class="text-[10px] text-slate-400">Received via 2G SMS Network</span>
+          </div>
+        `;
+      }
+    }).join('');
+
+    box.scrollTop = box.scrollHeight;
+  } catch (e) {
+    console.warn("Failed fetching conversation", e);
+  }
+}
+
+function setModalSmsTemplate(type) {
+  const inp = document.getElementById('convModalInput');
+  if (!inp) return;
+  if (type === 'ANC') {
+    inp.value = `Habari ${activeConvMotherName}! This is Sr. Sarah at Kagando Hospital. Your ANC checkup is scheduled for this week. Free Mama Kit delivery pack will be given.`;
+  } else if (type === 'BP') {
+    inp.value = `⚠️ Clinical Notice for ${activeConvMotherName}: Please visit the clinic tomorrow at 8:30 AM for a blood pressure monitoring re-check.`;
+  } else if (type === 'KMC') {
+    inp.value = `Habari ${activeConvMotherName}! Remember to maintain skin-to-skin Kangaroo Mother Care for 8+ hours today to keep baby warm and healthy.`;
+  } else if (type === 'MAMAKIT') {
+    inp.value = `Congratulations ${activeConvMotherName}! Your clean delivery Mama Kit voucher is approved and ready for pickup at the health centre pharmacy.`;
+  }
+  inp.focus();
+}
+
+async function sendModalSmsReply() {
+  const inp = document.getElementById('convModalInput');
+  if (!inp || !inp.value.trim()) return;
+  const text = inp.value.trim();
+
+  try {
+    const res = await fetch('/api/sms/send', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        to: activeConvPhone,
+        message: text,
+        type: 'CLINICAL_DISPATCH',
+        workerName: currentWorker ? currentWorker.fullName : 'Sr. Sarah Omondi (Midwife)'
+      })
+    });
+    inp.value = '';
+    playClinicalChime('sent');
+    toast(`SMS delivered to ${activeConvMotherName}! Free 0 UGX Route.`);
+    await renderModalConversationThread();
+    await refreshClinicalSmsLogs();
+  } catch (e) {
+    toast(`SMS sent (Simulated Free)`);
+  }
+}
+
+// Update Top Notifications Panel with dynamic mother replies
+function updateNotificationsPanelContent(inboundReplies) {
+  const panel = document.getElementById('notificationsPanel');
+  if (!panel) return;
+
+  const repliesSnippet = inboundReplies.slice(0, 3).map(r => `
+    <div class="p-2.5 rounded-lg bg-emerald-50 dark:bg-emerald-950/60 border border-emerald-200 dark:border-emerald-800 text-emerald-900 dark:text-emerald-200 space-y-1">
+      <div class="flex items-center justify-between text-xs">
+        <strong class="font-bold flex items-center gap-1">
+          <span class="material-symbols-outlined text-[14px] text-emerald-600">sms</span>
+          Reply: ${r.motherName || r.from}
+        </strong>
+        <span class="text-[10px] text-slate-400">${r.timestamp ? r.timestamp.slice(11, 16) : 'Now'}</span>
+      </div>
+      <p class="text-xs text-slate-700 dark:text-slate-300 leading-tight">"${r.message}"</p>
+      <div class="pt-1 flex justify-end">
+        <button type="button" onclick="openSmsConversationForMother('${r.motherName || 'Mother'}', '${r.motherId || ''}', '${r.from}'); toggleNotifications();" class="text-[11px] font-bold text-emerald-700 dark:text-emerald-300 hover:underline">
+          Open Chat & Reply →
+        </button>
+      </div>
+    </div>
+  `).join('');
+
+  panel.innerHTML = `
+    <div class="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-2">
+      <div class="flex items-center gap-1.5">
+        <span class="material-symbols-outlined text-[#0e7490] text-[18px]">notifications</span>
+        <span class="font-bold text-sm text-slate-900 dark:text-white">Clinical & SMS Alerts</span>
+      </div>
+      <button onclick="toggleNotifications()" class="text-slate-400 hover:text-slate-800 dark:hover:text-white text-xs cursor-pointer">Close</button>
+    </div>
+    <div class="space-y-2 text-xs">
+      ${repliesSnippet || '<div class="text-slate-400 py-2 text-center text-xs">No new mother replies yet.</div>'}
+      <div class="p-2.5 rounded-lg bg-amber-50 dark:bg-amber-950/60 border border-amber-200 dark:border-amber-800 text-amber-900 dark:text-amber-200">
+        <strong class="block font-semibold">High Risk BP Protocol Active</strong>
+        Halima Kadogo (M-03) BP 146/96 mmHg monitored at Bwera HC.
+      </div>
+      <div class="p-2.5 rounded-lg bg-cyan-50 dark:bg-cyan-950/60 border border-cyan-200 dark:border-cyan-800 text-cyan-900 dark:text-cyan-200">
+        <strong class="block font-semibold">Zero-Cost Telecom Gateway</strong>
+        MTN & Airtel Uganda SMS/USSD live. 0 UGX billed.
+      </div>
+    </div>
+  `;
+}
+
+// Periodic background polling for live mother replies (Every 8 seconds)
+setInterval(() => {
+  refreshClinicalSmsLogs();
+}, 8000);
 
 // Healthcare Worker Profile Setup
 function updateWorkerProfileUI(worker) {
@@ -3212,10 +5217,30 @@ function handleVisitsSearch(val) {
   renderVisitsTable();
 }
 
-function triggerSendInstantSms() {
+async function triggerSendInstantSms() {
   const visit = visitsData.find(v => v.key === selectedVisitKey) || visitsData[0];
-  if (visit) {
-    toast(`SMS reminder dispatched to ${visit.name} (${visit.time}): "Reminder: Your checkup is scheduled at ${visit.room}"`);
+  if (!visit) return;
+  const p = patients.find(item => item.name.toLowerCase() === visit.name.toLowerCase()) || { name: visit.name, phone: '+256 778 501 066' };
+  const targetPhone = p.phone || '+256 778 501 066';
+  const msg = `Habari ${visit.name}! Reminder from Sr. Sarah at Kagando Hospital: Your ANC visit is scheduled for ${visit.time} at ${visit.room}. Free Mama Kit will be issued. Dial *920# if you need transport.`;
+
+  try {
+    const res = await fetch('/api/sms/send', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        to: targetPhone,
+        message: msg,
+        type: 'APPOINTMENT_REMINDER',
+        workerName: currentWorker ? currentWorker.fullName : 'Sr. Sarah Omondi (Midwife)'
+      })
+    });
+    const data = await res.json();
+    playClinicalChime('sent');
+    toast(`SMS reminder dispatched to ${visit.name} (${targetPhone})! 100% Free Sandbox (0 UGX)`);
+    await refreshClinicalSmsLogs();
+  } catch (e) {
+    toast(`SMS reminder sent to ${visit.name} (Simulated Free)`);
   }
 }
 
@@ -3579,12 +5604,982 @@ async function initDashboard() {
   selectTransfer('FA');
 
   // Activate appointments (Visits & Reminders) view by default or by hash
-  const initialView = (window.location.hash ? window.location.hash.replace('#', '') : '') || 'appointments';
+  const initialView = (window.location.hash ? window.location.hash.replace('#', '') : '') || 'maternal-care';
   switchNavView(initialView);
 }
 
 // Run on page load
 window.addEventListener('DOMContentLoaded', initDashboard);
+</script>
+
+
+<!-- ========================================================================= -->
+<!-- FACILITY CLINICAL MONTHLY REPORT MODAL (MOH FR12)                         -->
+<!-- ========================================================================= -->
+<div id="facilityReportModal" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs hidden items-center justify-center p-4">
+  <div class="bg-white rounded-2xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto flex flex-col">
+    <!-- Header -->
+    <div class="bg-gradient-to-r from-[#08232c] via-[#0e7490] to-teal-800 p-5 text-white flex items-center justify-between shrink-0">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-white/15 flex items-center justify-center">
+          <span class="material-symbols-outlined text-[24px]">description</span>
+        </div>
+        <div>
+          <h3 class="font-bold text-lg leading-tight">Monthly Health Facility Maternal Report (FR12)</h3>
+          <p class="text-xs text-cyan-200">Uganda Ministry of Health • Health Management Information System (HMIS)</p>
+        </div>
+      </div>
+      <div class="flex items-center gap-2">
+        <button onclick="downloadFacilityReportCSV()" class="px-3 py-1.5 rounded-lg bg-white text-slate-900 font-bold text-xs flex items-center gap-1.5 hover:bg-cyan-50 transition-colors cursor-pointer">
+          <span class="material-symbols-outlined text-[16px]">download</span>
+          <span>Download CSV</span>
+        </button>
+        <button onclick="printFacilityReport()" class="px-3 py-1.5 rounded-lg bg-teal-600 hover:bg-teal-700 text-white font-bold text-xs flex items-center gap-1.5 transition-colors cursor-pointer">
+          <span class="material-symbols-outlined text-[16px]">print</span>
+          <span>Print / PDF</span>
+        </button>
+        <button onclick="closeFacilityReportModal()" class="w-8 h-8 rounded-lg bg-white/10 hover:bg-white/20 text-white flex items-center justify-center cursor-pointer">
+          <span class="material-symbols-outlined text-[20px]">close</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Printable Report Area -->
+    <div class="p-6 space-y-6 text-slate-800" id="printableReportArea">
+      <div class="flex flex-wrap items-center justify-between pb-4 border-b border-slate-200 text-xs">
+        <div>
+          <span class="text-slate-500 block">Reporting Facility:</span>
+          <strong class="text-slate-900 text-sm">Bwera Health Centre III (Maji Mazuri Outpost)</strong>
+        </div>
+        <div>
+          <span class="text-slate-500 block">Lead Healthcare Worker:</span>
+          <strong class="text-slate-900 text-sm" id="reportMidwifeName">Sr. Sarah Omondi (Midwife)</strong>
+        </div>
+        <div>
+          <span class="text-slate-500 block">Reporting Month:</span>
+          <strong class="text-slate-900 text-sm">November 2026 (Active Cycle)</strong>
+        </div>
+      </div>
+
+      <!-- KPI Metrics Grid -->
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+        <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-200">
+          <span class="text-[11px] text-slate-500 block">Total Active Mothers</span>
+          <strong class="text-2xl font-black text-slate-900" id="repTotalMothers">16</strong>
+          <span class="text-[10px] text-emerald-600 font-semibold block">100% Registry Completeness</span>
+        </div>
+        <div class="bg-rose-50 p-3.5 rounded-xl border border-rose-200">
+          <span class="text-[11px] text-rose-700 block">High Risk Mothers</span>
+          <strong class="text-2xl font-black text-rose-700" id="repHighRisk">4</strong>
+          <span class="text-[10px] text-rose-600 font-semibold block">Under weekly surveillance</span>
+        </div>
+        <div class="bg-cyan-50 p-3.5 rounded-xl border border-cyan-200">
+          <span class="text-[11px] text-cyan-800 block">ANC Visits Logged</span>
+          <strong class="text-2xl font-black text-[#0e7490]">28</strong>
+          <span class="text-[10px] text-cyan-700 font-semibold block">94% Attendance Rate</span>
+        </div>
+        <div class="bg-emerald-50 p-3.5 rounded-xl border border-emerald-200">
+          <span class="text-[11px] text-emerald-800 block">Safe Deliveries</span>
+          <strong class="text-2xl font-black text-emerald-700">12</strong>
+          <span class="text-[10px] text-emerald-600 font-semibold block">Zero Maternal Deaths</span>
+        </div>
+      </div>
+
+      <!-- Registry Extract Table -->
+      <div>
+        <h4 class="font-bold text-sm text-slate-900 mb-2">Registered Expectant Mothers Cohort</h4>
+        <div class="overflow-x-auto border border-slate-200 rounded-xl">
+          <table class="w-full text-left text-xs text-slate-700">
+            <thead class="bg-slate-100 text-slate-600 uppercase font-bold text-[10px]">
+              <tr>
+                <th class="p-2.5">ID & Name</th>
+                <th class="p-2.5">Age</th>
+                <th class="p-2.5">Gestation</th>
+                <th class="p-2.5">BP (mmHg)</th>
+                <th class="p-2.5">Hemoglobin</th>
+                <th class="p-2.5">Risk Category</th>
+                <th class="p-2.5">Facility</th>
+              </tr>
+            </thead>
+            <tbody id="reportTableBody" class="divide-y divide-slate-100">
+              <!-- Dynamically populated by JS -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer Actions -->
+    <div class="p-4 bg-slate-50 border-t border-slate-200 flex justify-end gap-3 shrink-0">
+      <button onclick="closeFacilityReportModal()" class="px-4 py-2 rounded-lg bg-slate-200 hover:bg-slate-300 text-slate-800 font-semibold text-xs transition-colors cursor-pointer">
+        Close
+      </button>
+      <button onclick="downloadFacilityReportCSV()" class="px-4 py-2 rounded-lg bg-[#0e7490] hover:bg-[#0c627a] text-white font-bold text-xs flex items-center gap-1.5 transition-colors cursor-pointer">
+        <span class="material-symbols-outlined text-[16px]">download</span>
+        <span>Download CSV</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ========================================================================= -->
+<!-- JAVASCRIPT: REAL WORKING FILE DOWNLOADS & SIGN OUT IMPLEMENTATION         -->
+<!-- ========================================================================= -->
+<script>
+// Generic helper to trigger real browser file downloads
+function triggerBrowserDownload(filename, content, mimeType) {
+  const blob = new Blob(["\uFEFF" + content], { type: mimeType + ';charset=utf-8;' });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.setAttribute("href", url);
+  link.setAttribute("download", filename);
+  link.style.visibility = 'hidden';
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+  URL.revokeObjectURL(url);
+  toast(`Downloaded ${filename} successfully!`);
+}
+
+// 1. Download Maternal Health Registry CSV
+function downloadMaternalRegistryCSV() {
+  const headers = ["Patient ID", "Full Name", "Age", "Gestation", "Trimester", "Due Date", "Blood Pressure", "BP Status", "Hemoglobin", "Risk Category", "Assigned Midwife", "Facility", "Clinical Notes"];
+  const rows = patients.map(p => [
+    `"${p.id || ''}"`,
+    `"${p.name || ''}"`,
+    `"${p.age || ''}"`,
+    `"${p.week || ''}"`,
+    `"${p.trimester || ''}"`,
+    `"${p.dueDate || ''}"`,
+    `"${p.bp || ''}"`,
+    `"${p.bpStatus || ''}"`,
+    `"${p.hb || ''}"`,
+    `"${p.risk || ''}"`,
+    `"${p.assignedWorker || ''}"`,
+    `"${p.facility || ''}"`,
+    `"${(p.notes || '').replace(/"/g, '""')}"`
+  ]);
+
+  const csvContent = [headers.join(','), ...rows.map(r => r.join(','))].join('\n');
+  triggerBrowserDownload('maternal_patients_registry.csv', csvContent, 'text/csv');
+}
+
+// 2. Download Baby Checks Registry CSV
+function downloadBabyRegistryCSV() {
+  const babyData = [
+    { id: "B-01", babyName: "Baby of Mary Osei", motherName: "Mary Osei", age: "Day 3", weightKg: "2.45", tempC: "35.3", breathRate: "52/min", status: "Needs Urgent Care", village: "Asamankese" },
+    { id: "B-02", babyName: "Baby of Fatima Abubakar", motherName: "Fatima Abubakar", age: "Day 7", weightKg: "3.10", tempC: "36.8", breathRate: "44/min", status: "Doing Well", village: "Beposo" },
+    { id: "B-03", babyName: "Baby of Amina Brenda", motherName: "Amina Brenda", age: "Day 14", weightKg: "3.42", tempC: "36.5", breathRate: "46/min", status: "Doing Well", village: "Kagando" },
+    { id: "B-04", babyName: "Baby of Grace Mwangi", motherName: "Grace Mwangi", age: "Day 21", weightKg: "3.80", tempC: "36.7", breathRate: "42/min", status: "Doing Well", village: "Lindi" },
+    { id: "B-05", babyName: "Baby of Zainab Bello", motherName: "Zainab Bello", age: "Day 2", weightKg: "2.85", tempC: "36.4", breathRate: "48/min", status: "Monitoring", village: "Maji Mazuri" }
+  ];
+
+  const headers = ["Baby ID", "Baby Reference", "Mother Name", "Age", "Weight (kg)", "Temperature (C)", "Breath Rate", "Clinical Care Status", "Village / Facility"];
+  const rows = babyData.map(b => [
+    `"${b.id}"`,
+    `"${b.babyName}"`,
+    `"${b.motherName}"`,
+    `"${b.age}"`,
+    `"${b.weightKg}"`,
+    `"${b.tempC}"`,
+    `"${b.breathRate}"`,
+    `"${b.status}"`,
+    `"${b.village}"`
+  ]);
+
+  const csvContent = [headers.join(','), ...rows.map(r => r.join(','))].join('\n');
+  triggerBrowserDownload('baby_checks_registry.csv', csvContent, 'text/csv');
+}
+
+// 3. Download Clinic Visits Schedule CSV
+function downloadClinicScheduleCSV() {
+  const headers = ["Appointment ID", "Patient Name", "Visit Type", "Scheduled Date & Time", "Facility / Clinic Room", "Attendance Status"];
+  const rows = appointments.map(a => [
+    `"${a.id || ''}"`,
+    `"${a.patientName || ''}"`,
+    `"${a.type || ''}"`,
+    `"${a.when || ''}"`,
+    `"${a.facility || ''}"`,
+    `"${a.status || ''}"`
+  ]);
+
+  const csvContent = [headers.join(','), ...rows.map(r => r.join(','))].join('\n');
+  triggerBrowserDownload('today_clinic_schedule.csv', csvContent, 'text/csv');
+}
+
+// 4. Monthly Report (FR12) Modal Logic
+function openFacilityReportModal() {
+  const modal = document.getElementById('facilityReportModal');
+  const tbody = document.getElementById('reportTableBody');
+  
+  // Populate cohort table
+  tbody.innerHTML = '';
+  patients.slice(0, 8).forEach(p => {
+    const tr = document.createElement('tr');
+    tr.className = 'hover:bg-slate-50';
+    tr.innerHTML = `
+      <td class="p-2.5 font-bold">${p.name} <span class="text-slate-400 font-normal">(${p.id})</span></td>
+      <td class="p-2.5">${p.age}</td>
+      <td class="p-2.5">${p.week}</td>
+      <td class="p-2.5">${p.bp}</td>
+      <td class="p-2.5">${p.hb}</td>
+      <td class="p-2.5"><span class="px-2 py-0.5 rounded text-[10px] font-bold ${p.risk === 'High Risk' ? 'bg-rose-100 text-rose-700' : 'bg-emerald-100 text-emerald-700'}">${p.risk}</span></td>
+      <td class="p-2.5">${p.facility}</td>
+    `;
+    tbody.appendChild(tr);
+  });
+
+  document.getElementById('repTotalMothers').textContent = patients.length;
+  document.getElementById('repHighRisk').textContent = patients.filter(p => p.risk === 'High Risk').length;
+  modal.classList.remove('hidden');
+  modal.classList.add('flex');
+}
+
+function closeFacilityReportModal() {
+  const modal = document.getElementById('facilityReportModal');
+  modal.classList.add('hidden');
+  modal.classList.remove('flex');
+}
+
+function downloadFacilityReportCSV() {
+  const headers = ["HMIS Indicator", "Count / Value", "Description"];
+  const rows = [
+    ['"Total Registered Expectant Mothers"', `"${patients.length}"`, '"Active in clinical cohort"'],
+    ['"High Risk Pregnancies Flagged"', `"${patients.filter(p => p.risk === 'High Risk').length}"`, '"Preeclampsia and severe anemia surveillance"'],
+    ['"Routine Antenatal Attendances"', `"${patients.filter(p => p.risk !== 'High Risk').length}"`, '"Standard 4-visit WHO pathway"'],
+    ['"ANC Clinic Visits Conducted This Cycle"', '"28"', '"Documented in facility records"'],
+    ['"Emergency Referrals to Sub-County Hospital"', '"2"', '"Transferred via fast-track protocol"'],
+    ['"Facility"', '"Bwera Health Centre III (Maji Mazuri Outpost)"', '"Uganda Ministry of Health"'],
+    ['"Report Generated At"', `"${new Date().toISOString()}"`, '"BabyHealth Guard Digital System"']
+  ];
+
+  const csvContent = [headers.join(','), ...rows.map(r => r.join(','))].join('\n');
+  triggerBrowserDownload('maternal_facility_report_FR12.csv', csvContent, 'text/csv');
+}
+
+function printFacilityReport() {
+  window.print();
+}
+
+// 5. Sign Out Logic
+function handleSignOut() {
+  if (confirm("Are you sure you want to sign out of your healthcare worker account?")) {
+    try {
+      localStorage.removeItem('authToken');
+      localStorage.removeItem('currentUser');
+      sessionStorage.clear();
+    } catch(e) {}
+    toast("Signed out successfully. Returning to Home...");
+    setTimeout(() => {
+      window.location.href = '/index.html';
+    }, 500);
+  }
+}
+</script>
+
+
+<!-- STRICTLY ONE FLOATING AI ASSISTANT BUTTON -->
+<div class="fixed bottom-6 right-6 z-40">
+  <button onclick="openAiSideDrawer()" aria-label="Open MaamaCare AI Assistant" class="flex items-center gap-2 px-4 py-3 rounded-full bg-[#0e7490] hover:bg-[#08232c] text-white font-bold text-xs sm:text-sm shadow-xl shadow-cyan-950/20 active:scale-95 transition-all border border-cyan-400/30 cursor-pointer" title="Open 10 Ugandan Languages Maternal AI Assistant">
+    <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+    <span class="material-symbols-outlined text-[19px]">auto_awesome</span>
+    <span>MaamaCare AI</span>
+  </button>
+</div>
+
+
+<!-- ========================================================================= -->
+<!-- MAAMACARE AI ASSISTANT SIDE DRAWER (10 UGANDAN LOCAL LANGUAGES)           -->
+<!-- ========================================================================= -->
+<div id="aiSideDrawerBackdrop" onclick="closeAiSideDrawer()" class="fixed inset-0 bg-slate-900/50 backdrop-blur-xs z-50 hidden transition-opacity duration-300"></div>
+
+<aside id="aiSideDrawer" class="fixed top-0 right-0 h-full w-full sm:w-[420px] bg-white shadow-2xl z-50 flex flex-col transform translate-x-full transition-transform duration-300 ease-in-out border-l border-slate-200">
+  
+  <!-- Drawer Header -->
+  <div class="bg-gradient-to-r from-[#08232c] to-[#0e7490] p-4 text-white flex items-center justify-between shrink-0 shadow-sm">
+    <div class="flex items-center gap-3">
+      <div class="w-10 h-10 rounded-xl bg-white/15 flex items-center justify-center text-xl">🤱</div>
+      <div>
+        <h3 class="font-extrabold text-sm sm:text-base leading-tight">MaamaCare AI Assistant</h3>
+        <p class="text-[11px] text-cyan-200" id="drawerDialectBadge">Luganda Active • Audio Spoken</p>
+      </div>
+    </div>
+    <button onclick="closeAiSideDrawer()" class="w-8 h-8 rounded-lg bg-white/10 hover:bg-white/20 flex items-center justify-center text-white transition-colors cursor-pointer" title="Close AI Assistant">
+      <span class="material-symbols-outlined text-[20px]">close</span>
+    </button>
+  </div>
+
+  <!-- Language Selector Dropdown in Drawer -->
+  <div class="p-3 bg-slate-50 border-b border-slate-200 flex items-center justify-between text-xs shrink-0">
+    <span class="font-bold text-slate-700">Choose Language:</span>
+    <select onchange="switchLanguage(this.value)" id="drawerLangSelect" class="bg-white text-slate-900 font-bold text-xs rounded-xl px-2.5 py-1.5 border border-slate-300 focus:outline-hidden focus:ring-2 focus:ring-[#0e7490] cursor-pointer">
+      <option value="luganda">🇺🇬 Luganda (Central)</option>
+      <option value="runyankore">🇺🇬 Runyankore (Western)</option>
+      <option value="rukiga">🇺🇬 Rukiga (Kigezi)</option>
+      <option value="lusoga">🇺🇬 Lusoga (Busoga)</option>
+      <option value="acholi">🇺🇬 Acholi (Northern / Luo)</option>
+      <option value="lango">🇺🇬 Lango (Northern)</option>
+      <option value="ateso">🇺🇬 Ateso (Eastern / Teso)</option>
+      <option value="lugbara">🇺🇬 Lugbara (West Nile)</option>
+      <option value="runyoro">🇺🇬 Runyoro-Rutooro (Western)</option>
+      <option value="lumasaba">🇺🇬 Lumasaba (Bugisu)</option>
+      <option value="english">🌐 English (Official)</option>
+      <option value="swahili">🇹🇿 Kiswahili (East Africa)</option>
+    </select>
+  </div>
+
+  <!-- Chat Messages Window -->
+  <div id="drawerChatMessages" class="flex-1 p-4 overflow-y-auto space-y-3.5 bg-slate-50/70 text-xs">
+    <!-- Messages populated by JS -->
+  </div>
+
+  <!-- Quick Question Chips -->
+  <div id="drawerQuickChips" class="px-3.5 py-2.5 bg-white border-t border-slate-100 flex flex-wrap gap-1.5 shrink-0">
+    <!-- Chips populated by JS -->
+  </div>
+
+  <!-- Input Bar -->
+  <div class="p-3 bg-white border-t border-slate-200 shrink-0">
+    <form onsubmit="handleDrawerChatSubmit(event)" class="flex items-center gap-2">
+      <button type="button" onclick="startVoiceInput()" id="drawerMicBtn" title="Speak via microphone" class="w-9 h-9 rounded-xl bg-slate-100 hover:bg-cyan-50 text-slate-700 hover:text-[#0e7490] border border-slate-200 flex items-center justify-center shrink-0 transition-colors cursor-pointer">
+        <span class="material-symbols-outlined text-[18px]">mic</span>
+      </button>
+      <input type="text" id="drawerChatInput" placeholder="Buuza ekibuuzo..." class="flex-1 bg-slate-50 text-xs px-3.5 py-2 rounded-xl border border-slate-200 focus:outline-hidden focus:ring-1 focus:ring-[#0e7490]">
+      <button type="submit" class="px-3.5 py-2 rounded-xl bg-[#0e7490] hover:bg-[#08232c] text-white font-bold text-xs flex items-center justify-center shrink-0 transition-colors cursor-pointer">
+        <span class="material-symbols-outlined text-[16px]">send</span>
+      </button>
+    </form>
+    <div class="mt-2 flex items-center justify-between text-[10px] text-slate-400 px-1">
+      <span>🔊 Tap "Listen" to hear spoken pronunciation</span>
+      <a href="https://wa.me/256778501066" target="_blank" class="text-emerald-600 font-bold hover:underline">WhatsApp Help</a>
+    </div>
+  </div>
+
+</aside>
+
+
+<script>
+// MaamaCare AI Multilingual Knowledge Engine (10 Ugandan Languages)
+const MAAMA_LANGUAGES = {
+  "luganda": {
+    "name": "Luganda (Central)",
+    "greeting": "Oli otya Maama! Nze MaamaCare AI, omuyambi wo ku by'obulamu bwo n'obw'omwana wo. Ndi wano okukuyamba ku bintu byonna ebikwata ku lubuto, okugenda mu ddwaliro, n'obulamu bw'omwana.",
+    "placeholder": "Buuza ekibuuzo ku lubuto oba omwana...",
+    "listenText": "Wuliriza eddoboozi",
+    "quickChips": ["🚨 Obubonero obw'obulabe", "👶 Omwana akuba atya?", "🥗 Eby'okulya n'eddagala lya ayoni", "🏥 Eddwaliro n'okubala emyezi"],
+    "intents": {
+      "danger": { "keywords": ["obulabe", "omusaayi", "omutwe", "amaaso", "omusujja", "kuzimba", "okulumwa", "bleeding", "headache"], "response": "⚠️ OBULABE OBW'AMANGU! Singa ofuna okuvaamu omusaayi, omutwe ogutawona ng'olina ebire mu maaso, omusujja omungi, oba okuzimba ennyo, genda mu ddwaliro amangu ddala! Kuba essimu ku 112 oba 0800 100 200 ku bwereere, oba omusawo wo ku +256 778 501 066." },
+      "kicks": { "keywords": ["kuba", "okukuba", "omwana", "kicks", "move"], "response": "👶 OKUKUBA KW'OMWANA: Omwana asaanidde akube emirundi egitakka wansi wa 10 mu ssaawa bbiri (2) ng'oli mu kuwummula ku lubiriizi olwa kkono. Bw'aleka okukuba, yanguwa ogende mu ddwaliro bakebe omutima gwe." },
+      "nutrition": { "keywords": ["lya", "okulya", "enva", "ayoni", "doodo", "food"], "response": "🥗 EBY'OKULYA: Lya emmere ezimba omusaayi: doodo, nakati, bbugga, ebijanjaalo, amagi, n'amata. Mira buli lunaku ebinini bya Ayoni ne Folic Acid eby'omusaayi." },
+      "visits": { "keywords": ["ddwaliro", "anc", "omusawo", "appointment"], "response": "🏥 OKUGENDA MU DDWALIRO (ANC): Buli maama agende mu ddwaliro emirundi egitakka wansi wa 4. Koona *920# ku ssimu yo okumanya olunaku lwo." }
+    },
+    "default": "Weebale maama! Ekyo ekibuuzo kikulu nnyo. Osobola okumbuuza ku bubonero obw'obulabe, okukuba kw'omwana, eby'okulya, oba okukuba essimu eri omusawo ku +256 778 501 066."
+  },
+  "runyankore": {
+    "name": "Runyankore (Western)",
+    "greeting": "Agandi Maama! Ndi MaamaCare AI, omuyambi waawe w'eby'amagara gaanyu n'omwana waawe ori munda.",
+    "placeholder": "Buuza ekibuuzo aha nda nari omwana...",
+    "listenText": "Huuriza eiraka",
+    "quickChips": ["🚨 Obumanyiso bw'akabi", "👶 Omwana arikutera ata?", "🥗 Eby'okurya n'obujuma", "🏥 Okwija omu ddwaliro"],
+    "intents": {
+      "danger": { "keywords": ["akabi", "omusaayi", "omutwe", "amaisho", "bleeding"], "response": "⚠️ AKABI K'AMAANI! Waareeba omusaayi kuruga omuriiwe, omutwe gw'amaani, nari omusujja, yiruka aha ddwaliro ahonaaho! Nari teera 112 / 0800 100 200, nari midwife aha +256 778 501 066." },
+      "kicks": { "keywords": ["kutera", "omwana", "kicks"], "response": "👶 OKUTERA KW'OMWANA: Omwana ashemereire kutera emirundi ikumi (10) omu shaaha ibiri ohuumwire aha rubaju rwa bumosho. Yaaba atari kutera, yiruka aha ddwaliro." },
+      "nutrition": { "keywords": ["kurya", "ebyokurya", "doodo", "iron"], "response": "🥗 EBY'OKURYA: Rya emboga ziragrikirwe (doodo, ebitakuri), ebihimba, amagi n'amata. Mira obujuma bwa Iron & Folic Acid buri eizooba." }
+    },
+    "default": "Webare maama! Ndi wano kukuyamba. Noobaasa kumbuuza aha kutera kw'omwana, eby'okurya, obumanyiso bw'akabi, nari waateera essimu aha +256 778 501 066."
+  },
+  "rukiga": {
+    "name": "Rukiga (Kigezi)",
+    "greeting": "Oraire ota Maama! Ndi MaamaCare AI, omukuru w'amagara gaanyu n'omwana ori munda omu Kigezi.",
+    "placeholder": "Buuza aha nda n'omwana wo...",
+    "listenText": "Huuriza eiraka",
+    "quickChips": ["🚨 Obumanyiso bw'akabi", "👶 Omwana arikutera ata?", "🥗 Eby'okurya by'omusaayi", "🏥 Okugyenda aha ddwaliro"],
+    "intents": {
+      "danger": { "keywords": ["akabi", "omusaayi", "omutwe", "bleeding"], "response": "⚠️ AKABI K'AMAANI! Waaza omu musaayi kuruga omu nda, omutwe gukurema gwine ebihoho omu maisho, yiruka aha ddwaliro erikukira haihi ahonaaho!" }
+    },
+    "default": "Webare kwebuuza maama! Amagara gaawe n'omwana nigo g'omugasho. Kumbuuza aha by'okurya, okutera kw'omwana, obumanyiso bw'akabi, nari +256 778 501 066."
+  },
+  "lusoga": {
+    "name": "Lusoga (Busoga)",
+    "greeting": "Kodheyo Maama! Nze MaamaCare AI ow'omulala gwo ku by'obulamu bwo n'obw'omwana ori mu nda.",
+    "placeholder": "Buuza ekibuuzo kyo ku nda...",
+    "listenText": "Wuliriza eddoboozi",
+    "quickChips": ["🚨 Obubonero obubi", "👶 Omwana akuba atya?", "🥗 Eby'okulya n'amata", "🏥 Enaku dh'eddwaliro"],
+    "intents": {
+      "danger": { "keywords": ["obulabe", "omusaayi", "omutwe", "bleeding"], "response": "⚠️ AKABANGA AKABI! Singa obona omusaayi gukuvaamu oba omutwe ogukutemye, yanguwa ogende mu ddwaliro lw'amangu ddala! Kuba ku 112 oba 0800 100 200." }
+    },
+    "default": "Webale kwogera nange maama! Buuza ku buli kintu ky'oyagala oba kubira abasawo baffe ku +256 778 501 066."
+  },
+  "acholi": {
+    "name": "Acholi (Northern / Luo)",
+    "greeting": "Kop ango Maama! An aye MaamaCare AI me konyi i kom yotkom meri ki pa litino ma itye kwede i ici.",
+    "placeholder": "Peny lapiny i kom ic...",
+    "listenText": "Winye dwon",
+    "quickChips": ["🚨 Pwony me gemo", "👶 Gayo pa litino", "🥗 Cam me yotkom", "🏥 Cito i ot yat"],
+    "intents": {
+      "danger": { "keywords": ["gemo", "remo", "wic", "bleeding"], "response": "⚠️ PWONY ME GEMO MADIT! Ka ineno remo cwer ki i dyere onyo wic abara madit marac, citi i ot yat ma cok loyo oyotoyot! Go cim 112 onyo 0800 100 200." }
+    },
+    "default": "Apwoyo tutwal maama! Yotkom meri ki pa litino tye gin madit. Peny lapiny mo keken nyo go cim i +256 778 501 066."
+  },
+  "lango": {
+    "name": "Lango (Northern)",
+    "greeting": "Kop ango Maama! Atye kany me konyi i yotkom me ic meri kede me litino ame itye kede.",
+    "placeholder": "Peny lapiny i yotkom...",
+    "listenText": "Winye dwon",
+    "quickChips": ["🚨 Obanga gema", "👶 Kwano gayo pa litino", "🥗 Cam me remo", "🏥 Nino me ot yat"],
+    "intents": {
+      "danger": { "keywords": ["gema", "remo", "wiye", "bleeding"], "response": "⚠️ OBANGA GEMA MALELE! Ka icwec remo onyo wiye obaro atek tutwal, wot i ot yat atotot! Go cim me nono 112 onyo 0800 100 200." }
+    },
+    "default": "Apwoyo matek maama! Peny lapiny i kom yotkom me ic, nino me ot yat, onyo go cim i +256 778 501 066."
+  },
+  "ateso": {
+    "name": "Ateso (Eastern / Teso)",
+    "greeting": "Yoga noi Maama! Eong nesi MaamaCare AI ikepakoni kede aijar kon kede naka ikoku kotoma aberu.",
+    "placeholder": "Ingit aingiset nako ikoku...",
+    "listenText": "Koko eporoto",
+    "quickChips": ["🚨 Agogon naka akalany", "👶 Aikeun naka ikoku", "🥗 Inyamat ka aokot", "🏥 Airot ore eipone"],
+    "intents": {
+      "danger": { "keywords": ["akalany", "aokot", "akou", "bleeding"], "response": "⚠️ AGOGON NAKA AKALANY! Arai ituru aokot arai ekukuni akou noi, kotor ore loka eipone (hospital) atipet! Epedori jo aiyalam simu 112 arai 0800 100 200." }
+    },
+    "default": "Eyalama noi maama! Ingit aingiset kere nako aikeun naka ikoku, inyamat, arai koom simu mama +256 778 501 066."
+  },
+  "lugbara": {
+    "name": "Lugbara (West Nile)",
+    "greeting": "Mi ngoni Maama! Ma mini MaamaCare AI, aza koza mini kpere mva mini dria vule.",
+    "placeholder": "Zi e'yo mva kede ali vule...",
+    "listenText": "Eri o'du",
+    "quickChips": ["🚨 E'yo ndri ka", "👶 Mva saza (Kicks)", "🥗 Enya kede aya ari", "🏥 Muza osipitali sia"],
+    "intents": {
+      "danger": { "keywords": ["ndri", "ari", "dri", "bleeding"], "response": "⚠️ E'YO NDRI KA! Ari ka le'e mi ti vule, dri ka sa nyari-nyari, mu osipitali sia azo amvu! Zaza simu 112 ko 0800 100 200 awu be ku." }
+    },
+    "default": "Awa'difo maama! Yotkom mini be mva mini be nesi e'yo eripi. Zi e'yo azi mini lezuri dria, ko zaza midwife mini i +256 778 501 066."
+  },
+  "runyoro": {
+    "name": "Runyoro-Rutooro (Western)",
+    "greeting": "Oraire ota Maama! Ninyowe MaamaCare AI, omuyambi waawe ow'eby'obwomeezi bwawe n'obw'omwana ori munda.",
+    "placeholder": "Buuza ekibuuzo kyona...",
+    "listenText": "Huuriza iraka",
+    "quickChips": ["🚨 Obulumuna bw'amaani", "👶 Omwana arikutera ata?", "🥗 Eby'okulya eby'omusaayi", "🏥 Ebiro by'okugenda"],
+    "intents": {
+      "danger": { "keywords": ["obulumuna", "omusaayi", "omutwe", "bleeding"], "response": "⚠️ OBULUMUNA BW'AMAANI! Obworaaba oine omusaayi ogurukukwija nari omutwe ogurukukulema, genda ha ddwaliro erikukira haihi ahonaaho!" }
+    },
+    "default": "Webale muno maama! Obwomeezi bwawe n'obw'omwana nigo b'omugaso. Kumbuuza ekiro kyona nari oteere essimu aha +256 778 501 066."
+  },
+  "lumasaba": {
+    "name": "Lumasaba (Bugisu)",
+    "greeting": "Mulembe Maama! Inze MaamaCare AI, omuyambi wo khulwe bulamu bwoosi n'obwo mwana ori munda.",
+    "placeholder": "Buuza khulwe bulamu...",
+    "listenText": "Wulila lilaka",
+    "quickChips": ["🚨 Kamatsai n'obulabe", "👶 Okhukuba khwo mwana", "🥗 By'okhulia n'eddagala", "🏥 Tsikhabado tsyo mu dwalilo"],
+    "intents": {
+      "danger": { "keywords": ["kamatsai", "lilulu", "omutwe", "bleeding"], "response": "⚠️ LUBANGA LULULU! Wakhabona kamatsai kakhuvaamu, omutwe ogukulumina, khenda mu dwalilo mangu mangu! Khuba lisiimu ku 112 naye 0800 100 200." }
+    },
+    "default": "Wanyala naabi maama! Obulamu bwo n'obwo mwana bwebufuna imbeli. Buuza khuri kyosi ky'oyenda kuteera lisiimu ku +256 778 501 066."
+  },
+  "english": {
+    "name": "English (Official)",
+    "greeting": "Hello Mama! I am MaamaCare AI, your maternal and newborn health assistant. How can I help you today with pregnancy signs, fetal kicks, or clinic visits?",
+    "placeholder": "Ask any maternal or baby question...",
+    "listenText": "Listen to Voice",
+    "quickChips": ["🚨 Danger signs in pregnancy", "👶 How to count baby kicks", "🥗 Nutrition & Iron pills", "🏥 Next clinic visit date"],
+    "intents": {
+      "danger": { "keywords": ["danger", "bleeding", "headache", "vision", "fever", "pain"], "response": "⚠️ CRITICAL EMERGENCY: If you experience vaginal bleeding, severe unyielding headache with blurred vision, or high fever, proceed to the nearest health facility immediately! Dial toll-free 112 or 0800 100 200, or call +256 778 501 066." },
+      "kicks": { "keywords": ["kicks", "kick", "movement", "move"], "response": "👶 BABY KICKS: Rest on your left side after a meal. You should feel at least 10 distinct movements within 2 hours. If movement decreases noticeably, visit your clinic right away." },
+      "nutrition": { "keywords": ["food", "nutrition", "eat", "iron", "greens"], "response": "🥗 NUTRITION: Eat green vegetables (doodo, nakati), beans, eggs, and take your daily Iron & Folic Acid supplements to build strong maternal blood and support baby development." },
+      "visits": { "keywords": ["visit", "anc", "clinic", "hospital", "appointment"], "response": "🏥 CLINIC VISITS: The Ministry of Health recommends at least 4 ANC visits. BabyHealth Guard automatically sends SMS reminders, or dial *920# on any phone to check your dates." }
+    },
+    "default": "Thank you Mama! Your health and baby's care are our priority. Ask me about danger signs, counting kicks, or reach our midwife team at +256 778 501 066."
+  },
+  "swahili": {
+    "name": "Kiswahili (East Africa)",
+    "greeting": "Jambo Mama! Mimi ni MaamaCare AI, msaidizi wako wa afya ya uzazi na mtoto. Una swali lolote kuhusu ujauzito au mtoto leo?",
+    "placeholder": "Uliza swali kuhusu ujauzito au mtoto...",
+    "listenText": "Sikiliza sauti",
+    "quickChips": ["🚨 Dalili za hatari", "👶 Mateke ya mtoto", "🥗 Lishe na vidonge vya damu", "🏥 Tarehe ya kliniki"],
+    "intents": {
+      "danger": { "keywords": ["hatari", "damu", "kichwa", "macho", "homa", "bleeding"], "response": "⚠️ TAHADHARI YA HATARI! Ukiona damu inatoka, maumivu makali ya kichwa na kutoona vizuri, fika hospitalini haraka! Piga simu ya bure 112 au 0800 100 200, au piga +256 778 501 066." }
+    },
+    "default": "Asante sana mama! Afya yako ndiyo kipaumbele chetu. Uliza kuhusu dalili za hatari, mateke ya mtoto, au piga simu kwa +256 778 501 066."
+  }
+};
+
+let currentMaamaLang = 'luganda';
+
+function openAiSideDrawer() {
+  const drawer = document.getElementById('aiSideDrawer');
+  const backdrop = document.getElementById('aiSideDrawerBackdrop');
+  if (!drawer || !backdrop) return;
+  initMaamaDrawerChat();
+  backdrop.classList.remove('hidden');
+  setTimeout(() => drawer.classList.remove('translate-x-full'), 10);
+}
+
+function closeAiSideDrawer() {
+  const drawer = document.getElementById('aiSideDrawer');
+  const backdrop = document.getElementById('aiSideDrawerBackdrop');
+  if (!drawer || !backdrop) return;
+  drawer.classList.add('translate-x-full');
+  setTimeout(() => backdrop.classList.add('hidden'), 300);
+  if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+}
+
+function switchLanguage(langKey) {
+  if (!MAAMA_LANGUAGES[langKey]) return;
+  currentMaamaLang = langKey;
+  
+  const langData = MAAMA_LANGUAGES[langKey];
+  const badge = document.getElementById('drawerDialectBadge');
+  const input = document.getElementById('drawerChatInput');
+  const select = document.getElementById('drawerLangSelect');
+  
+  if (badge) badge.textContent = `${langData.name} Active • Audio Spoken`;
+  if (input) input.placeholder = langData.placeholder;
+  if (select) select.value = langKey;
+
+  initMaamaDrawerChat();
+}
+
+function initMaamaDrawerChat() {
+  const langData = MAAMA_LANGUAGES[currentMaamaLang];
+  const container = document.getElementById('drawerChatMessages');
+  if (!container) return;
+  
+  container.innerHTML = `
+    <div class="flex items-start gap-2.5">
+      <div class="w-7 h-7 rounded-lg bg-gradient-to-tr from-cyan-600 to-teal-500 text-white flex items-center justify-center text-xs shrink-0 shadow-xs">
+        🤱
+      </div>
+      <div class="bg-white rounded-2xl rounded-tl-none p-3 shadow-xs border border-slate-200 text-xs text-slate-800 leading-relaxed max-w-[85%]">
+        <span class="font-bold text-[#0e7490] block mb-1">${langData.name}</span>
+        <p>${langData.greeting}</p>
+        <div class="mt-2.5 pt-1.5 border-t border-slate-100 flex items-center justify-between text-[11px]">
+          <button type="button" onclick="speakMaamaText('${escapeMaamaQuotes(langData.greeting)}', '${currentMaamaLang}')" class="inline-flex items-center gap-1 font-bold text-[#0e7490] hover:text-cyan-800 cursor-pointer">
+            <span class="material-symbols-outlined text-[15px]">volume_up</span>
+            <span>${langData.listenText}</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  `;
+
+  const chipsBox = document.getElementById('drawerQuickChips');
+  if (chipsBox) {
+    chipsBox.innerHTML = '';
+    langData.quickChips.forEach(chip => {
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'px-2.5 py-1 rounded-full bg-slate-100 hover:bg-cyan-50 hover:text-[#0e7490] text-slate-700 text-[11px] font-medium border border-slate-200 transition-colors cursor-pointer';
+      btn.textContent = chip;
+      btn.onclick = () => {
+        const inp = document.getElementById('drawerChatInput');
+        if (inp) inp.value = chip;
+        processMaamaDrawerMessage(chip);
+      };
+      chipsBox.appendChild(btn);
+    });
+  }
+}
+
+function handleDrawerChatSubmit(e) {
+  e.preventDefault();
+  const input = document.getElementById('drawerChatInput');
+  if (!input) return;
+  const text = input.value.trim();
+  if (!text) return;
+  processMaamaDrawerMessage(text);
+  input.value = '';
+}
+
+function processMaamaDrawerMessage(text) {
+  const container = document.getElementById('drawerChatMessages');
+  if (!container) return;
+  
+  // User bubble
+  container.insertAdjacentHTML('beforeend', `
+    <div class="flex items-start justify-end gap-2">
+      <div class="bg-[#0e7490] text-white rounded-2xl rounded-tr-none p-3 shadow-xs text-xs leading-relaxed max-w-[85%]">
+        <p>${text}</p>
+      </div>
+      <div class="w-7 h-7 rounded-lg bg-slate-800 text-white flex items-center justify-center text-xs shrink-0">
+        👤
+      </div>
+    </div>
+  `);
+  container.scrollTop = container.scrollHeight;
+
+  // AI Response
+  setTimeout(() => {
+    const langData = MAAMA_LANGUAGES[currentMaamaLang];
+    let responseText = langData.default;
+    const q = text.toLowerCase();
+    if (langData.intents) {
+      for (const [key, val] of Object.entries(langData.intents)) {
+        if (val.keywords.some(k => q.includes(k.toLowerCase()))) {
+          responseText = val.response;
+          break;
+        }
+      }
+    }
+    
+    container.insertAdjacentHTML('beforeend', `
+      <div class="flex items-start gap-2.5">
+        <div class="w-7 h-7 rounded-lg bg-gradient-to-tr from-cyan-600 to-teal-500 text-white flex items-center justify-center text-xs shrink-0 shadow-xs">
+          🤱
+        </div>
+        <div class="bg-white rounded-2xl rounded-tl-none p-3 shadow-xs border border-slate-200 text-xs text-slate-800 leading-relaxed max-w-[85%]">
+          <span class="font-bold text-[#0e7490] block mb-1">${langData.name}</span>
+          <p>${responseText}</p>
+          <div class="mt-2.5 pt-1.5 border-t border-slate-100 flex items-center justify-between text-[11px]">
+            <button type="button" onclick="speakMaamaText('${escapeMaamaQuotes(responseText)}', '${currentMaamaLang}')" class="inline-flex items-center gap-1 font-bold text-[#0e7490] hover:text-cyan-800 cursor-pointer">
+              <span class="material-symbols-outlined text-[15px]">volume_up</span>
+              <span>${langData.listenText}</span>
+            </button>
+            <a href="https://wa.me/256778501066?text=${encodeURIComponent('MaamaCare AI: ' + text)}" target="_blank" class="text-[10px] font-bold text-emerald-600 hover:underline">
+              Midwife WhatsApp →
+            </a>
+          </div>
+        </div>
+      </div>
+    `);
+    container.scrollTop = container.scrollHeight;
+
+    speakMaamaText(responseText, currentMaamaLang);
+  }, 350);
+}
+
+function speakMaamaText(text, langKey) {
+  if (!('speechSynthesis' in window)) return;
+  window.speechSynthesis.cancel();
+  
+  const cleanText = text.replace(/⚠️|👶|🥗|🏥|🤱|●|🚨/g, '').trim();
+  const utterance = new SpeechSynthesisUtterance(cleanText);
+  
+  const voices = window.speechSynthesis.getVoices();
+  const preferred = voices.find(v => v.lang.startsWith('sw') || v.lang.includes('ZA') || v.lang.includes('KE') || v.lang.includes('NG')) 
+                 || voices.find(v => v.lang.startsWith('en')) 
+                 || voices[0];
+  if (preferred) utterance.voice = preferred;
+  utterance.rate = 0.93;
+  utterance.pitch = 1.04;
+  window.speechSynthesis.speak(utterance);
+}
+
+function startVoiceInput() {
+  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (!SpeechRecognition) {
+    alert("Voice speech recognition is not supported in this browser. Please type your question.");
+    return;
+  }
+  const micBtn = document.getElementById('drawerMicBtn');
+  if (micBtn) micBtn.classList.add('bg-rose-100', 'text-rose-600', 'animate-pulse');
+  
+  const recognition = new SpeechRecognition();
+  recognition.lang = 'en-UG';
+  recognition.continuous = false;
+  recognition.interimResults = false;
+
+  recognition.onresult = function(event) {
+    const transcript = event.results[0][0].transcript;
+    const inp = document.getElementById('drawerChatInput');
+    if (inp) inp.value = transcript;
+    processMaamaDrawerMessage(transcript);
+  };
+
+  recognition.onerror = function() {
+    if (micBtn) micBtn.classList.remove('bg-rose-100', 'text-rose-600', 'animate-pulse');
+  };
+
+  recognition.onend = function() {
+    if (micBtn) micBtn.classList.remove('bg-rose-100', 'text-rose-600', 'animate-pulse');
+  };
+
+  recognition.start();
+}
+
+function escapeMaamaQuotes(str) {
+  return str.replace(/'/g, "\\'").replace(/"/g, '&quot;').replace(/\n/g, ' ');
+}
+</script>
+
+
+<!-- Flutterwave Maternal Delivery Fund & Voucher Modal -->
+<div id="flutterwaveModal" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs hidden items-center justify-center p-4">
+  <div class="bg-white w-full max-w-md rounded-3xl shadow-2xl overflow-hidden border border-slate-200 flex flex-col animate-fade-in">
+    <!-- Header with Flutterwave Branding -->
+    <div class="bg-gradient-to-r from-amber-500 via-orange-500 to-rose-500 p-5 text-white flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-white/20 backdrop-blur-md flex items-center justify-center">
+          <span class="material-symbols-outlined text-[24px]">payments</span>
+        </div>
+        <div>
+          <div class="flex items-center gap-1.5">
+            <h3 class="font-bold text-base leading-tight">Flutterwave Checkout</h3>
+            <span class="px-2 py-0.5 rounded-full bg-white/25 text-[10px] font-bold uppercase tracking-wider">Uganda UGX</span>
+          </div>
+          <p class="text-xs text-white/90">MTN MoMo • Airtel Money • Visa/Mastercard</p>
+        </div>
+      </div>
+      <button onclick="closeFlutterwaveModal()" class="w-8 h-8 rounded-full bg-white/20 hover:bg-white/30 text-white flex items-center justify-center transition-colors">
+        <span class="material-symbols-outlined text-[18px]">close</span>
+      </button>
+    </div>
+
+    <!-- Modal Form Body -->
+    <div class="p-6 space-y-4 max-h-[80vh] overflow-y-auto">
+      <div>
+        <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">Select Maternal Support Package</label>
+        <div class="grid grid-cols-2 gap-2.5">
+          <button type="button" onclick="selectFlwPackage(25000, 'Mama Kit Safe Delivery Pack')" class="flw-pkg-btn p-3 rounded-2xl border-2 border-[#0e7490] bg-cyan-50/50 text-left transition-all" data-amount="25000">
+            <span class="text-[11px] font-bold text-slate-500 block uppercase">Mama Kit Pack</span>
+            <span class="text-sm font-extrabold text-slate-900 block mt-0.5">25,000 UGX</span>
+            <span class="text-[10px] text-teal-700 font-medium">Sterile delivery pack</span>
+          </button>
+          <button type="button" onclick="selectFlwPackage(10000, 'Emergency Boda Transport Voucher')" class="flw-pkg-btn p-3 rounded-2xl border border-slate-200 hover:border-slate-300 text-left transition-all" data-amount="10000">
+            <span class="text-[11px] font-bold text-slate-500 block uppercase">Boda Transport</span>
+            <span class="text-sm font-extrabold text-slate-900 block mt-0.5">10,000 UGX</span>
+            <span class="text-[10px] text-slate-500 font-medium">Emergency ride to clinic</span>
+          </button>
+          <button type="button" onclick="selectFlwPackage(15000, 'Antenatal Ultrasound Scan Voucher')" class="flw-pkg-btn p-3 rounded-2xl border border-slate-200 hover:border-slate-300 text-left transition-all" data-amount="15000">
+            <span class="text-[11px] font-bold text-slate-500 block uppercase">Ultrasound Scan</span>
+            <span class="text-sm font-extrabold text-slate-900 block mt-0.5">15,000 UGX</span>
+            <span class="text-[10px] text-slate-500 font-medium">Routine obstetric scan</span>
+          </button>
+          <button type="button" onclick="selectFlwPackage(5000, 'Maternal Micro-Savings Top-up')" class="flw-pkg-btn p-3 rounded-2xl border border-slate-200 hover:border-slate-300 text-left transition-all" data-amount="5000">
+            <span class="text-[11px] font-bold text-slate-500 block uppercase">Micro-Savings</span>
+            <span class="text-sm font-extrabold text-slate-900 block mt-0.5">5,000 UGX</span>
+            <span class="text-[10px] text-slate-500 font-medium">Weekly delivery savings</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Payment Method Selection -->
+      <div>
+        <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">Payment Method</label>
+        <div class="grid grid-cols-3 gap-2">
+          <label class="flex flex-col items-center justify-center p-2.5 rounded-xl border-2 border-amber-400 bg-amber-50/40 cursor-pointer text-center">
+            <input type="radio" name="flwMethod" value="mtn" checked class="sr-only">
+            <span class="text-xs font-bold text-slate-900">MTN MoMo</span>
+            <span class="text-[10px] text-amber-700 font-semibold">*165# Uganda</span>
+          </label>
+          <label class="flex flex-col items-center justify-center p-2.5 rounded-xl border border-slate-200 hover:border-red-300 cursor-pointer text-center">
+            <input type="radio" name="flwMethod" value="airtel" class="sr-only">
+            <span class="text-xs font-bold text-slate-900">Airtel Money</span>
+            <span class="text-[10px] text-red-600 font-semibold">*185# Uganda</span>
+          </label>
+          <label class="flex flex-col items-center justify-center p-2.5 rounded-xl border border-slate-200 hover:border-slate-300 cursor-pointer text-center">
+            <input type="radio" name="flwMethod" value="card" class="sr-only">
+            <span class="text-xs font-bold text-slate-900">Visa / Card</span>
+            <span class="text-[10px] text-slate-500">Debit / Credit</span>
+          </label>
+        </div>
+      </div>
+
+      <!-- Payer Details -->
+      <div class="space-y-3">
+        <div>
+          <label class="block text-xs font-medium text-slate-600 mb-1">Mobile Money Phone Number</label>
+          <div class="relative">
+            <span class="material-symbols-outlined absolute left-3 top-2.5 text-slate-400 text-[18px]">phone_iphone</span>
+            <input id="flwPayerPhone" type="tel" value="+256 778 501 066" placeholder="+256 7XX XXX XXX" class="w-full h-10 pl-9 pr-3 rounded-xl bg-slate-50 border border-slate-200 text-slate-800 text-xs font-semibold focus:outline-none focus:bg-white focus:border-[#0e7490]">
+          </div>
+        </div>
+        <div>
+          <label class="block text-xs font-medium text-slate-600 mb-1">Beneficiary Mother / Payer Name</label>
+          <div class="relative">
+            <span class="material-symbols-outlined absolute left-3 top-2.5 text-slate-400 text-[18px]">person</span>
+            <input id="flwPayerName" type="text" value="Amina Brenda" placeholder="Full Name" class="w-full h-10 pl-9 pr-3 rounded-xl bg-slate-50 border border-slate-200 text-slate-800 text-xs font-semibold focus:outline-none focus:bg-white focus:border-[#0e7490]">
+          </div>
+        </div>
+      </div>
+
+      <!-- Action Button -->
+      <div class="pt-2">
+        <button id="flwPaySubmitBtn" onclick="processFlutterwavePayment()" class="w-full py-3.5 px-5 rounded-2xl bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-white font-extrabold text-sm shadow-md active:scale-98 transition-all flex items-center justify-center gap-2">
+          <span class="material-symbols-outlined text-[20px]">lock</span>
+          <span id="flwBtnText">Pay 25,000 UGX with Flutterwave</span>
+        </button>
+        <div class="flex items-center justify-center gap-2 mt-2 text-[11px] text-slate-400">
+          <span class="material-symbols-outlined text-[13px] text-emerald-600">verified_user</span>
+          <span>Secured by Flutterwave Uganda (PCI-DSS Level 1)</span>
+        </div>
+      </div>
+
+      <!-- Dynamic Receipt / Processing View (Hidden Initially) -->
+      <div id="flwProcessingState" class="hidden text-center py-4 space-y-3">
+        <div class="w-12 h-12 rounded-full border-4 border-amber-500 border-t-transparent animate-spin mx-auto"></div>
+        <div class="space-y-1">
+          <span class="text-xs font-bold text-slate-900 block">Waiting for Mobile Money PIN confirmation...</span>
+          <p class="text-[11px] text-slate-500">A push notification has been sent to your phone. Approve prompt on MTN *165# or Airtel *185#.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Flutterwave Success Toast / Receipt Modal -->
+<div id="flwReceiptModal" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs hidden items-center justify-center p-4">
+  <div class="bg-white w-full max-w-sm rounded-3xl p-6 shadow-2xl text-center space-y-4 border border-slate-100 animate-fade-in">
+    <div class="w-14 h-14 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center mx-auto">
+      <span class="material-symbols-outlined text-[32px]">check_circle</span>
+    </div>
+    <div class="space-y-1">
+      <span class="px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-800 text-[10px] font-bold uppercase tracking-wider border border-emerald-200">Payment Verified</span>
+      <h3 class="text-lg font-bold text-slate-900 mt-1">Maternal Voucher Activated!</h3>
+      <p id="flwReceiptDesc" class="text-xs text-slate-600">Your 25,000 UGX Mama Kit Safe Delivery Pack is funded and linked to your clinic ID.</p>
+    </div>
+    <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-100 text-left text-xs space-y-1.5">
+      <div class="flex justify-between text-slate-500">
+        <span>Tx Ref:</span>
+        <strong id="flwReceiptTxRef" class="text-slate-800 font-mono">FLW-UGX-89210</strong>
+      </div>
+      <div class="flex justify-between text-slate-500">
+        <span>Payment Method:</span>
+        <strong id="flwReceiptMethod" class="text-slate-800">MTN Mobile Money</strong>
+      </div>
+      <div class="flex justify-between text-slate-500">
+        <span>Amount:</span>
+        <strong id="flwReceiptAmount" class="text-emerald-700 font-bold">25,000 UGX</strong>
+      </div>
+    </div>
+    <button onclick="closeFlutterwaveReceipt()" class="w-full py-3 bg-[#0e7490] hover:bg-[#0c627a] text-white rounded-xl text-xs font-bold transition-all">
+      Continue to Dashboard
+    </button>
+  </div>
+</div>
+
+<script>
+// Flutterwave Integration Logic
+let flwSelectedAmount = 25000;
+let flwSelectedPackage = 'Mama Kit Safe Delivery Pack';
+
+function openFlutterwaveModal(amount, pkgName) {
+  if (amount) selectFlwPackage(amount, pkgName || 'Maternal Support');
+  const modal = document.getElementById('flutterwaveModal');
+  if (modal) {
+    modal.classList.remove('hidden');
+    modal.classList.add('flex');
+  }
+}
+
+function closeFlutterwaveModal() {
+  const modal = document.getElementById('flutterwaveModal');
+  if (modal) {
+    modal.classList.add('hidden');
+    modal.classList.remove('flex');
+  }
+}
+
+function selectFlwPackage(amount, pkgName) {
+  flwSelectedAmount = amount;
+  flwSelectedPackage = pkgName;
+  document.querySelectorAll('.flw-pkg-btn').forEach(btn => {
+    if (parseInt(btn.dataset.amount) === amount) {
+      btn.className = 'flw-pkg-btn p-3 rounded-2xl border-2 border-[#0e7490] bg-cyan-50/50 text-left transition-all';
+    } else {
+      btn.className = 'flw-pkg-btn p-3 rounded-2xl border border-slate-200 hover:border-slate-300 text-left transition-all';
+    }
+  });
+  const btnText = document.getElementById('flwBtnText');
+  if (btnText) {
+    btnText.textContent = `Pay ${amount.toLocaleString()} UGX with Flutterwave`;
+  }
+}
+
+function processFlutterwavePayment() {
+  const phone = document.getElementById('flwPayerPhone')?.value || '+256778501066';
+  const name = document.getElementById('flwPayerName')?.value || 'Amina Brenda';
+  const txRef = 'BHG-FLW-' + Date.now();
+
+  // If live FlutterwaveCheckout SDK is available in browser:
+  if (typeof FlutterwaveCheckout === 'function') {
+    FlutterwaveCheckout({
+      public_key: 'FLWPUBK_TEST-SANDBOXDEMO-X',
+      tx_ref: txRef,
+      amount: flwSelectedAmount,
+      currency: 'UGX',
+      payment_options: 'mobilemoneyuganda, card',
+      customer: {
+        email: 'infor@babyguard.org',
+        phone_number: phone,
+        name: name,
+      },
+      customizations: {
+        title: 'BabyHealth Guard - ' + flwSelectedPackage,
+        description: 'Maternal & Newborn Safe Care Support',
+        logo: 'https://images.unsplash.com/photo-1596704017254-9b121068fb31?auto=format&fit=crop&w=200&q=80',
+      },
+      callback: function(data) {
+        finishFlutterwavePayment(txRef, flwSelectedAmount, flwSelectedPackage);
+      },
+      onclose: function() {
+        console.log('Flutterwave window closed');
+      }
+    });
+  } else {
+    // Offline / direct Mobile Money push simulation:
+    const procState = document.getElementById('flwProcessingState');
+    const submitBtn = document.getElementById('flwPaySubmitBtn');
+    if (procState && submitBtn) {
+      procState.classList.remove('hidden');
+      submitBtn.classList.add('opacity-50', 'pointer-events-none');
+      setTimeout(() => {
+        procState.classList.add('hidden');
+        submitBtn.classList.remove('opacity-50', 'pointer-events-none');
+        finishFlutterwavePayment(txRef, flwSelectedAmount, flwSelectedPackage);
+      }, 2200);
+    } else {
+      finishFlutterwavePayment(txRef, flwSelectedAmount, flwSelectedPackage);
+    }
+  }
+}
+
+function finishFlutterwavePayment(txRef, amount, pkgName) {
+  closeFlutterwaveModal();
+  const receipt = document.getElementById('flwReceiptModal');
+  if (receipt) {
+    document.getElementById('flwReceiptTxRef').textContent = txRef;
+    document.getElementById('flwReceiptAmount').textContent = amount.toLocaleString() + ' UGX';
+    document.getElementById('flwReceiptDesc').textContent = `Your ${amount.toLocaleString()} UGX ${pkgName} is verified and active.`;
+    receipt.classList.remove('hidden');
+    receipt.classList.add('flex');
+  }
+
+  // Update voucher balance in local state
+  const prevBalance = parseInt(localStorage.getItem('bhg_voucher_balance') || '0');
+  localStorage.setItem('bhg_voucher_balance', (prevBalance + amount).toString());
+  const balanceDisplay = document.getElementById('maternalVoucherBalance');
+  if (balanceDisplay) {
+    balanceDisplay.textContent = (prevBalance + amount).toLocaleString() + ' UGX';
+  }
+}
+
+function closeFlutterwaveReceipt() {
+  const receipt = document.getElementById('flwReceiptModal');
+  if (receipt) {
+    receipt.classList.add('hidden');
+    receipt.classList.remove('flex');
+  }
+}
+</script>
+
+
+<script>
+// Universal Back / Forward / View Navigation Logic
+function navigateBack() {
+  if (window.history.length > 1) {
+    window.history.back();
+  } else {
+    window.location.href = '/index.html';
+  }
+}
+
+function navigateForward() {
+  window.history.forward();
+}
+
+function quickNavigate(path) {
+  window.location.href = path;
+}
 </script>
 
 </body>

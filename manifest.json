@@ -1,0 +1,26 @@
+{
+  "name": "BabyHealth Guard Uganda — MaamaCare",
+  "short_name": "BabyHealth",
+  "start_url": "/mobile/dashboard_preview.html",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#0e7490",
+  "theme_color": "#0e7490",
+  "orientation": "portrait-primary",
+  "description": "Ugandan Maternal and Infant Healthcare Platform — ANC Visits, Kangaroo Mother Care, VHT Triage, and Mama Kit Flutterwave Checkout",
+  "icons": [
+    {
+      "src": "/assets/images/african_pregnant_mother.jpg",
+      "sizes": "192x192",
+      "type": "image/jpeg",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/assets/images/african_pregnant_mother.jpg",
+      "sizes": "512x512",
+      "type": "image/jpeg",
+      "purpose": "any maskable"
+    }
+  ]
+}
+
