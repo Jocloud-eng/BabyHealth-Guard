@@ -539,36 +539,53 @@ class _MotherDashboardScreenState extends State<MotherDashboardScreen> {
   }
 
   Widget _buildNavigationDrawer() {
+    final drawerWidth = MediaQuery.sizeOf(context).width * 0.25;
     return Drawer(
+      width: drawerWidth,
       child: SafeArea(
         child: Column(
           children: [
-            UserAccountsDrawerHeader(
-              decoration: const BoxDecoration(color: colorPrimary),
-              accountName: Text(widget.profile.fullName),
-              accountEmail: Text(widget.profile.email),
-              currentAccountPicture: const CircleAvatar(
-                backgroundColor: Colors.white,
-                child: Icon(Icons.person, color: colorPrimary),
+            const Padding(
+              padding: EdgeInsets.symmetric(vertical: 12),
+              child: Text(
+                'Menu',
+                maxLines: 1,
+                style: TextStyle(
+                  color: colorPrimary,
+                  fontWeight: FontWeight.w700,
+                ),
               ),
             ),
-            _buildDrawerItem(0, Icons.home_rounded, 'Home'),
-            _buildDrawerItem(1, Icons.monitor_heart_rounded, 'My Health'),
+            _buildDrawerItem(0, 'Home'),
+            _buildDrawerItem(1, 'My Health'),
             _buildDrawerItem(
               2,
-              Icons.health_and_safety_rounded,
               'Warning Signs',
             ),
-            _buildDrawerItem(3, Icons.event_available_rounded, 'Visits'),
+            _buildDrawerItem(3, 'Visits'),
             const Spacer(),
             const Divider(height: 1),
-            ListTile(
-              leading: const Icon(Icons.logout_rounded),
-              title: const Text('Logout'),
+            InkWell(
               onTap: () {
                 Navigator.of(context).pop();
                 widget.onSignOut();
               },
+              child: Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 6,
+                  vertical: 12,
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Icon(Icons.logout_rounded, size: 14),
+                    const SizedBox(width: 3),
+                    Flexible(
+                      child: _drawerLabel('Logout'),
+                    ),
+                  ],
+                ),
+              ),
             ),
           ],
         ),
@@ -576,14 +593,16 @@ class _MotherDashboardScreenState extends State<MotherDashboardScreen> {
     );
   }
 
-  Widget _buildDrawerItem(int index, IconData icon, String label) {
+  Widget _buildDrawerItem(int index, String label) {
     final isSelected = _currentTab == index;
     return ListTile(
-      leading: Icon(icon, color: isSelected ? colorPrimaryContainer : null),
-      title: Text(
-        label,
-        style: TextStyle(
-          color: isSelected ? colorPrimaryContainer : null,
+      dense: true,
+      minVerticalPadding: 8,
+      contentPadding: const EdgeInsets.symmetric(horizontal: 6),
+      title: Center(
+        child: _drawerLabel(
+          label,
+          color: isSelected ? colorPrimaryContainer : colorOnSurface,
           fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
         ),
       ),
@@ -592,6 +611,26 @@ class _MotherDashboardScreenState extends State<MotherDashboardScreen> {
         Navigator.of(context).pop();
         setState(() => _currentTab = index);
       },
+    );
+  }
+
+  Widget _drawerLabel(
+    String label, {
+    Color color = colorOnSurface,
+    FontWeight fontWeight = FontWeight.normal,
+  }) {
+    return FittedBox(
+      fit: BoxFit.scaleDown,
+      child: Text(
+        label,
+        maxLines: 1,
+        softWrap: false,
+        style: TextStyle(
+          color: color,
+          fontSize: 12,
+          fontWeight: fontWeight,
+        ),
+      ),
     );
   }
 
