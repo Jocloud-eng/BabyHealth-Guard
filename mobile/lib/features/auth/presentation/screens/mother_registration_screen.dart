@@ -839,13 +839,18 @@ class _MotherRegistrationScreenState extends State<MotherRegistrationScreen> {
               color: isSelected ? colorPrimary : colorOnSurfaceVariant,
             ),
             const SizedBox(width: 8),
-            Text(
-              title,
-              style: TextStyle(
-                fontFamily: 'Inter',
-                fontSize: 12,
-                fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
-                color: isSelected ? colorPrimary : colorOnSurfaceVariant,
+            Flexible(
+              child: Text(
+                title,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontFamily: 'Inter',
+                  fontSize: 12,
+                  fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
+                  color: isSelected ? colorPrimary : colorOnSurfaceVariant,
+                ),
               ),
             ),
           ],

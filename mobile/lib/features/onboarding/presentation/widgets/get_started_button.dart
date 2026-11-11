@@ -66,10 +66,10 @@ class _GetStartedButtonState extends State<GetStartedButton>
           height: 62,
           padding: const EdgeInsets.only(left: 8, right: 20, top: 8, bottom: 8),
           decoration: BoxDecoration(
-            color: Colors.white.withValues(alpha: 0.96),
+            color: AppColors.primary,
             borderRadius: BorderRadius.circular(999),
             border: Border.all(
-              color: AppColors.stone100,
+              color: AppColors.primary,
               width: 1.2,
             ),
             boxShadow: const [
@@ -89,11 +89,11 @@ class _GetStartedButtonState extends State<GetStartedButton>
                 width: 46,
                 height: 46,
                 decoration: BoxDecoration(
-                  color: AppColors.primary,
+                  color: Colors.white,
                   shape: BoxShape.circle,
                   boxShadow: [
                     BoxShadow(
-                      color: AppColors.primary.withValues(alpha: 0.35),
+                      color: AppColors.primary.withValues(alpha: 0.2),
                       blurRadius: 8,
                       offset: const Offset(0, 3),
                     ),
@@ -101,7 +101,7 @@ class _GetStartedButtonState extends State<GetStartedButton>
                 ),
                 child: const Icon(
                   Icons.arrow_forward_rounded,
-                  color: Colors.white,
+                  color: AppColors.primary,
                   size: 22,
                 ),
               ),
@@ -114,7 +114,7 @@ class _GetStartedButtonState extends State<GetStartedButton>
                   fontSize: 16,
                   fontWeight: FontWeight.w700,
                   letterSpacing: -0.3,
-                  color: AppColors.stone900,
+                  color: Colors.white,
                 ),
               ),
 
@@ -132,14 +132,14 @@ class _GetStartedButtonState extends State<GetStartedButton>
                           const Icon(
                             Icons.chevron_right_rounded,
                             size: 20,
-                            color: AppColors.primary,
+                            color: Colors.white,
                           ),
                           Transform.translate(
                             offset: const Offset(-8, 0),
                             child: Icon(
                               Icons.chevron_right_rounded,
                               size: 20,
-                              color: AppColors.primary.withValues(alpha: 0.8),
+                              color: Colors.white.withValues(alpha: 0.8),
                             ),
                           ),
                           Transform.translate(
@@ -147,7 +147,7 @@ class _GetStartedButtonState extends State<GetStartedButton>
                             child: Icon(
                               Icons.chevron_right_rounded,
                               size: 20,
-                              color: AppColors.primary.withValues(alpha: 0.45),
+                              color: Colors.white.withValues(alpha: 0.45),
                             ),
                           ),
                         ],
